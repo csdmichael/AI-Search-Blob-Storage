@@ -142,10 +142,27 @@ def test_agent(project_client: AIProjectClient):
 
         for msg in messages:
             if msg.role == "assistant" and msg.text_messages:
-                response = msg.text_messages[-1].text.value
-                print(f"  Agent Response:\n  {response[:500]}")
-                if len(response) > 500:
+                last_text = msg.text_messages[-1]
+                response = last_text.text.value
+                annotations = last_text.text.annotations if hasattr(last_text.text, "annotations") else []
+
+                print(f"  Agent Response:\n  {response[:800]}")
+                if len(response) > 800:
                     print("  ... (truncated)")
+
+                # Display citations from annotations
+                if annotations:
+                    print(f"\n  Citations ({len(annotations)}):")
+                    for ann in annotations:
+                        if hasattr(ann, "url_citation") and ann.url_citation:
+                            title = getattr(ann.url_citation, "title", "")
+                            url = getattr(ann.url_citation, "url", "")
+                            print(f"    - {title or 'Source'}: {url}")
+                        elif hasattr(ann, "file_citation") and ann.file_citation:
+                            fid = getattr(ann.file_citation, "file_id", "")
+                            print(f"    - File: {fid}")
+                        else:
+                            print(f"    - {ann}")
 
 
 def main():
