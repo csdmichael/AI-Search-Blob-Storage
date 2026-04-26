@@ -1,0 +1,153 @@
+================================================================================
+ENGINEERING TEST CASE DOCUMENT
+================================================================================
+
+Document Number: KLA-MFG-TC-0080
+Revision: Rev D.9
+Classification: CONFIDENTIAL - KLA Internal Use Only
+
+Title: LED Inspection - Overlay Shift Detection on Archer 700
+Subtitle: Post-Lithography Quality Validation for 7nm Node Manufacturing
+
+────────────────────────────────────────────────────────────────────────────────
+DOCUMENT INFORMATION
+────────────────────────────────────────────────────────────────────────────────
+
+Author:           James Rodriguez
+Reviewer:         Robert Kim
+Fab Location:     Dresden Fab 3
+Created Date:     2024-11-18
+Last Modified:    2024-12-15
+Status:           NEEDS REVIEW
+Priority:         P2 - High
+Severity Level:   Major
+
+────────────────────────────────────────────────────────────────────────────────
+1. OBJECTIVE
+────────────────────────────────────────────────────────────────────────────────
+
+This test case validates the capability of the Archer 700 system to detect
+and classify Overlay Shift defects during post-lithography inspection
+at the 7nm technology node. The test is conducted at Dresden Fab 3 to ensure
+manufacturing quality standards are met for 200mm wafer production.
+
+The primary objective is to verify that the inspection system meets the required
+detection sensitivity and classification accuracy for Overlay Shift defects
+that are critical to yield at the 7nm node. This test case is part of
+the ongoing qualification program for the Archer 700 platform.
+
+────────────────────────────────────────────────────────────────────────────────
+2. SCOPE
+────────────────────────────────────────────────────────────────────────────────
+
+- Product Line: Archer 700
+- Inspection Type: LED Inspection
+- Target Defect: Overlay Shift
+- Process Step: Post-Lithography
+- Wafer Size: 200mm
+- Technology Node: 7nm
+- Fab Location: Dresden Fab 3
+
+This test case applies to all Archer 700 systems deployed at Dresden Fab 3
+for post-lithography monitoring in the 7nm manufacturing line.
+Results from this test are used to establish baseline performance metrics
+and to qualify new recipe configurations.
+
+────────────────────────────────────────────────────────────────────────────────
+3. TEST CONFIGURATION
+────────────────────────────────────────────────────────────────────────────────
+
+System:                Archer 700
+Software Version:      v11.6.989
+Recipe:                LED_INSPECTION_7nm_POST_LITHOGRAPHY
+Illumination Mode:     Brightfield
+Scan Speed:            High (50 mm/s)
+Pixel Size:            1.0μm
+Edge Exclusion:        5mm
+Sampling Plan:         Full wafer sampling
+
+────────────────────────────────────────────────────────────────────────────────
+4. TEST PROCEDURE
+────────────────────────────────────────────────────────────────────────────────
+
+1. Power on the Archer 700 system and allow 30-minute warm-up period.
+2. Load the calibration wafer and run the standard calibration routine.
+3. Verify calibration results are within specification (±2% tolerance).
+4. Load the test wafer onto the stage using the automated handler.
+5. Select the 'LED Inspection' recipe from the recipe library.
+6. Configure detection sensitivity to target Overlay Shift defects.
+7. Set scan parameters: full wafer scan with edge exclusion of 3mm.
+8. Initiate the inspection run and monitor real-time defect map.
+9. Upon completion, review the defect density map and classification results.
+10. Export results to the factory automation system (SECS/GEM interface).
+11. Compare results against the golden reference baseline.
+12. Document any anomalies and generate the summary report.
+
+────────────────────────────────────────────────────────────────────────────────
+5. ACCEPTANCE CRITERIA
+────────────────────────────────────────────────────────────────────────────────
+
+- Defect detection sensitivity must meet 7nm node requirements
+- False positive rate shall not exceed 5% of total detected events
+- Scan throughput must be ≥ 65 wafers per hour
+- Classification accuracy shall be ≥ 97% for known defect types
+- Repeatability (3-sigma) shall be within ±1.6% for LED Inspection
+- System uptime during test shall be ≥ 98%
+- All results must be traceable through the MES integration
+- Measurement correlation with reference tool shall be ≥ 0.99 R²
+
+────────────────────────────────────────────────────────────────────────────────
+6. TEST RESULTS
+────────────────────────────────────────────────────────────────────────────────
+
+Test Execution Date:   2024-12-15
+Wafers Tested:         35
+Total Defects Found:   3490
+Defect Density:        1110.9 defects/cm²
+Nuisance Rate:         2.0%
+Capture Rate:          94.1%
+Test Duration:         51 minutes
+System Uptime:         97.5%
+
+Result Classification: NEEDS REVIEW
+
+────────────────────────────────────────────────────────────────────────────────
+7. OBSERVATIONS AND FINDINGS
+────────────────────────────────────────────────────────────────────────────────
+
+During the execution of this test case, the following observations were noted:
+
+a) The Archer 700 demonstrated below-target performance
+   in detecting Overlay Shift at the 7nm node.
+
+b) The capture rate exceeded the minimum threshold, confirming system readiness.
+
+c) Nuisance rate is within acceptable limits.
+
+d) Cross-correlation with the reference SEM confirmed classification accuracy.
+
+e) SECS/GEM communication was verified with zero packet loss during data transfer.
+
+────────────────────────────────────────────────────────────────────────────────
+8. CORRECTIVE ACTIONS (if applicable)
+────────────────────────────────────────────────────────────────────────────────
+
+
+The following corrective actions are recommended:
+
+1. Review edge-zone detection parameters for optimization.
+2. Schedule follow-up test after recipe optimization.
+3. Monitor performance over next 30 production days.
+
+
+────────────────────────────────────────────────────────────────────────────────
+9. SIGN-OFF
+────────────────────────────────────────────────────────────────────────────────
+
+Author:     James Rodriguez                Date: 2024-12-15
+Reviewer:   Robert Kim                     Date: 2024-12-18
+Approver:   Dr. Hans Schmidt               Date: 2024-12-20
+
+================================================================================
+END OF DOCUMENT - KLA-MFG-TC-0080
+================================================================================

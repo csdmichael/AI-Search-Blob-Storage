@@ -1,0 +1,153 @@
+================================================================================
+ENGINEERING TEST CASE DOCUMENT
+================================================================================
+
+Document Number: KLA-MFG-TC-0093
+Revision: Rev B.1
+Classification: CONFIDENTIAL - KLA Internal Use Only
+
+Title: Surface Roughness Analysis - Extra Pattern Detection on Puma 9xxx
+Subtitle: Post-Lithography Quality Validation for 3nm Node Manufacturing
+
+────────────────────────────────────────────────────────────────────────────────
+DOCUMENT INFORMATION
+────────────────────────────────────────────────────────────────────────────────
+
+Author:           Lisa Johansson
+Reviewer:         Maria Gonzalez
+Fab Location:     Milpitas Fab A
+Created Date:     2025-03-19
+Last Modified:    2025-05-04
+Status:           FAIL
+Priority:         P3 - Medium
+Severity Level:   Critical
+
+────────────────────────────────────────────────────────────────────────────────
+1. OBJECTIVE
+────────────────────────────────────────────────────────────────────────────────
+
+This test case validates the capability of the Puma 9xxx system to detect
+and classify Extra Pattern defects during post-lithography inspection
+at the 3nm technology node. The test is conducted at Milpitas Fab A to ensure
+manufacturing quality standards are met for 300mm wafer production.
+
+The primary objective is to verify that the inspection system meets the required
+detection sensitivity and classification accuracy for Extra Pattern defects
+that are critical to yield at the 3nm node. This test case is part of
+the ongoing qualification program for the Puma 9xxx platform.
+
+────────────────────────────────────────────────────────────────────────────────
+2. SCOPE
+────────────────────────────────────────────────────────────────────────────────
+
+- Product Line: Puma 9xxx
+- Inspection Type: Surface Roughness Analysis
+- Target Defect: Extra Pattern
+- Process Step: Post-Lithography
+- Wafer Size: 300mm
+- Technology Node: 3nm
+- Fab Location: Milpitas Fab A
+
+This test case applies to all Puma 9xxx systems deployed at Milpitas Fab A
+for post-lithography monitoring in the 3nm manufacturing line.
+Results from this test are used to establish baseline performance metrics
+and to qualify new recipe configurations.
+
+────────────────────────────────────────────────────────────────────────────────
+3. TEST CONFIGURATION
+────────────────────────────────────────────────────────────────────────────────
+
+System:                Puma 9xxx
+Software Version:      v11.6.740
+Recipe:                SURFACE_ROUGHNESS_ANALYSIS_3nm_POST_LITHOGRAPHY
+Illumination Mode:     Darkfield
+Scan Speed:            Medium (188 mm/s)
+Pixel Size:            0.5μm
+Edge Exclusion:        3mm
+Sampling Plan:         21-point sampling
+
+────────────────────────────────────────────────────────────────────────────────
+4. TEST PROCEDURE
+────────────────────────────────────────────────────────────────────────────────
+
+1. Power on the Puma 9xxx system and allow 30-minute warm-up period.
+2. Load the calibration wafer and run the standard calibration routine.
+3. Verify calibration results are within specification (±2% tolerance).
+4. Load the test wafer onto the stage using the automated handler.
+5. Select the 'Surface Roughness Analysis' recipe from the recipe library.
+6. Configure detection sensitivity to target Extra Pattern defects.
+7. Set scan parameters: full wafer scan with edge exclusion of 3mm.
+8. Initiate the inspection run and monitor real-time defect map.
+9. Upon completion, review the defect density map and classification results.
+10. Export results to the factory automation system (SECS/GEM interface).
+11. Compare results against the golden reference baseline.
+12. Document any anomalies and generate the summary report.
+
+────────────────────────────────────────────────────────────────────────────────
+5. ACCEPTANCE CRITERIA
+────────────────────────────────────────────────────────────────────────────────
+
+- Defect detection sensitivity must meet 3nm node requirements
+- False positive rate shall not exceed 5% of total detected events
+- Scan throughput must be ≥ 70 wafers per hour
+- Classification accuracy shall be ≥ 96% for known defect types
+- Repeatability (3-sigma) shall be within ±2.0% for Surface Roughness Analysis
+- System uptime during test shall be ≥ 98%
+- All results must be traceable through the MES integration
+- Measurement correlation with reference tool shall be ≥ 0.95 R²
+
+────────────────────────────────────────────────────────────────────────────────
+6. TEST RESULTS
+────────────────────────────────────────────────────────────────────────────────
+
+Test Execution Date:   2025-05-04
+Wafers Tested:         33
+Total Defects Found:   2075
+Defect Density:        293.55 defects/cm²
+Nuisance Rate:         4.4%
+Capture Rate:          88.2%
+Test Duration:         324 minutes
+System Uptime:         98.3%
+
+Result Classification: FAIL
+
+────────────────────────────────────────────────────────────────────────────────
+7. OBSERVATIONS AND FINDINGS
+────────────────────────────────────────────────────────────────────────────────
+
+During the execution of this test case, the following observations were noted:
+
+a) The Puma 9xxx demonstrated below-target performance
+   in detecting Extra Pattern at the 3nm node.
+
+b) The capture rate requires optimization of the detection algorithm.
+
+c) Nuisance rate is within acceptable limits.
+
+d) Cross-correlation with the reference SEM confirmed classification accuracy.
+
+e) SECS/GEM communication was verified with zero packet loss during data transfer.
+
+────────────────────────────────────────────────────────────────────────────────
+8. CORRECTIVE ACTIONS (if applicable)
+────────────────────────────────────────────────────────────────────────────────
+
+
+The following corrective actions are recommended:
+
+1. Re-tune detection algorithm thresholds for Extra Pattern at 3nm node.
+2. Schedule follow-up test after recipe optimization.
+3. Escalate to R&D for algorithm enhancement if re-tuning does not resolve sensitivity gap.
+
+
+────────────────────────────────────────────────────────────────────────────────
+9. SIGN-OFF
+────────────────────────────────────────────────────────────────────────────────
+
+Author:     Lisa Johansson                 Date: 2025-05-04
+Reviewer:   Maria Gonzalez                 Date: 2025-05-10
+Approver:   Dr. Susan Park                 Date: 2025-05-11
+
+================================================================================
+END OF DOCUMENT - KLA-MFG-TC-0093
+================================================================================

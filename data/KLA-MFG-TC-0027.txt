@@ -1,0 +1,147 @@
+================================================================================
+ENGINEERING TEST CASE DOCUMENT
+================================================================================
+
+Document Number: KLA-MFG-TC-0027
+Revision: Rev C.2
+Classification: CONFIDENTIAL - KLA Internal Use Only
+
+Title: Macro Defect Inspection - Mounds Detection on ATL/LMS IPRO8
+Subtitle: Post-Etch Quality Validation for 45nm Node Manufacturing
+
+────────────────────────────────────────────────────────────────────────────────
+DOCUMENT INFORMATION
+────────────────────────────────────────────────────────────────────────────────
+
+Author:           Robert Kim
+Reviewer:         Maria Gonzalez
+Fab Location:     Milpitas Fab B
+Created Date:     2024-07-27
+Last Modified:    2024-08-03
+Status:           PASS
+Priority:         P3 - Medium
+Severity Level:   Major
+
+────────────────────────────────────────────────────────────────────────────────
+1. OBJECTIVE
+────────────────────────────────────────────────────────────────────────────────
+
+This test case validates the capability of the ATL/LMS IPRO8 system to detect
+and classify Mounds defects during post-etch inspection
+at the 45nm technology node. The test is conducted at Milpitas Fab B to ensure
+manufacturing quality standards are met for 450mm wafer production.
+
+The primary objective is to verify that the inspection system meets the required
+detection sensitivity and classification accuracy for Mounds defects
+that are critical to yield at the 45nm node. This test case is part of
+the ongoing qualification program for the ATL/LMS IPRO8 platform.
+
+────────────────────────────────────────────────────────────────────────────────
+2. SCOPE
+────────────────────────────────────────────────────────────────────────────────
+
+- Product Line: ATL/LMS IPRO8
+- Inspection Type: Macro Defect Inspection
+- Target Defect: Mounds
+- Process Step: Post-Etch
+- Wafer Size: 450mm
+- Technology Node: 45nm
+- Fab Location: Milpitas Fab B
+
+This test case applies to all ATL/LMS IPRO8 systems deployed at Milpitas Fab B
+for post-etch monitoring in the 45nm manufacturing line.
+Results from this test are used to establish baseline performance metrics
+and to qualify new recipe configurations.
+
+────────────────────────────────────────────────────────────────────────────────
+3. TEST CONFIGURATION
+────────────────────────────────────────────────────────────────────────────────
+
+System:                ATL/LMS IPRO8
+Software Version:      v11.9.958
+Recipe:                MACRO_DEFECT_INSPECTION_45nm_POST_ETCH
+Illumination Mode:     Brightfield
+Scan Speed:            High (89 mm/s)
+Pixel Size:            0.5μm
+Edge Exclusion:        4mm
+Sampling Plan:         21-point sampling
+
+────────────────────────────────────────────────────────────────────────────────
+4. TEST PROCEDURE
+────────────────────────────────────────────────────────────────────────────────
+
+1. Power on the ATL/LMS IPRO8 system and allow 30-minute warm-up period.
+2. Load the calibration wafer and run the standard calibration routine.
+3. Verify calibration results are within specification (±2% tolerance).
+4. Load the test wafer onto the stage using the automated handler.
+5. Select the 'Macro Defect Inspection' recipe from the recipe library.
+6. Configure detection sensitivity to target Mounds defects.
+7. Set scan parameters: full wafer scan with edge exclusion of 3mm.
+8. Initiate the inspection run and monitor real-time defect map.
+9. Upon completion, review the defect density map and classification results.
+10. Export results to the factory automation system (SECS/GEM interface).
+11. Compare results against the golden reference baseline.
+12. Document any anomalies and generate the summary report.
+
+────────────────────────────────────────────────────────────────────────────────
+5. ACCEPTANCE CRITERIA
+────────────────────────────────────────────────────────────────────────────────
+
+- Defect detection sensitivity must meet 45nm node requirements
+- False positive rate shall not exceed 5% of total detected events
+- Scan throughput must be ≥ 102 wafers per hour
+- Classification accuracy shall be ≥ 94% for known defect types
+- Repeatability (3-sigma) shall be within ±2.5% for Macro Defect Inspection
+- System uptime during test shall be ≥ 98%
+- All results must be traceable through the MES integration
+- Measurement correlation with reference tool shall be ≥ 0.95 R²
+
+────────────────────────────────────────────────────────────────────────────────
+6. TEST RESULTS
+────────────────────────────────────────────────────────────────────────────────
+
+Test Execution Date:   2024-08-03
+Wafers Tested:         27
+Total Defects Found:   3292
+Defect Density:        1047.88 defects/cm²
+Nuisance Rate:         1.4%
+Capture Rate:          99.1%
+Test Duration:         446 minutes
+System Uptime:         96.1%
+
+Result Classification: PASS
+
+────────────────────────────────────────────────────────────────────────────────
+7. OBSERVATIONS AND FINDINGS
+────────────────────────────────────────────────────────────────────────────────
+
+During the execution of this test case, the following observations were noted:
+
+a) The ATL/LMS IPRO8 demonstrated excellent performance
+   in detecting Mounds at the 45nm node.
+
+b) The capture rate exceeded the minimum threshold, confirming system readiness.
+
+c) Nuisance rate is within acceptable limits.
+
+d) Edge-zone defect detection showed improved performance compared to previous revision.
+
+e) The system successfully integrated with the factory automation host.
+
+────────────────────────────────────────────────────────────────────────────────
+8. CORRECTIVE ACTIONS (if applicable)
+────────────────────────────────────────────────────────────────────────────────
+
+No corrective actions required. Test passed all acceptance criteria.
+
+────────────────────────────────────────────────────────────────────────────────
+9. SIGN-OFF
+────────────────────────────────────────────────────────────────────────────────
+
+Author:     Robert Kim                     Date: 2024-08-03
+Reviewer:   Maria Gonzalez                 Date: 2024-08-05
+Approver:   Dr. Hans Schmidt               Date: 2024-08-07
+
+================================================================================
+END OF DOCUMENT - KLA-MFG-TC-0027
+================================================================================

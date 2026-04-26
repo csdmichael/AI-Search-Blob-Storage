@@ -1,0 +1,153 @@
+================================================================================
+ENGINEERING TEST CASE DOCUMENT
+================================================================================
+
+Document Number: KLA-MFG-TC-0035
+Revision: Rev B.6
+Classification: CONFIDENTIAL - KLA Internal Use Only
+
+Title: CD-SEM Measurement - Micro-cracks Detection on Zeta-388
+Subtitle: Post-Implant Quality Validation for 65nm Node Manufacturing
+
+────────────────────────────────────────────────────────────────────────────────
+DOCUMENT INFORMATION
+────────────────────────────────────────────────────────────────────────────────
+
+Author:           Dr. Yuki Tanaka
+Reviewer:         David Okafor
+Fab Location:     Milpitas Fab B
+Created Date:     2024-03-04
+Last Modified:    2024-04-12
+Status:           CONDITIONAL PASS
+Priority:         P4 - Low
+Severity Level:   Critical
+
+────────────────────────────────────────────────────────────────────────────────
+1. OBJECTIVE
+────────────────────────────────────────────────────────────────────────────────
+
+This test case validates the capability of the Zeta-388 system to detect
+and classify Micro-cracks defects during post-implant inspection
+at the 65nm technology node. The test is conducted at Milpitas Fab B to ensure
+manufacturing quality standards are met for 450mm wafer production.
+
+The primary objective is to verify that the inspection system meets the required
+detection sensitivity and classification accuracy for Micro-cracks defects
+that are critical to yield at the 65nm node. This test case is part of
+the ongoing qualification program for the Zeta-388 platform.
+
+────────────────────────────────────────────────────────────────────────────────
+2. SCOPE
+────────────────────────────────────────────────────────────────────────────────
+
+- Product Line: Zeta-388
+- Inspection Type: CD-SEM Measurement
+- Target Defect: Micro-cracks
+- Process Step: Post-Implant
+- Wafer Size: 450mm
+- Technology Node: 65nm
+- Fab Location: Milpitas Fab B
+
+This test case applies to all Zeta-388 systems deployed at Milpitas Fab B
+for post-implant monitoring in the 65nm manufacturing line.
+Results from this test are used to establish baseline performance metrics
+and to qualify new recipe configurations.
+
+────────────────────────────────────────────────────────────────────────────────
+3. TEST CONFIGURATION
+────────────────────────────────────────────────────────────────────────────────
+
+System:                Zeta-388
+Software Version:      v8.9.710
+Recipe:                CD-SEM_MEASUREMENT_65nm_POST_IMPLANT
+Illumination Mode:     Brightfield
+Scan Speed:            Low (174 mm/s)
+Pixel Size:            0.25μm
+Edge Exclusion:        3mm
+Sampling Plan:         9-point sampling
+
+────────────────────────────────────────────────────────────────────────────────
+4. TEST PROCEDURE
+────────────────────────────────────────────────────────────────────────────────
+
+1. Power on the Zeta-388 system and allow 30-minute warm-up period.
+2. Load the calibration wafer and run the standard calibration routine.
+3. Verify calibration results are within specification (±2% tolerance).
+4. Load the test wafer onto the stage using the automated handler.
+5. Select the 'CD-SEM Measurement' recipe from the recipe library.
+6. Configure detection sensitivity to target Micro-cracks defects.
+7. Set scan parameters: full wafer scan with edge exclusion of 3mm.
+8. Initiate the inspection run and monitor real-time defect map.
+9. Upon completion, review the defect density map and classification results.
+10. Export results to the factory automation system (SECS/GEM interface).
+11. Compare results against the golden reference baseline.
+12. Document any anomalies and generate the summary report.
+
+────────────────────────────────────────────────────────────────────────────────
+5. ACCEPTANCE CRITERIA
+────────────────────────────────────────────────────────────────────────────────
+
+- Defect detection sensitivity must meet 65nm node requirements
+- False positive rate shall not exceed 5% of total detected events
+- Scan throughput must be ≥ 116 wafers per hour
+- Classification accuracy shall be ≥ 95% for known defect types
+- Repeatability (3-sigma) shall be within ±1.6% for CD-SEM Measurement
+- System uptime during test shall be ≥ 98%
+- All results must be traceable through the MES integration
+- Measurement correlation with reference tool shall be ≥ 0.94 R²
+
+────────────────────────────────────────────────────────────────────────────────
+6. TEST RESULTS
+────────────────────────────────────────────────────────────────────────────────
+
+Test Execution Date:   2024-04-12
+Wafers Tested:         24
+Total Defects Found:   858
+Defect Density:        273.11 defects/cm²
+Nuisance Rate:         7.7%
+Capture Rate:          87.8%
+Test Duration:         273 minutes
+System Uptime:         100.0%
+
+Result Classification: CONDITIONAL PASS
+
+────────────────────────────────────────────────────────────────────────────────
+7. OBSERVATIONS AND FINDINGS
+────────────────────────────────────────────────────────────────────────────────
+
+During the execution of this test case, the following observations were noted:
+
+a) The Zeta-388 demonstrated acceptable performance
+   in detecting Micro-cracks at the 65nm node.
+
+b) The capture rate requires optimization of the detection algorithm.
+
+c) Nuisance rate exceeds the target threshold; recipe tuning is recommended.
+
+d) Minor calibration drift was detected after extended run; re-calibration resolved the issue.
+
+e) SECS/GEM communication was verified with zero packet loss during data transfer.
+
+────────────────────────────────────────────────────────────────────────────────
+8. CORRECTIVE ACTIONS (if applicable)
+────────────────────────────────────────────────────────────────────────────────
+
+
+The following corrective actions are recommended:
+
+1. Review edge-zone detection parameters for optimization.
+2. Schedule follow-up test after recipe optimization.
+3. Monitor performance over next 30 production days.
+
+
+────────────────────────────────────────────────────────────────────────────────
+9. SIGN-OFF
+────────────────────────────────────────────────────────────────────────────────
+
+Author:     Dr. Yuki Tanaka                Date: 2024-04-12
+Reviewer:   David Okafor                   Date: 2024-04-17
+Approver:   Dr. Kenji Watanabe             Date: 2024-04-22
+
+================================================================================
+END OF DOCUMENT - KLA-MFG-TC-0035
+================================================================================

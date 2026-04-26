@@ -1,0 +1,153 @@
+================================================================================
+ENGINEERING TEST CASE DOCUMENT
+================================================================================
+
+Document Number: KLA-MFG-TC-0050
+Revision: Rev A.7
+Classification: CONFIDENTIAL - KLA Internal Use Only
+
+Title: E-Beam Inspection - Edge Placement Error Detection on C205 Broadband Plasma
+Subtitle: Post-Planarization Quality Validation for 65nm Node Manufacturing
+
+────────────────────────────────────────────────────────────────────────────────
+DOCUMENT INFORMATION
+────────────────────────────────────────────────────────────────────────────────
+
+Author:           Dr. Yuki Tanaka
+Reviewer:         Dr. Thomas Mueller
+Fab Location:     Pyeongtaek Fab 2
+Created Date:     2024-03-12
+Last Modified:    2024-04-01
+Status:           FAIL
+Priority:         P3 - Medium
+Severity Level:   Critical
+
+────────────────────────────────────────────────────────────────────────────────
+1. OBJECTIVE
+────────────────────────────────────────────────────────────────────────────────
+
+This test case validates the capability of the C205 Broadband Plasma system to detect
+and classify Edge Placement Error defects during post-planarization inspection
+at the 65nm technology node. The test is conducted at Pyeongtaek Fab 2 to ensure
+manufacturing quality standards are met for 300mm wafer production.
+
+The primary objective is to verify that the inspection system meets the required
+detection sensitivity and classification accuracy for Edge Placement Error defects
+that are critical to yield at the 65nm node. This test case is part of
+the ongoing qualification program for the C205 Broadband Plasma platform.
+
+────────────────────────────────────────────────────────────────────────────────
+2. SCOPE
+────────────────────────────────────────────────────────────────────────────────
+
+- Product Line: C205 Broadband Plasma
+- Inspection Type: E-Beam Inspection
+- Target Defect: Edge Placement Error
+- Process Step: Post-Planarization
+- Wafer Size: 300mm
+- Technology Node: 65nm
+- Fab Location: Pyeongtaek Fab 2
+
+This test case applies to all C205 Broadband Plasma systems deployed at Pyeongtaek Fab 2
+for post-planarization monitoring in the 65nm manufacturing line.
+Results from this test are used to establish baseline performance metrics
+and to qualify new recipe configurations.
+
+────────────────────────────────────────────────────────────────────────────────
+3. TEST CONFIGURATION
+────────────────────────────────────────────────────────────────────────────────
+
+System:                C205 Broadband Plasma
+Software Version:      v14.7.464
+Recipe:                E-BEAM_INSPECTION_65nm_POST_PLANARIZATION
+Illumination Mode:     Brightfield
+Scan Speed:            Medium (69 mm/s)
+Pixel Size:            1.0μm
+Edge Exclusion:        4mm
+Sampling Plan:         21-point sampling
+
+────────────────────────────────────────────────────────────────────────────────
+4. TEST PROCEDURE
+────────────────────────────────────────────────────────────────────────────────
+
+1. Power on the C205 Broadband Plasma system and allow 30-minute warm-up period.
+2. Load the calibration wafer and run the standard calibration routine.
+3. Verify calibration results are within specification (±2% tolerance).
+4. Load the test wafer onto the stage using the automated handler.
+5. Select the 'E-Beam Inspection' recipe from the recipe library.
+6. Configure detection sensitivity to target Edge Placement Error defects.
+7. Set scan parameters: full wafer scan with edge exclusion of 3mm.
+8. Initiate the inspection run and monitor real-time defect map.
+9. Upon completion, review the defect density map and classification results.
+10. Export results to the factory automation system (SECS/GEM interface).
+11. Compare results against the golden reference baseline.
+12. Document any anomalies and generate the summary report.
+
+────────────────────────────────────────────────────────────────────────────────
+5. ACCEPTANCE CRITERIA
+────────────────────────────────────────────────────────────────────────────────
+
+- Defect detection sensitivity must meet 65nm node requirements
+- False positive rate shall not exceed 5% of total detected events
+- Scan throughput must be ≥ 42 wafers per hour
+- Classification accuracy shall be ≥ 92% for known defect types
+- Repeatability (3-sigma) shall be within ±1.1% for E-Beam Inspection
+- System uptime during test shall be ≥ 98%
+- All results must be traceable through the MES integration
+- Measurement correlation with reference tool shall be ≥ 0.94 R²
+
+────────────────────────────────────────────────────────────────────────────────
+6. TEST RESULTS
+────────────────────────────────────────────────────────────────────────────────
+
+Test Execution Date:   2024-04-01
+Wafers Tested:         50
+Total Defects Found:   3357
+Defect Density:        474.92 defects/cm²
+Nuisance Rate:         4.3%
+Capture Rate:          89.7%
+Test Duration:         242 minutes
+System Uptime:         96.1%
+
+Result Classification: FAIL
+
+────────────────────────────────────────────────────────────────────────────────
+7. OBSERVATIONS AND FINDINGS
+────────────────────────────────────────────────────────────────────────────────
+
+During the execution of this test case, the following observations were noted:
+
+a) The C205 Broadband Plasma demonstrated below-target performance
+   in detecting Edge Placement Error at the 65nm node.
+
+b) The capture rate requires optimization of the detection algorithm.
+
+c) Nuisance rate is within acceptable limits.
+
+d) Minor calibration drift was detected after extended run; re-calibration resolved the issue.
+
+e) The defect review station correlation was within specification.
+
+────────────────────────────────────────────────────────────────────────────────
+8. CORRECTIVE ACTIONS (if applicable)
+────────────────────────────────────────────────────────────────────────────────
+
+
+The following corrective actions are recommended:
+
+1. Re-tune detection algorithm thresholds for Edge Placement Error at 65nm node.
+2. Schedule follow-up test after recipe optimization.
+3. Escalate to R&D for algorithm enhancement if re-tuning does not resolve sensitivity gap.
+
+
+────────────────────────────────────────────────────────────────────────────────
+9. SIGN-OFF
+────────────────────────────────────────────────────────────────────────────────
+
+Author:     Dr. Yuki Tanaka                Date: 2024-04-01
+Reviewer:   Dr. Thomas Mueller             Date: 2024-04-03
+Approver:   Dr. Kenji Watanabe             Date: 2024-04-13
+
+================================================================================
+END OF DOCUMENT - KLA-MFG-TC-0050
+================================================================================

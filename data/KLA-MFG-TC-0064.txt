@@ -1,0 +1,153 @@
+================================================================================
+ENGINEERING TEST CASE DOCUMENT
+================================================================================
+
+Document Number: KLA-MFG-TC-0064
+Revision: Rev B.5
+Classification: CONFIDENTIAL - KLA Internal Use Only
+
+Title: IC Substrate Inspection - Stacking Faults Detection on Teron 640
+Subtitle: Post-Anneal Quality Validation for 5nm Node Manufacturing
+
+────────────────────────────────────────────────────────────────────────────────
+DOCUMENT INFORMATION
+────────────────────────────────────────────────────────────────────────────────
+
+Author:           Dr. Wei Zhang
+Reviewer:         Dr. Priya Sharma
+Fab Location:     Dresden Fab 3
+Created Date:     2025-03-17
+Last Modified:    2025-04-22
+Status:           CONDITIONAL PASS
+Priority:         P3 - Medium
+Severity Level:   Informational
+
+────────────────────────────────────────────────────────────────────────────────
+1. OBJECTIVE
+────────────────────────────────────────────────────────────────────────────────
+
+This test case validates the capability of the Teron 640 system to detect
+and classify Stacking Faults defects during post-anneal inspection
+at the 5nm technology node. The test is conducted at Dresden Fab 3 to ensure
+manufacturing quality standards are met for 300mm wafer production.
+
+The primary objective is to verify that the inspection system meets the required
+detection sensitivity and classification accuracy for Stacking Faults defects
+that are critical to yield at the 5nm node. This test case is part of
+the ongoing qualification program for the Teron 640 platform.
+
+────────────────────────────────────────────────────────────────────────────────
+2. SCOPE
+────────────────────────────────────────────────────────────────────────────────
+
+- Product Line: Teron 640
+- Inspection Type: IC Substrate Inspection
+- Target Defect: Stacking Faults
+- Process Step: Post-Anneal
+- Wafer Size: 300mm
+- Technology Node: 5nm
+- Fab Location: Dresden Fab 3
+
+This test case applies to all Teron 640 systems deployed at Dresden Fab 3
+for post-anneal monitoring in the 5nm manufacturing line.
+Results from this test are used to establish baseline performance metrics
+and to qualify new recipe configurations.
+
+────────────────────────────────────────────────────────────────────────────────
+3. TEST CONFIGURATION
+────────────────────────────────────────────────────────────────────────────────
+
+System:                Teron 640
+Software Version:      v15.3.271
+Recipe:                IC_SUBSTRATE_INSPECTION_5nm_POST_ANNEAL
+Illumination Mode:     Darkfield
+Scan Speed:            High (60 mm/s)
+Pixel Size:            1.0μm
+Edge Exclusion:        4mm
+Sampling Plan:         21-point sampling
+
+────────────────────────────────────────────────────────────────────────────────
+4. TEST PROCEDURE
+────────────────────────────────────────────────────────────────────────────────
+
+1. Power on the Teron 640 system and allow 30-minute warm-up period.
+2. Load the calibration wafer and run the standard calibration routine.
+3. Verify calibration results are within specification (±2% tolerance).
+4. Load the test wafer onto the stage using the automated handler.
+5. Select the 'IC Substrate Inspection' recipe from the recipe library.
+6. Configure detection sensitivity to target Stacking Faults defects.
+7. Set scan parameters: full wafer scan with edge exclusion of 3mm.
+8. Initiate the inspection run and monitor real-time defect map.
+9. Upon completion, review the defect density map and classification results.
+10. Export results to the factory automation system (SECS/GEM interface).
+11. Compare results against the golden reference baseline.
+12. Document any anomalies and generate the summary report.
+
+────────────────────────────────────────────────────────────────────────────────
+5. ACCEPTANCE CRITERIA
+────────────────────────────────────────────────────────────────────────────────
+
+- Defect detection sensitivity must meet 5nm node requirements
+- False positive rate shall not exceed 5% of total detected events
+- Scan throughput must be ≥ 92 wafers per hour
+- Classification accuracy shall be ≥ 91% for known defect types
+- Repeatability (3-sigma) shall be within ±0.7% for IC Substrate Inspection
+- System uptime during test shall be ≥ 98%
+- All results must be traceable through the MES integration
+- Measurement correlation with reference tool shall be ≥ 0.97 R²
+
+────────────────────────────────────────────────────────────────────────────────
+6. TEST RESULTS
+────────────────────────────────────────────────────────────────────────────────
+
+Test Execution Date:   2025-04-22
+Wafers Tested:         9
+Total Defects Found:   4731
+Defect Density:        669.3 defects/cm²
+Nuisance Rate:         2.9%
+Capture Rate:          98.4%
+Test Duration:         406 minutes
+System Uptime:         96.9%
+
+Result Classification: CONDITIONAL PASS
+
+────────────────────────────────────────────────────────────────────────────────
+7. OBSERVATIONS AND FINDINGS
+────────────────────────────────────────────────────────────────────────────────
+
+During the execution of this test case, the following observations were noted:
+
+a) The Teron 640 demonstrated acceptable performance
+   in detecting Stacking Faults at the 5nm node.
+
+b) The capture rate exceeded the minimum threshold, confirming system readiness.
+
+c) Nuisance rate is within acceptable limits.
+
+d) No significant drift was observed during the test duration.
+
+e) SECS/GEM communication was verified with zero packet loss during data transfer.
+
+────────────────────────────────────────────────────────────────────────────────
+8. CORRECTIVE ACTIONS (if applicable)
+────────────────────────────────────────────────────────────────────────────────
+
+
+The following corrective actions are recommended:
+
+1. Review edge-zone detection parameters for optimization.
+2. Schedule follow-up test after recipe optimization.
+3. Monitor performance over next 30 production days.
+
+
+────────────────────────────────────────────────────────────────────────────────
+9. SIGN-OFF
+────────────────────────────────────────────────────────────────────────────────
+
+Author:     Dr. Wei Zhang                  Date: 2025-04-22
+Reviewer:   Dr. Priya Sharma               Date: 2025-04-26
+Approver:   Dr. Richard Lee                Date: 2025-04-30
+
+================================================================================
+END OF DOCUMENT - KLA-MFG-TC-0064
+================================================================================

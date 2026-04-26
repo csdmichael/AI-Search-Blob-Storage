@@ -1,0 +1,147 @@
+================================================================================
+ENGINEERING TEST CASE DOCUMENT
+================================================================================
+
+Document Number: KLA-MFG-TC-0062
+Revision: Rev C.9
+Classification: CONFIDENTIAL - KLA Internal Use Only
+
+Title: Particle Detection - Residue Detection on 2920 Series
+Subtitle: Post-Lithography Quality Validation for 5nm Node Manufacturing
+
+────────────────────────────────────────────────────────────────────────────────
+DOCUMENT INFORMATION
+────────────────────────────────────────────────────────────────────────────────
+
+Author:           Maria Gonzalez
+Reviewer:         Dr. Yuki Tanaka
+Fab Location:     Hsinchu Fab 15
+Created Date:     2024-05-21
+Last Modified:    2024-06-26
+Status:           PASS
+Priority:         P2 - High
+Severity Level:   Critical
+
+────────────────────────────────────────────────────────────────────────────────
+1. OBJECTIVE
+────────────────────────────────────────────────────────────────────────────────
+
+This test case validates the capability of the 2920 Series system to detect
+and classify Residue defects during post-lithography inspection
+at the 5nm technology node. The test is conducted at Hsinchu Fab 15 to ensure
+manufacturing quality standards are met for 450mm wafer production.
+
+The primary objective is to verify that the inspection system meets the required
+detection sensitivity and classification accuracy for Residue defects
+that are critical to yield at the 5nm node. This test case is part of
+the ongoing qualification program for the 2920 Series platform.
+
+────────────────────────────────────────────────────────────────────────────────
+2. SCOPE
+────────────────────────────────────────────────────────────────────────────────
+
+- Product Line: 2920 Series
+- Inspection Type: Particle Detection
+- Target Defect: Residue
+- Process Step: Post-Lithography
+- Wafer Size: 450mm
+- Technology Node: 5nm
+- Fab Location: Hsinchu Fab 15
+
+This test case applies to all 2920 Series systems deployed at Hsinchu Fab 15
+for post-lithography monitoring in the 5nm manufacturing line.
+Results from this test are used to establish baseline performance metrics
+and to qualify new recipe configurations.
+
+────────────────────────────────────────────────────────────────────────────────
+3. TEST CONFIGURATION
+────────────────────────────────────────────────────────────────────────────────
+
+System:                2920 Series
+Software Version:      v9.7.777
+Recipe:                PARTICLE_DETECTION_5nm_POST_LITHOGRAPHY
+Illumination Mode:     Brightfield
+Scan Speed:            Medium (197 mm/s)
+Pixel Size:            0.5μm
+Edge Exclusion:        4mm
+Sampling Plan:         Full wafer sampling
+
+────────────────────────────────────────────────────────────────────────────────
+4. TEST PROCEDURE
+────────────────────────────────────────────────────────────────────────────────
+
+1. Power on the 2920 Series system and allow 30-minute warm-up period.
+2. Load the calibration wafer and run the standard calibration routine.
+3. Verify calibration results are within specification (±2% tolerance).
+4. Load the test wafer onto the stage using the automated handler.
+5. Select the 'Particle Detection' recipe from the recipe library.
+6. Configure detection sensitivity to target Residue defects.
+7. Set scan parameters: full wafer scan with edge exclusion of 3mm.
+8. Initiate the inspection run and monitor real-time defect map.
+9. Upon completion, review the defect density map and classification results.
+10. Export results to the factory automation system (SECS/GEM interface).
+11. Compare results against the golden reference baseline.
+12. Document any anomalies and generate the summary report.
+
+────────────────────────────────────────────────────────────────────────────────
+5. ACCEPTANCE CRITERIA
+────────────────────────────────────────────────────────────────────────────────
+
+- Defect detection sensitivity must meet 5nm node requirements
+- False positive rate shall not exceed 5% of total detected events
+- Scan throughput must be ≥ 68 wafers per hour
+- Classification accuracy shall be ≥ 96% for known defect types
+- Repeatability (3-sigma) shall be within ±2.3% for Particle Detection
+- System uptime during test shall be ≥ 98%
+- All results must be traceable through the MES integration
+- Measurement correlation with reference tool shall be ≥ 0.99 R²
+
+────────────────────────────────────────────────────────────────────────────────
+6. TEST RESULTS
+────────────────────────────────────────────────────────────────────────────────
+
+Test Execution Date:   2024-06-26
+Wafers Tested:         13
+Total Defects Found:   3465
+Defect Density:        1102.94 defects/cm²
+Nuisance Rate:         7.8%
+Capture Rate:          92.9%
+Test Duration:         356 minutes
+System Uptime:         98.5%
+
+Result Classification: PASS
+
+────────────────────────────────────────────────────────────────────────────────
+7. OBSERVATIONS AND FINDINGS
+────────────────────────────────────────────────────────────────────────────────
+
+During the execution of this test case, the following observations were noted:
+
+a) The 2920 Series demonstrated excellent performance
+   in detecting Residue at the 5nm node.
+
+b) The capture rate exceeded the minimum threshold, confirming system readiness.
+
+c) Nuisance rate exceeds the target threshold; recipe tuning is recommended.
+
+d) No significant drift was observed during the test duration.
+
+e) Statistical process control charts showed stable performance over the test period.
+
+────────────────────────────────────────────────────────────────────────────────
+8. CORRECTIVE ACTIONS (if applicable)
+────────────────────────────────────────────────────────────────────────────────
+
+No corrective actions required. Test passed all acceptance criteria.
+
+────────────────────────────────────────────────────────────────────────────────
+9. SIGN-OFF
+────────────────────────────────────────────────────────────────────────────────
+
+Author:     Maria Gonzalez                 Date: 2024-06-26
+Reviewer:   Dr. Yuki Tanaka                Date: 2024-07-02
+Approver:   Dr. Kenji Watanabe             Date: 2024-07-06
+
+================================================================================
+END OF DOCUMENT - KLA-MFG-TC-0062
+================================================================================

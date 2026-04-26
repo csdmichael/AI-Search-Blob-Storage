@@ -1,0 +1,153 @@
+================================================================================
+ENGINEERING TEST CASE DOCUMENT
+================================================================================
+
+Document Number: KLA-MFG-TC-0001
+Revision: Rev B.9
+Classification: CONFIDENTIAL - KLA Internal Use Only
+
+Title: Patterned Wafer Inspection - ESD Damage Detection on C205 Broadband Plasma
+Subtitle: Post-Etch Quality Validation for 45nm Node Manufacturing
+
+────────────────────────────────────────────────────────────────────────────────
+DOCUMENT INFORMATION
+────────────────────────────────────────────────────────────────────────────────
+
+Author:           Emily Nakamura
+Reviewer:         David Okafor
+Fab Location:     Pyeongtaek Fab 2
+Created Date:     2024-03-25
+Last Modified:    2024-04-06
+Status:           CONDITIONAL PASS
+Priority:         P1 - Critical
+Severity Level:   Critical
+
+────────────────────────────────────────────────────────────────────────────────
+1. OBJECTIVE
+────────────────────────────────────────────────────────────────────────────────
+
+This test case validates the capability of the C205 Broadband Plasma system to detect
+and classify ESD Damage defects during post-etch inspection
+at the 45nm technology node. The test is conducted at Pyeongtaek Fab 2 to ensure
+manufacturing quality standards are met for 300mm wafer production.
+
+The primary objective is to verify that the inspection system meets the required
+detection sensitivity and classification accuracy for ESD Damage defects
+that are critical to yield at the 45nm node. This test case is part of
+the ongoing qualification program for the C205 Broadband Plasma platform.
+
+────────────────────────────────────────────────────────────────────────────────
+2. SCOPE
+────────────────────────────────────────────────────────────────────────────────
+
+- Product Line: C205 Broadband Plasma
+- Inspection Type: Patterned Wafer Inspection
+- Target Defect: ESD Damage
+- Process Step: Post-Etch
+- Wafer Size: 300mm
+- Technology Node: 45nm
+- Fab Location: Pyeongtaek Fab 2
+
+This test case applies to all C205 Broadband Plasma systems deployed at Pyeongtaek Fab 2
+for post-etch monitoring in the 45nm manufacturing line.
+Results from this test are used to establish baseline performance metrics
+and to qualify new recipe configurations.
+
+────────────────────────────────────────────────────────────────────────────────
+3. TEST CONFIGURATION
+────────────────────────────────────────────────────────────────────────────────
+
+System:                C205 Broadband Plasma
+Software Version:      v9.5.337
+Recipe:                PATTERNED_WAFER_INSPECTION_45nm_POST_ETCH
+Illumination Mode:     Brightfield
+Scan Speed:            High (90 mm/s)
+Pixel Size:            0.1μm
+Edge Exclusion:        2mm
+Sampling Plan:         9-point sampling
+
+────────────────────────────────────────────────────────────────────────────────
+4. TEST PROCEDURE
+────────────────────────────────────────────────────────────────────────────────
+
+1. Power on the C205 Broadband Plasma system and allow 30-minute warm-up period.
+2. Load the calibration wafer and run the standard calibration routine.
+3. Verify calibration results are within specification (±2% tolerance).
+4. Load the test wafer onto the stage using the automated handler.
+5. Select the 'Patterned Wafer Inspection' recipe from the recipe library.
+6. Configure detection sensitivity to target ESD Damage defects.
+7. Set scan parameters: full wafer scan with edge exclusion of 3mm.
+8. Initiate the inspection run and monitor real-time defect map.
+9. Upon completion, review the defect density map and classification results.
+10. Export results to the factory automation system (SECS/GEM interface).
+11. Compare results against the golden reference baseline.
+12. Document any anomalies and generate the summary report.
+
+────────────────────────────────────────────────────────────────────────────────
+5. ACCEPTANCE CRITERIA
+────────────────────────────────────────────────────────────────────────────────
+
+- Defect detection sensitivity must meet 45nm node requirements
+- False positive rate shall not exceed 5% of total detected events
+- Scan throughput must be ≥ 96 wafers per hour
+- Classification accuracy shall be ≥ 98% for known defect types
+- Repeatability (3-sigma) shall be within ±2.2% for Patterned Wafer Inspection
+- System uptime during test shall be ≥ 98%
+- All results must be traceable through the MES integration
+- Measurement correlation with reference tool shall be ≥ 0.93 R²
+
+────────────────────────────────────────────────────────────────────────────────
+6. TEST RESULTS
+────────────────────────────────────────────────────────────────────────────────
+
+Test Execution Date:   2024-04-06
+Wafers Tested:         10
+Total Defects Found:   261
+Defect Density:        36.92 defects/cm²
+Nuisance Rate:         6.2%
+Capture Rate:          92.3%
+Test Duration:         352 minutes
+System Uptime:         97.3%
+
+Result Classification: CONDITIONAL PASS
+
+────────────────────────────────────────────────────────────────────────────────
+7. OBSERVATIONS AND FINDINGS
+────────────────────────────────────────────────────────────────────────────────
+
+During the execution of this test case, the following observations were noted:
+
+a) The C205 Broadband Plasma demonstrated acceptable performance
+   in detecting ESD Damage at the 45nm node.
+
+b) The capture rate exceeded the minimum threshold, confirming system readiness.
+
+c) Nuisance rate exceeds the target threshold; recipe tuning is recommended.
+
+d) Cross-correlation with the reference SEM confirmed classification accuracy.
+
+e) Statistical process control charts showed stable performance over the test period.
+
+────────────────────────────────────────────────────────────────────────────────
+8. CORRECTIVE ACTIONS (if applicable)
+────────────────────────────────────────────────────────────────────────────────
+
+
+The following corrective actions are recommended:
+
+1. Review edge-zone detection parameters for optimization.
+2. Schedule follow-up test after recipe optimization.
+3. Monitor performance over next 30 production days.
+
+
+────────────────────────────────────────────────────────────────────────────────
+9. SIGN-OFF
+────────────────────────────────────────────────────────────────────────────────
+
+Author:     Emily Nakamura                 Date: 2024-04-06
+Reviewer:   David Okafor                   Date: 2024-04-13
+Approver:   Dr. Richard Lee                Date: 2024-04-18
+
+================================================================================
+END OF DOCUMENT - KLA-MFG-TC-0001
+================================================================================

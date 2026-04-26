@@ -1,0 +1,153 @@
+================================================================================
+ENGINEERING TEST CASE DOCUMENT
+================================================================================
+
+Document Number: KLA-MFG-TC-0099
+Revision: Rev D.2
+Classification: CONFIDENTIAL - KLA Internal Use Only
+
+Title: Optical Overlay Metrology - Edge Placement Error Detection on Zeta-20
+Subtitle: Post-CMP Quality Validation for 7nm Node Manufacturing
+
+────────────────────────────────────────────────────────────────────────────────
+DOCUMENT INFORMATION
+────────────────────────────────────────────────────────────────────────────────
+
+Author:           Maria Gonzalez
+Reviewer:         Dr. Amir Patel
+Fab Location:     Milpitas Fab B
+Created Date:     2024-08-09
+Last Modified:    2024-09-15
+Status:           CONDITIONAL PASS
+Priority:         P3 - Medium
+Severity Level:   Major
+
+────────────────────────────────────────────────────────────────────────────────
+1. OBJECTIVE
+────────────────────────────────────────────────────────────────────────────────
+
+This test case validates the capability of the Zeta-20 system to detect
+and classify Edge Placement Error defects during post-cmp inspection
+at the 7nm technology node. The test is conducted at Milpitas Fab B to ensure
+manufacturing quality standards are met for 450mm wafer production.
+
+The primary objective is to verify that the inspection system meets the required
+detection sensitivity and classification accuracy for Edge Placement Error defects
+that are critical to yield at the 7nm node. This test case is part of
+the ongoing qualification program for the Zeta-20 platform.
+
+────────────────────────────────────────────────────────────────────────────────
+2. SCOPE
+────────────────────────────────────────────────────────────────────────────────
+
+- Product Line: Zeta-20
+- Inspection Type: Optical Overlay Metrology
+- Target Defect: Edge Placement Error
+- Process Step: Post-CMP
+- Wafer Size: 450mm
+- Technology Node: 7nm
+- Fab Location: Milpitas Fab B
+
+This test case applies to all Zeta-20 systems deployed at Milpitas Fab B
+for post-cmp monitoring in the 7nm manufacturing line.
+Results from this test are used to establish baseline performance metrics
+and to qualify new recipe configurations.
+
+────────────────────────────────────────────────────────────────────────────────
+3. TEST CONFIGURATION
+────────────────────────────────────────────────────────────────────────────────
+
+System:                Zeta-20
+Software Version:      v15.6.173
+Recipe:                OPTICAL_OVERLAY_METROLOGY_7nm_POST_CMP
+Illumination Mode:     Darkfield
+Scan Speed:            Low (137 mm/s)
+Pixel Size:            1.0μm
+Edge Exclusion:        5mm
+Sampling Plan:         5-point sampling
+
+────────────────────────────────────────────────────────────────────────────────
+4. TEST PROCEDURE
+────────────────────────────────────────────────────────────────────────────────
+
+1. Power on the Zeta-20 system and allow 30-minute warm-up period.
+2. Load the calibration wafer and run the standard calibration routine.
+3. Verify calibration results are within specification (±2% tolerance).
+4. Load the test wafer onto the stage using the automated handler.
+5. Select the 'Optical Overlay Metrology' recipe from the recipe library.
+6. Configure detection sensitivity to target Edge Placement Error defects.
+7. Set scan parameters: full wafer scan with edge exclusion of 3mm.
+8. Initiate the inspection run and monitor real-time defect map.
+9. Upon completion, review the defect density map and classification results.
+10. Export results to the factory automation system (SECS/GEM interface).
+11. Compare results against the golden reference baseline.
+12. Document any anomalies and generate the summary report.
+
+────────────────────────────────────────────────────────────────────────────────
+5. ACCEPTANCE CRITERIA
+────────────────────────────────────────────────────────────────────────────────
+
+- Defect detection sensitivity must meet 7nm node requirements
+- False positive rate shall not exceed 5% of total detected events
+- Scan throughput must be ≥ 113 wafers per hour
+- Classification accuracy shall be ≥ 96% for known defect types
+- Repeatability (3-sigma) shall be within ±0.5% for Optical Overlay Metrology
+- System uptime during test shall be ≥ 98%
+- All results must be traceable through the MES integration
+- Measurement correlation with reference tool shall be ≥ 0.93 R²
+
+────────────────────────────────────────────────────────────────────────────────
+6. TEST RESULTS
+────────────────────────────────────────────────────────────────────────────────
+
+Test Execution Date:   2024-09-15
+Wafers Tested:         21
+Total Defects Found:   1124
+Defect Density:        357.78 defects/cm²
+Nuisance Rate:         5.5%
+Capture Rate:          98.2%
+Test Duration:         159 minutes
+System Uptime:         96.6%
+
+Result Classification: CONDITIONAL PASS
+
+────────────────────────────────────────────────────────────────────────────────
+7. OBSERVATIONS AND FINDINGS
+────────────────────────────────────────────────────────────────────────────────
+
+During the execution of this test case, the following observations were noted:
+
+a) The Zeta-20 demonstrated acceptable performance
+   in detecting Edge Placement Error at the 7nm node.
+
+b) The capture rate exceeded the minimum threshold, confirming system readiness.
+
+c) Nuisance rate exceeds the target threshold; recipe tuning is recommended.
+
+d) Throughput metrics met production requirements without sensitivity compromise.
+
+e) The system successfully integrated with the factory automation host.
+
+────────────────────────────────────────────────────────────────────────────────
+8. CORRECTIVE ACTIONS (if applicable)
+────────────────────────────────────────────────────────────────────────────────
+
+
+The following corrective actions are recommended:
+
+1. Review edge-zone detection parameters for optimization.
+2. Schedule follow-up test after recipe optimization.
+3. Monitor performance over next 30 production days.
+
+
+────────────────────────────────────────────────────────────────────────────────
+9. SIGN-OFF
+────────────────────────────────────────────────────────────────────────────────
+
+Author:     Maria Gonzalez                 Date: 2024-09-15
+Reviewer:   Dr. Amir Patel                 Date: 2024-09-18
+Approver:   Dr. Kenji Watanabe             Date: 2024-09-23
+
+================================================================================
+END OF DOCUMENT - KLA-MFG-TC-0099
+================================================================================

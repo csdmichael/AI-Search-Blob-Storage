@@ -1,0 +1,106 @@
+name: Deploy AI Search + Foundry Agent Solution
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AZURE_SUBSCRIPTION_ID: "86b37969-9445-49cf-b03f-d8866235171c"
+  AZURE_RESOURCE_GROUP: "ai-myaacoub"
+  STORAGE_ACCOUNT_NAME: "aistoragemyaacoub"
+  SEARCH_SERVICE_NAME: "ai-search-my"
+  PYTHON_VERSION: "3.11"
+
+jobs:
+  deploy:
+    name: Deploy Solution
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Azure Login (Federated Identity)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ env.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Generate Engineering Documents
+        run: python scripts/generate_docs.py
+
+      - name: Upload Documents to Blob Storage
+        run: python scripts/upload_to_blob.py
+        env:
+          AZURE_SUBSCRIPTION_ID: ${{ env.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Create AI Search Index and Indexer
+        run: python scripts/create_search_index.py
+
+      - name: Chunk Documents and Create Enhanced Index
+        run: python scripts/chunk_and_index.py
+
+      - name: Wait for Indexer to Complete
+        run: |
+          echo "Waiting 60 seconds for indexer to process documents..."
+          sleep 60
+
+      - name: Create Foundry Agent
+        run: python scripts/create_agent.py
+        env:
+          AZURE_AI_SEARCH_CONNECTION_NAME: ${{ secrets.AZURE_AI_SEARCH_CONNECTION_NAME }}
+          MODEL_DEPLOYMENT_NAME: ${{ secrets.MODEL_DEPLOYMENT_NAME || 'gpt-4o' }}
+
+      - name: Fine-Tune and Evaluate Model
+        run: python scripts/fine_tune_and_evaluate.py
+        env:
+          FINE_TUNE_BASE_MODEL: ${{ secrets.FINE_TUNE_BASE_MODEL || 'gpt-4o-mini' }}
+
+      - name: Generate Architecture Diagram
+        run: python scripts/generate_architecture_diagram.py
+
+  test:
+    name: Test Solution
+    needs: deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Azure Login (Federated Identity)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ env.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Run Search Tests
+        run: python scripts/test_search.py
+        env:
+          AZURE_AI_SEARCH_CONNECTION_NAME: ${{ secrets.AZURE_AI_SEARCH_CONNECTION_NAME }}
+          MODEL_DEPLOYMENT_NAME: ${{ secrets.MODEL_DEPLOYMENT_NAME || 'gpt-4o' }}

@@ -1,0 +1,153 @@
+================================================================================
+ENGINEERING TEST CASE DOCUMENT
+================================================================================
+
+Document Number: KLA-MFG-TC-0072
+Revision: Rev A.6
+Classification: CONFIDENTIAL - KLA Internal Use Only
+
+Title: E-Beam Inspection - Stacking Faults Detection on 2920 Series
+Subtitle: Post-CMP Quality Validation for 10nm Node Manufacturing
+
+────────────────────────────────────────────────────────────────────────────────
+DOCUMENT INFORMATION
+────────────────────────────────────────────────────────────────────────────────
+
+Author:           Dr. Klaus Weber
+Reviewer:         David Okafor
+Fab Location:     Hsinchu Fab 15
+Created Date:     2024-08-15
+Last Modified:    2024-09-02
+Status:           NEEDS REVIEW
+Priority:         P4 - Low
+Severity Level:   Minor
+
+────────────────────────────────────────────────────────────────────────────────
+1. OBJECTIVE
+────────────────────────────────────────────────────────────────────────────────
+
+This test case validates the capability of the 2920 Series system to detect
+and classify Stacking Faults defects during post-cmp inspection
+at the 10nm technology node. The test is conducted at Hsinchu Fab 15 to ensure
+manufacturing quality standards are met for 450mm wafer production.
+
+The primary objective is to verify that the inspection system meets the required
+detection sensitivity and classification accuracy for Stacking Faults defects
+that are critical to yield at the 10nm node. This test case is part of
+the ongoing qualification program for the 2920 Series platform.
+
+────────────────────────────────────────────────────────────────────────────────
+2. SCOPE
+────────────────────────────────────────────────────────────────────────────────
+
+- Product Line: 2920 Series
+- Inspection Type: E-Beam Inspection
+- Target Defect: Stacking Faults
+- Process Step: Post-CMP
+- Wafer Size: 450mm
+- Technology Node: 10nm
+- Fab Location: Hsinchu Fab 15
+
+This test case applies to all 2920 Series systems deployed at Hsinchu Fab 15
+for post-cmp monitoring in the 10nm manufacturing line.
+Results from this test are used to establish baseline performance metrics
+and to qualify new recipe configurations.
+
+────────────────────────────────────────────────────────────────────────────────
+3. TEST CONFIGURATION
+────────────────────────────────────────────────────────────────────────────────
+
+System:                2920 Series
+Software Version:      v8.5.456
+Recipe:                E-BEAM_INSPECTION_10nm_POST_CMP
+Illumination Mode:     Brightfield
+Scan Speed:            Medium (122 mm/s)
+Pixel Size:            0.1μm
+Edge Exclusion:        4mm
+Sampling Plan:         Full wafer sampling
+
+────────────────────────────────────────────────────────────────────────────────
+4. TEST PROCEDURE
+────────────────────────────────────────────────────────────────────────────────
+
+1. Power on the 2920 Series system and allow 30-minute warm-up period.
+2. Load the calibration wafer and run the standard calibration routine.
+3. Verify calibration results are within specification (±2% tolerance).
+4. Load the test wafer onto the stage using the automated handler.
+5. Select the 'E-Beam Inspection' recipe from the recipe library.
+6. Configure detection sensitivity to target Stacking Faults defects.
+7. Set scan parameters: full wafer scan with edge exclusion of 3mm.
+8. Initiate the inspection run and monitor real-time defect map.
+9. Upon completion, review the defect density map and classification results.
+10. Export results to the factory automation system (SECS/GEM interface).
+11. Compare results against the golden reference baseline.
+12. Document any anomalies and generate the summary report.
+
+────────────────────────────────────────────────────────────────────────────────
+5. ACCEPTANCE CRITERIA
+────────────────────────────────────────────────────────────────────────────────
+
+- Defect detection sensitivity must meet 10nm node requirements
+- False positive rate shall not exceed 5% of total detected events
+- Scan throughput must be ≥ 70 wafers per hour
+- Classification accuracy shall be ≥ 95% for known defect types
+- Repeatability (3-sigma) shall be within ±1.4% for E-Beam Inspection
+- System uptime during test shall be ≥ 98%
+- All results must be traceable through the MES integration
+- Measurement correlation with reference tool shall be ≥ 0.99 R²
+
+────────────────────────────────────────────────────────────────────────────────
+6. TEST RESULTS
+────────────────────────────────────────────────────────────────────────────────
+
+Test Execution Date:   2024-09-02
+Wafers Tested:         45
+Total Defects Found:   2648
+Defect Density:        842.89 defects/cm²
+Nuisance Rate:         0.5%
+Capture Rate:          92.6%
+Test Duration:         160 minutes
+System Uptime:         99.0%
+
+Result Classification: NEEDS REVIEW
+
+────────────────────────────────────────────────────────────────────────────────
+7. OBSERVATIONS AND FINDINGS
+────────────────────────────────────────────────────────────────────────────────
+
+During the execution of this test case, the following observations were noted:
+
+a) The 2920 Series demonstrated below-target performance
+   in detecting Stacking Faults at the 10nm node.
+
+b) The capture rate exceeded the minimum threshold, confirming system readiness.
+
+c) Nuisance rate is within acceptable limits.
+
+d) No significant drift was observed during the test duration.
+
+e) The defect review station correlation was within specification.
+
+────────────────────────────────────────────────────────────────────────────────
+8. CORRECTIVE ACTIONS (if applicable)
+────────────────────────────────────────────────────────────────────────────────
+
+
+The following corrective actions are recommended:
+
+1. Review edge-zone detection parameters for optimization.
+2. Schedule follow-up test after recipe optimization.
+3. Monitor performance over next 30 production days.
+
+
+────────────────────────────────────────────────────────────────────────────────
+9. SIGN-OFF
+────────────────────────────────────────────────────────────────────────────────
+
+Author:     Dr. Klaus Weber                Date: 2024-09-02
+Reviewer:   David Okafor                   Date: 2024-09-04
+Approver:   Dr. Hans Schmidt               Date: 2024-09-08
+
+================================================================================
+END OF DOCUMENT - KLA-MFG-TC-0072
+================================================================================

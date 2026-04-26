@@ -1,0 +1,23 @@
+Use the following Azure resources:
+- Blob Storage Resource: /subscriptions/86b37969-9445-49cf-b03f-d8866235171c/resourceGroups/ai-myaacoub/providers/Microsoft.Storage/storageAccounts/aistoragemyaacoub
+- AI Search Resource: /subscriptions/86b37969-9445-49cf-b03f-d8866235171c/resourceGroups/ai-myaacoub/providers/Microsoft.Search/searchServices/ai-search-my
+- AI Foundry EndPoint: https://001-ai-poc.services.ai.azure.com/api/projects/001-ai-proj
+
+Generate 100 Engineering documents for manufacturing test cases used by KLA and add them to data folder.
+Create a container called engineering-docs in blob storage and upload engineering documents from data folder to it
+Leverage private VNET and private endpoint that exist for Blob Storage
+Use managed identity and list all commands in readme file to setup this project.
+Create an AI Search index and schedule this index to refresh daily at 8 am pst. Allow semantic and keyword search
+Create an agent in Foundry using endpoint listed above. Call it "Eng-Docs-Search-Agent" which only uses ai search index as a Tool. Instruct the agent to not make up any answers and only use ai search index as its only tool / knowledge source. Disable web search.
+Draw architecture diagram including private vnet, private endpoints, ai search, storage account, foundry agent in a png diagram with Azure official icons and store this architecture diagram in docs folder.
+Generate github actions workflow to deploy the whole solution, run it, test it and fix bugs.
+Refer architecture diagram in readme file. Include in readme, sample prompts for semantic and keyword search.
+Test project after provisioning all resources by running sample semantic search.
+Created MIT license file to copyright for Michael Yaacoub at Microsoft.
+
+Enhancements
+=============
+Implement best practices for AI Search including chunking by section and best practices to enhance search index for accurate results
+Document best practices in readme for AI Search.
+Fine-tune Foundry model by training it on samples of Engineering docs, evaluate its accuracy and show results in separate file and refer to it in readme.
+

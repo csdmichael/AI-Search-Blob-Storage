@@ -1,0 +1,8 @@
+azure-identity
+azure-storage-blob
+azure-search-documents
+azure-ai-projects
+azure-ai-agents
+azure-ai-evaluation
+openai
+matplotlib
