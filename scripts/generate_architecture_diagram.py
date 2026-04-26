@@ -10,6 +10,10 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
 import os
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import config
 
 DOCS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "docs")
 
@@ -86,7 +90,8 @@ def main():
 
     # ── Azure Blob Storage ──
     draw_azure_icon_box(ax, 0.8, 4.0, 2.8, 1.2,
-                        "Azure Blob Storage", "aistoragemyaacoub / engineering-docs",
+                        "Azure Blob Storage",
+                        f"{config.STORAGE_ACCOUNT_NAME or '<storage-account>'} / {config.STORAGE_CONTAINER_NAME}",
                         "#0078D4", "BS")
 
     # ── Private Endpoint for Blob ──
@@ -107,7 +112,8 @@ def main():
 
     # ── Azure AI Search ──
     draw_azure_icon_box(ax, 4.2, 4.0, 2.8, 1.2,
-                        "Azure AI Search", "ai-search-my / engineering-docs-index",
+                        "Azure AI Search",
+                        f"{config.SEARCH_SERVICE_NAME or '<search-service>'} / {config.SEARCH_INDEX_NAME}",
                         "#6B2FA0", "AS")
 
     # Arrow: AI Search -> Blob (indexer pulls data)
@@ -131,7 +137,7 @@ def main():
 
     # ── Azure AI Foundry Agent ──
     draw_azure_icon_box(ax, 4.2, 5.8, 2.8, 1.0,
-                        "AI Foundry Agent", "Eng-Docs-Search-Agent",
+                        "AI Foundry Agent", config.AGENT_NAME,
                         "#107C10", "FA")
 
     # Arrow: Foundry Agent -> AI Search (tool call)

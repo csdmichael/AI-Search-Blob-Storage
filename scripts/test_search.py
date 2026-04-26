@@ -9,11 +9,14 @@ from azure.identity import DefaultAzureCredential
 from azure.search.documents import SearchClient
 from azure.ai.projects import AIProjectClient
 from azure.ai.agents.models import ListSortOrder
+import config
 
-SEARCH_ENDPOINT = "https://ai-search-my.search.windows.net"
-INDEX_NAME = "engineering-docs-index"
-PROJECT_ENDPOINT = "https://001-ai-poc.services.ai.azure.com/api/projects/001-ai-proj"
-AGENT_NAME = "Eng-Docs-Search-Agent"
+config.validate_required(["SEARCH_SERVICE_NAME", "PROJECT_ENDPOINT"])
+
+SEARCH_ENDPOINT = config.SEARCH_ENDPOINT
+INDEX_NAME = config.SEARCH_INDEX_NAME
+PROJECT_ENDPOINT = config.PROJECT_ENDPOINT
+AGENT_NAME = config.AGENT_NAME
 
 
 def test_keyword_search(search_client: SearchClient):

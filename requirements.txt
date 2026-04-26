@@ -6,3 +6,4 @@ azure-ai-agents
 azure-ai-evaluation
 openai
 matplotlib
+python-dotenv

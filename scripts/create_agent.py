@@ -18,16 +18,19 @@ from azure.ai.agents.models import (
     AzureAISearchQueryType,
     ToolResources,
 )
+import config
 
-PROJECT_ENDPOINT = "https://001-ai-poc.services.ai.azure.com/api/projects/001-ai-proj"
-AGENT_NAME = "Eng-Docs-Search-Agent"
-AI_SEARCH_INDEX_NAME = "engineering-docs-index"
+config.validate_required([
+    "PROJECT_ENDPOINT",
+    "AI_SEARCH_CONNECTION_NAME",
+    "MODEL_DEPLOYMENT_NAME",
+])
 
-# The connection name for AI Search in your Foundry project
-# Update this to match your actual connection name in the Foundry project
-AI_SEARCH_CONNECTION_NAME = os.environ.get("AZURE_AI_SEARCH_CONNECTION_NAME", "aisearchmymmcjmu")
-
-MODEL_DEPLOYMENT_NAME = os.environ.get("MODEL_DEPLOYMENT_NAME", "gpt-4.1")
+PROJECT_ENDPOINT = config.PROJECT_ENDPOINT
+AGENT_NAME = config.AGENT_NAME
+AI_SEARCH_INDEX_NAME = config.SEARCH_INDEX_NAME
+AI_SEARCH_CONNECTION_NAME = config.AI_SEARCH_CONNECTION_NAME
+MODEL_DEPLOYMENT_NAME = config.MODEL_DEPLOYMENT_NAME
 
 AGENT_INSTRUCTIONS = """You are the Engineering Documents Search Agent for KLA manufacturing test cases.
 

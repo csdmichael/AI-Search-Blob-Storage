@@ -9,10 +9,13 @@ import os
 import sys
 from azure.identity import DefaultAzureCredential
 from azure.storage.blob import BlobServiceClient
+import config
 
-STORAGE_ACCOUNT_NAME = "aistoragemyaacoub"
-CONTAINER_NAME = "engineering-docs"
-STORAGE_URL = f"https://{STORAGE_ACCOUNT_NAME}.blob.core.windows.net"
+config.validate_required(["STORAGE_ACCOUNT_NAME", "STORAGE_CONTAINER_NAME"])
+
+STORAGE_ACCOUNT_NAME = config.STORAGE_ACCOUNT_NAME
+CONTAINER_NAME = config.STORAGE_CONTAINER_NAME
+STORAGE_URL = config.STORAGE_URL
 
 DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data")
 

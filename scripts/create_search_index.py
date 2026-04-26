@@ -25,20 +25,23 @@ from azure.search.documents.indexes.models import (
     IndexingSchedule,
     FieldMapping,
 )
+import config
 
-SEARCH_SERVICE_NAME = "ai-search-my"
-SEARCH_ENDPOINT = f"https://{SEARCH_SERVICE_NAME}.search.windows.net"
-INDEX_NAME = "engineering-docs-index"
-INDEXER_NAME = "engineering-docs-indexer"
-DATA_SOURCE_NAME = "engineering-docs-blob-datasource"
+config.validate_required([
+    "SEARCH_SERVICE_NAME",
+    "STORAGE_ACCOUNT_NAME",
+    "SUBSCRIPTION_ID",
+    "RESOURCE_GROUP",
+])
 
-STORAGE_ACCOUNT_NAME = "aistoragemyaacoub"
-CONTAINER_NAME = "engineering-docs"
-STORAGE_RESOURCE_ID = (
-    "/subscriptions/86b37969-9445-49cf-b03f-d8866235171c"
-    "/resourceGroups/ai-myaacoub"
-    "/providers/Microsoft.Storage/storageAccounts/aistoragemyaacoub"
-)
+SEARCH_ENDPOINT = config.SEARCH_ENDPOINT
+INDEX_NAME = config.SEARCH_INDEX_NAME
+INDEXER_NAME = config.SEARCH_INDEXER_NAME
+DATA_SOURCE_NAME = config.SEARCH_DATA_SOURCE_NAME
+
+STORAGE_ACCOUNT_NAME = config.STORAGE_ACCOUNT_NAME
+CONTAINER_NAME = config.STORAGE_CONTAINER_NAME
+STORAGE_RESOURCE_ID = config.STORAGE_RESOURCE_ID
 
 
 def create_index(index_client: SearchIndexClient):

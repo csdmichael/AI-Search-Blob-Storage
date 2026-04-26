@@ -29,9 +29,12 @@ from azure.search.documents.indexes.models import (
     ScoringProfile,
     TextWeights,
 )
+import config
 
-SEARCH_ENDPOINT = "https://ai-search-my.search.windows.net"
-INDEX_NAME = "engineering-docs-chunked-index"
+config.validate_required(["SEARCH_SERVICE_NAME"])
+
+SEARCH_ENDPOINT = config.SEARCH_ENDPOINT
+INDEX_NAME = config.SEARCH_CHUNKED_INDEX_NAME
 DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data")
 
 # Chunking configuration

@@ -10,10 +10,10 @@ An end-to-end solution that indexes 100 KLA manufacturing engineering test case 
 
 | Component | Resource | Description |
 |-----------|----------|-------------|
-| **Azure Blob Storage** | `aistoragemyaacoub` | Stores 100 engineering test case documents in the `engineering-docs` container |
+| **Azure Blob Storage** | configured via `AZURE_STORAGE_ACCOUNT_NAME` | Stores engineering test case documents in the blob container |
 | **Private VNET & Endpoints** | Existing VNET | Blob Storage accessed via private endpoint for secure data transfer |
-| **Azure AI Search** | `ai-search-my` | Indexes documents with semantic + keyword search; refreshes daily at 8 AM PST |
-| **AI Foundry Agent** | `Eng-Docs-Search-Agent` | Answers engineering queries using only the AI Search index — no web search or fabrication |
+| **Azure AI Search** | configured via `AZURE_SEARCH_SERVICE_NAME` | Indexes documents with semantic + keyword search; refreshes daily at 8 AM PST |
+| **AI Foundry Agent** | configured via `AGENT_NAME` | Answers engineering queries using only the AI Search index — no web search or fabrication |
 | **Managed Identity** | `DefaultAzureCredential` | All authentication uses managed identity — no keys or secrets |
 
 ---
@@ -23,10 +23,15 @@ An end-to-end solution that indexes 100 KLA manufacturing engineering test case 
 - **Azure CLI** installed and logged in (`az login`)
 - **Python 3.10+** installed
 - Azure subscription with the following resources already provisioned:
-  - Storage Account: `aistoragemyaacoub` (with private VNET and private endpoint)
-  - AI Search Service: `ai-search-my`
-  - AI Foundry Project: `001-ai-poc / 001-ai-proj`
-  - A deployed model (e.g., `gpt-4o`) in the Foundry project
+
+  | Resource | Description |
+  |----------|-------------|
+  | **Resource Group** | A resource group to contain all resources below |
+  | **Storage Account** | General-purpose v2 storage account (recommended: private VNET + private endpoint for production) |
+  | **Blob Container** | Container inside the storage account for engineering documents (default name: `engineering-docs`) |
+  | **Azure AI Search service** | Standard tier or higher (required for semantic search) |
+  | **Azure AI Foundry Hub + Project** | An AI Foundry hub with a project; register the AI Search service as a connected resource inside the project |
+  | **Model deployment** | A chat-completion model deployed inside the Foundry project (e.g., `gpt-4.1`) |
 
 ---
 
@@ -40,59 +45,96 @@ cd AI-Search-Blob-Storage
 pip install -r requirements.txt
 ```
 
-### 2. Authenticate with Azure
+### 2. Configure resource names
+
+All Azure resource names and configuration values are managed through environment
+variables. A template file lists every available option:
+
+```bash
+cp .env.example .env
+```
+
+Open `.env` and fill in the values for your deployment:
+
+| Variable | Required | Description |
+|----------|:--------:|-------------|
+| `AZURE_SUBSCRIPTION_ID` | ✅ | Azure subscription ID |
+| `AZURE_RESOURCE_GROUP` | ✅ | Resource group containing all resources |
+| `AZURE_STORAGE_ACCOUNT_NAME` | ✅ | Storage Account name |
+| `AZURE_SEARCH_SERVICE_NAME` | ✅ | AI Search service name |
+| `AZURE_AI_PROJECT_ENDPOINT` | ✅ | Foundry project endpoint URL (`https://<hub>.services.ai.azure.com/api/projects/<project>`) |
+| `AZURE_AI_SEARCH_CONNECTION_NAME` | ✅ | Name of the AI Search connection registered in the Foundry project |
+| `MODEL_DEPLOYMENT_NAME` | ✅ | Deployed model name (e.g. `gpt-4.1`) |
+| `AZURE_STORAGE_CONTAINER_NAME` | ➖ | Blob container name (default: `engineering-docs`) |
+| `AZURE_SEARCH_INDEX_NAME` | ➖ | Search index name (default: `engineering-docs-index`) |
+| `AZURE_SEARCH_CHUNKED_INDEX_NAME` | ➖ | Chunked index name (default: `engineering-docs-chunked-index`) |
+| `AZURE_SEARCH_INDEXER_NAME` | ➖ | Indexer name (default: `engineering-docs-indexer`) |
+| `AZURE_SEARCH_DATA_SOURCE_NAME` | ➖ | Data source name (default: `engineering-docs-blob-datasource`) |
+| `AGENT_NAME` | ➖ | Foundry agent display name (default: `Eng-Docs-Search-Agent`) |
+| `FINE_TUNE_BASE_MODEL` | ➖ | Base model for fine-tuning (default: `gpt-4.1`) |
+
+> **Note:** The `.env` file is git-ignored so your values are never committed.
+> In CI/CD (GitHub Actions) set these as repository secrets / environment variables instead.
+
+### 3. Authenticate with Azure
 
 ```bash
 # Login with your Azure account
 az login
 
-# Set the subscription
-az account set --subscription "86b37969-9445-49cf-b03f-d8866235171c"
+# Set the subscription (use your AZURE_SUBSCRIPTION_ID value)
+az account set --subscription "<AZURE_SUBSCRIPTION_ID>"
 ```
 
-### 3. Assign managed identity roles
+### 4. Assign managed identity roles
 
 ```bash
 # Get your signed-in user object ID
 USER_OBJECT_ID=$(az ad signed-in-user show --query id -o tsv)
 
+# Set convenience variables matching your .env values
+SUBSCRIPTION_ID="<AZURE_SUBSCRIPTION_ID>"
+RESOURCE_GROUP="<AZURE_RESOURCE_GROUP>"
+STORAGE_ACCOUNT="<AZURE_STORAGE_ACCOUNT_NAME>"
+SEARCH_SERVICE="<AZURE_SEARCH_SERVICE_NAME>"
+
 # Storage Blob Data Contributor on the storage account
 az role assignment create \
   --assignee "$USER_OBJECT_ID" \
   --role "Storage Blob Data Contributor" \
-  --scope "/subscriptions/86b37969-9445-49cf-b03f-d8866235171c/resourceGroups/ai-myaacoub/providers/Microsoft.Storage/storageAccounts/aistoragemyaacoub"
+  --scope "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Storage/storageAccounts/$STORAGE_ACCOUNT"
 
 # Search Index Data Contributor on the search service
 az role assignment create \
   --assignee "$USER_OBJECT_ID" \
   --role "Search Index Data Contributor" \
-  --scope "/subscriptions/86b37969-9445-49cf-b03f-d8866235171c/resourceGroups/ai-myaacoub/providers/Microsoft.Search/searchServices/ai-search-my"
+  --scope "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Search/searchServices/$SEARCH_SERVICE"
 
 # Search Service Contributor on the search service
 az role assignment create \
   --assignee "$USER_OBJECT_ID" \
   --role "Search Service Contributor" \
-  --scope "/subscriptions/86b37969-9445-49cf-b03f-d8866235171c/resourceGroups/ai-myaacoub/providers/Microsoft.Search/searchServices/ai-search-my"
+  --scope "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Search/searchServices/$SEARCH_SERVICE"
 
-# Azure AI Developer on the Foundry project
+# Azure AI Developer on the resource group
 az role assignment create \
   --assignee "$USER_OBJECT_ID" \
   --role "Azure AI Developer" \
-  --scope "/subscriptions/86b37969-9445-49cf-b03f-d8866235171c/resourceGroups/ai-myaacoub"
+  --scope "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP"
 
 # Allow AI Search managed identity to read from Blob Storage
 SEARCH_MI=$(az search service show \
-  --name "ai-search-my" \
-  --resource-group "ai-myaacoub" \
+  --name "$SEARCH_SERVICE" \
+  --resource-group "$RESOURCE_GROUP" \
   --query identity.principalId -o tsv)
 
 az role assignment create \
   --assignee "$SEARCH_MI" \
   --role "Storage Blob Data Reader" \
-  --scope "/subscriptions/86b37969-9445-49cf-b03f-d8866235171c/resourceGroups/ai-myaacoub/providers/Microsoft.Storage/storageAccounts/aistoragemyaacoub"
+  --scope "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Storage/storageAccounts/$STORAGE_ACCOUNT"
 ```
 
-### 4. Generate engineering documents
+### 5. Generate engineering documents
 
 ```bash
 python scripts/generate_docs.py
@@ -121,19 +163,12 @@ This creates an optimized `engineering-docs-chunked-index` with section-level ch
 ### 7. Create Foundry agent
 
 ```bash
-# Set environment variables (update connection name if different)
-export AZURE_AI_SEARCH_CONNECTION_NAME="ai-search-my"
-export MODEL_DEPLOYMENT_NAME="gpt-4o"
-
 python scripts/create_agent.py
 ```
 
 ### 8. Fine-tune and evaluate model
 
 ```bash
-# Optional: specify base model (default: gpt-4o-mini)
-export FINE_TUNE_BASE_MODEL="gpt-4o-mini"
-
 python scripts/fine_tune_and_evaluate.py
 ```
 
@@ -363,6 +398,7 @@ AI-Search-Blob-Storage/
 │   ├── evaluation_results.md       # Fine-tuning evaluation report
 │   └── Prompt.txt                  # Original project requirements
 ├── scripts/
+│   ├── config.py                   # Centralised configuration (reads from env / .env)
 │   ├── generate_docs.py            # Generate 100 KLA test case documents
 │   ├── upload_to_blob.py           # Upload docs to Blob Storage
 │   ├── create_search_index.py      # Create AI Search index + indexer
@@ -371,6 +407,7 @@ AI-Search-Blob-Storage/
 │   ├── fine_tune_and_evaluate.py   # Fine-tune model + evaluate accuracy
 │   ├── generate_architecture_diagram.py  # Generate architecture PNG
 │   └── test_search.py              # Test semantic + keyword search
+├── .env.example                    # Template for environment variable configuration
 ├── requirements.txt                # Python dependencies
 ├── LICENSE                         # MIT License
 └── README.md                       # This file

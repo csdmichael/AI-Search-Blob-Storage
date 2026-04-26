@@ -21,9 +21,12 @@ import time
 from datetime import datetime
 from azure.identity import DefaultAzureCredential
 from azure.ai.projects import AIProjectClient
+import config
 
-PROJECT_ENDPOINT = "https://001-ai-poc.services.ai.azure.com/api/projects/001-ai-proj"
-BASE_MODEL = os.environ.get("FINE_TUNE_BASE_MODEL", "gpt-4.1")
+config.validate_required(["PROJECT_ENDPOINT"])
+
+PROJECT_ENDPOINT = config.PROJECT_ENDPOINT
+BASE_MODEL = config.FINE_TUNE_BASE_MODEL
 DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data")
 DOCS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "docs")
 TRAINING_FILE = os.path.join(DATA_DIR, "fine_tuning_train.jsonl")
