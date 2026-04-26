@@ -23,7 +23,7 @@ from azure.identity import DefaultAzureCredential
 from azure.ai.projects import AIProjectClient
 
 PROJECT_ENDPOINT = "https://001-ai-poc.services.ai.azure.com/api/projects/001-ai-proj"
-BASE_MODEL = os.environ.get("FINE_TUNE_BASE_MODEL", "gpt-4o-mini")
+BASE_MODEL = os.environ.get("FINE_TUNE_BASE_MODEL", "gpt-4.1")
 DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data")
 DOCS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "docs")
 TRAINING_FILE = os.path.join(DATA_DIR, "fine_tuning_train.jsonl")
@@ -208,7 +208,7 @@ def generate_training_data():
 
 def fine_tune_model(project_client: AIProjectClient):
     """Upload training data and start fine-tuning job."""
-    openai_client = project_client.get_openai_client()
+    openai_client = project_client.get_openai_client(api_version="2025-03-01-preview")
 
     # Upload training file
     print("\nUploading training file...")
@@ -230,8 +230,6 @@ def fine_tune_model(project_client: AIProjectClient):
         model=BASE_MODEL,
         hyperparameters={
             "n_epochs": 3,
-            "batch_size": "auto",
-            "learning_rate_multiplier": "auto",
         },
         suffix="kla-eng-docs",
     )
@@ -260,7 +258,7 @@ def fine_tune_model(project_client: AIProjectClient):
 
 def evaluate_model(project_client: AIProjectClient, model_name: str, val_pairs: list[dict]):
     """Evaluate the fine-tuned model on validation data and produce metrics."""
-    openai_client = project_client.get_openai_client()
+    openai_client = project_client.get_openai_client(api_version="2025-03-01-preview")
 
     results = []
     correct_doc_citations = 0
@@ -439,14 +437,19 @@ def main():
     print("STEP 2: Fine-Tune Model")
     print("=" * 60)
     project_client = AIProjectClient(endpoint=PROJECT_ENDPOINT, credential=credential)
-    job = fine_tune_model(project_client)
-
-    if job.status != "succeeded":
-        print("Fine-tuning did not succeed. Generating report with available data...")
-        # Generate report with base model evaluation as fallback
+    fine_tuned = False
+    try:
+        job = fine_tune_model(project_client)
+        if job.status == "succeeded":
+            model_name = job.fine_tuned_model
+            fine_tuned = True
+        else:
+            print(f"Fine-tuning did not succeed (status: {job.status}). Falling back to base model evaluation...")
+            model_name = BASE_MODEL
+    except Exception as e:
+        print(f"Fine-tuning unavailable: {e}")
+        print(f"Falling back to base model evaluation ({BASE_MODEL})...")
         model_name = BASE_MODEL
-    else:
-        model_name = job.fine_tuned_model
 
     # Step 3: Evaluate
     print("\n" + "=" * 60)

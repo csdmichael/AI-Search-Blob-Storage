@@ -290,15 +290,15 @@ All connections (Blob Storage data source, Search API, Foundry) use `DefaultAzur
 
 ## Fine-Tuning & Evaluation
 
-The project includes a pipeline to fine-tune a model on the KLA engineering documents and evaluate its accuracy.
+The project includes a pipeline to fine-tune a model on the KLA engineering documents and evaluate its accuracy. If fine-tuning is not available in the Foundry project's region, the script gracefully falls back to evaluating the deployed base model.
 
 ### How It Works
 
 1. **Training Data Generation**: Q&A pairs are automatically extracted from all 100 documents. Each document yields 5-7 pairs covering objectives, results, systems, acceptance criteria, observations, and corrective actions.
 
-2. **Fine-Tuning**: The training data (JSONL format) is uploaded to Azure AI Foundry, and a fine-tuning job is created on the base model (default: `gpt-4o-mini`).
+2. **Fine-Tuning**: The training data (JSONL format) is uploaded to Azure AI Foundry, and a fine-tuning job is created on the base model (default: `gpt-4.1`). If fine-tuning is unavailable in the region, the script skips this step and proceeds to evaluation.
 
-3. **Evaluation**: The fine-tuned model is evaluated on a held-out 20% validation set. Key metrics:
+3. **Evaluation**: The fine-tuned (or base) model is evaluated on a held-out 20% validation set. Key metrics:
    - **Citation Accuracy**: Does the model correctly cite KLA-MFG-TC document numbers?
    - **Response Relevance**: Does the response contain expected information?
    - **Token Efficiency**: Cost per query
@@ -306,18 +306,28 @@ The project includes a pipeline to fine-tune a model on the KLA engineering docu
 ### Running Fine-Tuning
 
 ```bash
-# Use default base model (gpt-4o-mini)
+# Use default base model (gpt-4.1)
 python scripts/fine_tune_and_evaluate.py
 
 # Or specify a different base model
-export FINE_TUNE_BASE_MODEL="gpt-4o-mini"
+export FINE_TUNE_BASE_MODEL="gpt-4.1"
 python scripts/fine_tune_and_evaluate.py
 ```
 
-### Evaluation Results
+### Latest Evaluation Results (April 2026)
 
-See [docs/evaluation_results.md](docs/evaluation_results.md) for detailed results including:
-- Summary metrics table
+| Metric | Value |
+|--------|-------|
+| **Model Evaluated** | `gpt-4.1` |
+| **Training Examples** | 539 |
+| **Validation Examples** | 135 |
+| **Evaluated Samples** | 50 |
+| **Citation Accuracy** | **90.0%** |
+| **Avg Tokens/Query** | 222.8 |
+
+> **Note**: Fine-tuning is not currently available in the `westus` region. The evaluation above reflects the base `gpt-4.1` model's performance on the KLA engineering Q&A dataset. When fine-tuning becomes available, re-run the script to compare fine-tuned vs. base model accuracy.
+
+See [docs/evaluation_results.md](docs/evaluation_results.md) for the full report including:
 - Per-example citation match results
 - Sample predictions with expected vs. actual answers
 - Recommendations for improvement

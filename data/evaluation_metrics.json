@@ -1,0 +1,410 @@
+{
+  "model": "gpt-4.1",
+  "base_model": "gpt-4.1",
+  "timestamp": "2026-04-26T02:38:00.515801",
+  "total_evaluated": 50,
+  "citation_accuracy_pct": 90.0,
+  "avg_tokens_per_query": 222.8,
+  "results": [
+    {
+      "question": "What does test case KLA-MFG-TC-0028 cover?",
+      "expected_answer": "Test case KLA-MFG-TC-0028 covers: CD-SEM Measurement - Edge Placement Error Detection on 5D Analyzer. This test case validates the capability of the 5D Analyzer system to detect\nand classify Edge Placement Error defects during post-oxidation inspection\nat the 3nm technology node. The test is conduct",
+      "predicted_answer": "Test case **KLA-MFG-TC-0028** covers the **verification of the system\u2019s ability to detect sub-micron particle defects on 300mm silicon wafers during the standard inspection cycle**. This includes validating the detection threshold, false positive rate, and repeatability of defect identification unde",
+      "citation_match": true,
+      "prompt_tokens": 76,
+      "completion_tokens": 86
+    },
+    {
+      "question": "What does test case KLA-MFG-TC-0077 cover?",
+      "expected_answer": "Test case KLA-MFG-TC-0077 covers: Wafer Geometry Measurement - Corrosion Detection on Surfscan SP5. This test case validates the capability of the Surfscan SP5 system to detect\nand classify Corrosion defects during pre-diffusion inspection\nat the 5nm technology node. The test is conducted at Hsinchu",
+      "predicted_answer": "Test case **KLA-MFG-TC-0077** covers the **detection and classification of sub-micron particle defects on 300mm silicon wafers using the SP7xx series inspection tool**. It verifies the tool\u2019s ability to identify particles down to 90nm in size, assess false positive/negative rates, and ensure defect ",
+      "citation_match": true,
+      "prompt_tokens": 76,
+      "completion_tokens": 98
+    },
+    {
+      "question": "What test cases involve the Archer 750 system?",
+      "expected_answer": "Test case KLA-MFG-TC-0085 involves the Archer 750 system for Extra Pattern detection at the 3nm node (Pre-Diffusion). Refer to the full index for other test cases using this system.",
+      "predicted_answer": "The Archer 750 system is referenced in several test cases related to overlay metrology and defect detection. According to the engineering documentation:\n\n- **KLA-MFG-TC-1123**: \"Archer 750 Overlay Accuracy Verification\"  \n  This test case validates the overlay measurement accuracy of the Archer 750 ",
+      "citation_match": false,
+      "prompt_tokens": 71,
+      "completion_tokens": 179
+    },
+    {
+      "question": "What are the acceptance criteria for KLA-MFG-TC-0001?",
+      "expected_answer": "Acceptance criteria for KLA-MFG-TC-0001:\n- Defect detection sensitivity must meet 45nm node requirements\n- False positive rate shall not exceed 5% of total detected events\n- Scan throughput must be \u2265 96 wafers per hour\n- Classification accuracy shall be \u2265 98% for known defect types\n- Repeatability (",
+      "predicted_answer": "According to engineering documentation KLA-MFG-TC-0001, the acceptance criteria are as follows:\n\n1. **Defect Detection Sensitivity:**  \n   The inspection system must detect all programmed defects \u2265 0.15 \u03bcm in size with a detection rate of \u2265 95%.\n\n2. **False Positive Rate:**  \n   The false positive (",
+      "citation_match": true,
+      "prompt_tokens": 77,
+      "completion_tokens": 217
+    },
+    {
+      "question": "What are the acceptance criteria for KLA-MFG-TC-0091?",
+      "expected_answer": "Acceptance criteria for KLA-MFG-TC-0091:\n- Defect detection sensitivity must meet 14nm node requirements\n- False positive rate shall not exceed 5% of total detected events\n- Scan throughput must be \u2265 81 wafers per hour\n- Classification accuracy shall be \u2265 98% for known defect types\n- Repeatability (",
+      "predicted_answer": "According to engineering documentation KLA-MFG-TC-0091, the acceptance criteria are as follows:\n\n1. **Defect Detection Sensitivity:**  \n   The inspection system must detect all programmed test defects \u2265 90 nm in size with a detection rate of at least 95%.\n\n2. **False Positive Rate:**  \n   The false ",
+      "citation_match": true,
+      "prompt_tokens": 77,
+      "completion_tokens": 222
+    },
+    {
+      "question": "What test cases involve the Candela 8520 system?",
+      "expected_answer": "Test case KLA-MFG-TC-0024 involves the Candela 8520 system for Stacking Faults detection at the 22nm node (Post-Implant). Refer to the full index for other test cases using this system.",
+      "predicted_answer": "The Candela 8520 system is referenced in several test cases related to surface defect inspection and haze measurement. According to the engineering documentation:\n\n- **KLA-MFG-TC-1123**: \"Candela 8520 Surface Defect Detection\"  \n  This test case verifies the system\u2019s ability to detect and classify s",
+      "citation_match": false,
+      "prompt_tokens": 73,
+      "completion_tokens": 241
+    },
+    {
+      "question": "What were the results of test case KLA-MFG-TC-0067?",
+      "expected_answer": "Test case KLA-MFG-TC-0067 result: NEEDS REVIEW. Total defects found: 266, capture rate: 93.4%, nuisance rate: 6.1%.",
+      "predicted_answer": "According to the engineering documentation, test case KLA-MFG-TC-0067 evaluated the system\u2019s ability to detect sub-micron particle defects on 300mm silicon wafers under standard inspection conditions. The results were as follows:\n\n- **Detection Rate:** 98.7% for particles \u22650.15\u03bcm  \n- **False Positiv",
+      "citation_match": true,
+      "prompt_tokens": 78,
+      "completion_tokens": 147
+    },
+    {
+      "question": "Which inspection system is used in KLA-MFG-TC-0093 and what defects does it target?",
+      "expected_answer": "Test case KLA-MFG-TC-0093 uses the Puma 9xxx system to detect Extra Pattern defects during the Post-Lithography step at the 3nm technology node, located at Milpitas Fab A.",
+      "predicted_answer": "According to KLA-MFG-TC-0093, the inspection system used is the **KLA 2365 Brightfield Inspection System**. This system targets **particulate contamination, pattern defects, and scratches** on patterned wafer surfaces.",
+      "citation_match": true,
+      "prompt_tokens": 83,
+      "completion_tokens": 51
+    },
+    {
+      "question": "What corrective actions are recommended in KLA-MFG-TC-0100?",
+      "expected_answer": "Corrective actions for KLA-MFG-TC-0100:\nThe following corrective actions are recommended:\n\n1. Review edge-zone detection parameters for optimization.\n2. Schedule follow-up test after recipe optimization.\n3. Monitor performance over next 30 production days.",
+      "predicted_answer": "According to KLA-MFG-TC-0100, the recommended corrective actions include:\n\n1. **Immediate Equipment Calibration:** If inspection results deviate from baseline standards, recalibrate the inspection tool using the prescribed calibration wafer set (Section 4.2).\n2. **Defect Source Isolation:** Perform ",
+      "citation_match": true,
+      "prompt_tokens": 77,
+      "completion_tokens": 211
+    },
+    {
+      "question": "Which inspection system is used in KLA-MFG-TC-0096 and what defects does it target?",
+      "expected_answer": "Test case KLA-MFG-TC-0096 uses the Zeta-388 system to detect Mounds defects during the Post-Oxidation step at the 45nm technology node, located at Milpitas Fab B.",
+      "predicted_answer": "According to KLA-MFG-TC-0096, the inspection system used is the **KLA 2365 Brightfield Inspection System**. This system targets **particulate contamination, pattern defects, and micro-scratches** on patterned wafer surfaces.",
+      "citation_match": true,
+      "prompt_tokens": 83,
+      "completion_tokens": 54
+    },
+    {
+      "question": "What were the results of test case KLA-MFG-TC-0097?",
+      "expected_answer": "Test case KLA-MFG-TC-0097 result: NEEDS REVIEW. Total defects found: 4223, capture rate: 86.3%, nuisance rate: 6.5%.",
+      "predicted_answer": "According to the engineering documentation, test case **KLA-MFG-TC-0097** evaluated the system\u2019s ability to detect sub-micron particle defects on 300mm silicon wafers under standard inspection conditions.\n\n**Results Summary (KLA-MFG-TC-0097):**\n- **Detection Rate:** 98.7% for particles \u22650.15\u03bcm\n- **F",
+      "citation_match": true,
+      "prompt_tokens": 78,
+      "completion_tokens": 163
+    },
+    {
+      "question": "What does test case KLA-MFG-TC-0094 cover?",
+      "expected_answer": "Test case KLA-MFG-TC-0094 covers: FinFET Inspection - Pattern Defects Detection on Teron SL650. This test case validates the capability of the Teron SL650 system to detect\nand classify Pattern Defects defects during final inspection inspection\nat the 10nm technology node. The test is conducted at Si",
+      "predicted_answer": "Test case **KLA-MFG-TC-0094** covers the **detection and classification of sub-micron particle defects on 300mm silicon wafers using the SP7xx inspection system**. It verifies system sensitivity, false positive rate, and defect size threshold compliance according to the requirements outlined in the ",
+      "citation_match": true,
+      "prompt_tokens": 76,
+      "completion_tokens": 113
+    },
+    {
+      "question": "What were the results of test case KLA-MFG-TC-0018?",
+      "expected_answer": "Test case KLA-MFG-TC-0018 result: NEEDS REVIEW. Total defects found: 4292, capture rate: 88.2%, nuisance rate: 3.5%.",
+      "predicted_answer": "According to the engineering documentation, test case **KLA-MFG-TC-0018** evaluated the system\u2019s ability to detect sub-micron particle defects on 300mm silicon wafers under standard inspection conditions.\n\n**Results Summary (KLA-MFG-TC-0018):**\n- **Detection Rate:** 98.7% for particles \u22650.15\u03bcm\n- **F",
+      "citation_match": true,
+      "prompt_tokens": 78,
+      "completion_tokens": 158
+    },
+    {
+      "question": "What observations were noted in KLA-MFG-TC-0002?",
+      "expected_answer": "Key observations from KLA-MFG-TC-0002:\nDuring the execution of this test case, the following observations were noted:\n\na) The Archer 750 demonstrated below-target performance\n   in detecting Edge Placement Error at the 45nm node.\n\nb) The capture rate exceeded the minimum threshold, confirming system",
+      "predicted_answer": "In KLA-MFG-TC-0002, the following observations were noted:\n\n- Multiple instances of particle contamination were detected on wafer surfaces, primarily at the wafer edge.\n- Several defects were classified as \"unknown origin\" and flagged for further analysis.\n- The inspection tool demonstrated consiste",
+      "citation_match": true,
+      "prompt_tokens": 76,
+      "completion_tokens": 124
+    },
+    {
+      "question": "What does test case KLA-MFG-TC-0039 cover?",
+      "expected_answer": "Test case KLA-MFG-TC-0039 covers: Reticle Inspection - Micro-cracks Detection on eDR-7100. This test case validates the capability of the eDR-7100 system to detect\nand classify Micro-cracks defects during post-deposition inspection\nat the 10nm technology node. The test is conducted at Pyeongtaek Fab",
+      "predicted_answer": "Test case **KLA-MFG-TC-0039** covers the **detection and classification of sub-micron particle defects on 300mm silicon wafers using the Surfscan inspection system**. It verifies system sensitivity, false positive rate, and classification accuracy for particles ranging from 90nm to 200nm in diameter",
+      "citation_match": true,
+      "prompt_tokens": 76,
+      "completion_tokens": 117
+    },
+    {
+      "question": "Which inspection system is used in KLA-MFG-TC-0081 and what defects does it target?",
+      "expected_answer": "Test case KLA-MFG-TC-0081 uses the eDR-7100 system to detect Overlay Shift defects during the Post-Deposition step at the 14nm technology node, located at Hsinchu Fab 15.",
+      "predicted_answer": "According to KLA-MFG-TC-0081, the inspection system used is the **KLA 2365 Brightfield Inspection System**. This system targets the detection of **particulate contamination, pattern defects, and scratches** on patterned wafer surfaces.",
+      "citation_match": true,
+      "prompt_tokens": 83,
+      "completion_tokens": 54
+    },
+    {
+      "question": "What were the results of test case KLA-MFG-TC-0072?",
+      "expected_answer": "Test case KLA-MFG-TC-0072 result: NEEDS REVIEW. Total defects found: 2648, capture rate: 92.6%, nuisance rate: 0.5%.",
+      "predicted_answer": "According to the engineering documentation, test case **KLA-MFG-TC-0072** evaluated the system\u2019s ability to detect sub-micron particle defects on 300mm silicon wafers under standard inspection conditions.\n\n**Results Summary (KLA-MFG-TC-0072):**\n- **Detection Rate:** 98.6% for particles \u22650.15\u03bcm\n- **F",
+      "citation_match": true,
+      "prompt_tokens": 78,
+      "completion_tokens": 200
+    },
+    {
+      "question": "What were the results of test case KLA-MFG-TC-0059?",
+      "expected_answer": "Test case KLA-MFG-TC-0059 result: FAIL. Total defects found: 2667, capture rate: 88.9%, nuisance rate: 5.1%.",
+      "predicted_answer": "According to the engineering documentation, test case **KLA-MFG-TC-0059** evaluated the system\u2019s ability to detect sub-micron particle defects on 300mm silicon wafers under standard inspection parameters.\n\n**Results Summary (KLA-MFG-TC-0059):**\n- **Detection Rate:** 98.7% for particles \u22650.15\u03bcm\n- **F",
+      "citation_match": true,
+      "prompt_tokens": 78,
+      "completion_tokens": 151
+    },
+    {
+      "question": "What corrective actions are recommended in KLA-MFG-TC-0059?",
+      "expected_answer": "Corrective actions for KLA-MFG-TC-0059:\nThe following corrective actions are recommended:\n\n1. Re-tune detection algorithm thresholds for Bridge Defects at 5nm node.\n2. Schedule follow-up test after recipe optimization.\n3. Escalate to R&D for algorithm enhancement if re-tuning does not resolve sensit",
+      "predicted_answer": "According to KLA-MFG-TC-0059, the recommended corrective actions include:\n\n1. **Recalibration of Inspection Equipment:** All affected inspection tools must be recalibrated using the latest certified standards.\n2. **Root Cause Analysis:** Initiate a root cause analysis to identify the source of the d",
+      "citation_match": true,
+      "prompt_tokens": 77,
+      "completion_tokens": 166
+    },
+    {
+      "question": "What corrective actions are recommended in KLA-MFG-TC-0010?",
+      "expected_answer": "Corrective actions for KLA-MFG-TC-0010:\nThe following corrective actions are recommended:\n\n1. Review edge-zone detection parameters for optimization.\n2. Schedule follow-up test after recipe optimization.\n3. Monitor performance over next 30 production days.",
+      "predicted_answer": "According to KLA-MFG-TC-0010, the recommended corrective actions include:\n\n1. **Recalibration of Inspection Equipment:** If measurement drift or calibration errors are detected, perform a full recalibration of the affected inspection tools.\n2. **Root Cause Analysis:** Initiate a root cause analysis ",
+      "citation_match": true,
+      "prompt_tokens": 77,
+      "completion_tokens": 198
+    },
+    {
+      "question": "What are the acceptance criteria for KLA-MFG-TC-0096?",
+      "expected_answer": "Acceptance criteria for KLA-MFG-TC-0096:\n- Defect detection sensitivity must meet 45nm node requirements\n- False positive rate shall not exceed 5% of total detected events\n- Scan throughput must be \u2265 104 wafers per hour\n- Classification accuracy shall be \u2265 92% for known defect types\n- Repeatability ",
+      "predicted_answer": "According to engineering documentation KLA-MFG-TC-0096, the acceptance criteria are as follows:\n\n1. **Defect Detection Sensitivity:**  \n   The inspection system must detect all programmed defects \u2265 0.15 \u00b5m with a detection rate of \u2265 95%.\n\n2. **False Positive Rate:**  \n   The false positive (nuisance",
+      "citation_match": true,
+      "prompt_tokens": 77,
+      "completion_tokens": 218
+    },
+    {
+      "question": "What observations were noted in KLA-MFG-TC-0096?",
+      "expected_answer": "Key observations from KLA-MFG-TC-0096:\nDuring the execution of this test case, the following observations were noted:\n\na) The Zeta-388 demonstrated excellent performance\n   in detecting Mounds at the 45nm node.\n\nb) The capture rate exceeded the minimum threshold, confirming system readiness.\n\nc) Nui",
+      "predicted_answer": "In KLA-MFG-TC-0096, the following observations were noted:\n\n- Multiple instances of sub-micron particle contamination were detected on wafer surfaces during the inspection cycle.\n- The defect density was observed to be higher at the wafer edge compared to the center.\n- Several false positives were r",
+      "citation_match": true,
+      "prompt_tokens": 76,
+      "completion_tokens": 130
+    },
+    {
+      "question": "What does test case KLA-MFG-TC-0024 cover?",
+      "expected_answer": "Test case KLA-MFG-TC-0024 covers: Unpatterned Wafer Inspection - Stacking Faults Detection on Candela 8520. This test case validates the capability of the Candela 8520 system to detect\nand classify Stacking Faults defects during post-implant inspection\nat the 22nm technology node. The test is conduc",
+      "predicted_answer": "Test case **KLA-MFG-TC-0024** covers the **calibration verification of the optical inspection subsystem**. Specifically, it ensures that the subsystem maintains alignment and sensitivity within specified tolerances after routine maintenance or component replacement. The test involves running a stand",
+      "citation_match": true,
+      "prompt_tokens": 76,
+      "completion_tokens": 109
+    },
+    {
+      "question": "What are the acceptance criteria for KLA-MFG-TC-0017?",
+      "expected_answer": "Acceptance criteria for KLA-MFG-TC-0017:\n- Defect detection sensitivity must meet 22nm node requirements\n- False positive rate shall not exceed 5% of total detected events\n- Scan throughput must be \u2265 76 wafers per hour\n- Classification accuracy shall be \u2265 95% for known defect types\n- Repeatability (",
+      "predicted_answer": "According to engineering documentation KLA-MFG-TC-0017, the acceptance criteria are as follows:\n\n1. **Defect Detection Sensitivity:**  \n   The inspection system must detect all programmed defects \u2265 0.15 \u00b5m with a detection rate of at least 95%.\n\n2. **False Positive Rate:**  \n   The false positive (n",
+      "citation_match": true,
+      "prompt_tokens": 77,
+      "completion_tokens": 218
+    },
+    {
+      "question": "What does test case KLA-MFG-TC-0008 cover?",
+      "expected_answer": "Test case KLA-MFG-TC-0008 covers: Macro Defect Inspection - Voids Detection on 5D Analyzer. This test case validates the capability of the 5D Analyzer system to detect\nand classify Voids defects during post-cmp inspection\nat the 28nm technology node. The test is conducted at Dresden Fab 3 to ensure\n",
+      "predicted_answer": "Test case **KLA-MFG-TC-0008** covers the **calibration and verification of the optical inspection system\u2019s resolution and contrast settings**. It ensures that the system can reliably detect defects at the minimum specified feature size and contrast threshold, as defined in the engineering requiremen",
+      "citation_match": true,
+      "prompt_tokens": 76,
+      "completion_tokens": 103
+    },
+    {
+      "question": "What corrective actions are recommended in KLA-MFG-TC-0014?",
+      "expected_answer": "Corrective actions for KLA-MFG-TC-0014:\nThe following corrective actions are recommended:\n\n1. Review edge-zone detection parameters for optimization.\n2. Schedule follow-up test after recipe optimization.\n3. Monitor performance over next 30 production days.",
+      "predicted_answer": "According to KLA-MFG-TC-0014, the recommended corrective actions include:\n\n1. **Recalibration of Inspection Equipment:** All affected inspection tools must be recalibrated following the standard calibration procedure outlined in section 4.2 of the document.\n2. **Root Cause Analysis:** Initiate a roo",
+      "citation_match": true,
+      "prompt_tokens": 77,
+      "completion_tokens": 191
+    },
+    {
+      "question": "What does test case KLA-MFG-TC-0076 cover?",
+      "expected_answer": "Test case KLA-MFG-TC-0076 covers: FinFET Inspection - Residue Detection on Candela 8520. This test case validates the capability of the Candela 8520 system to detect\nand classify Residue defects during post-deposition inspection\nat the 10nm technology node. The test is conducted at Hsinchu Fab 15 to",
+      "predicted_answer": "Test case **KLA-MFG-TC-0076** covers the **detection and classification of sub-micron particle defects on 300mm silicon wafers using the SP7xx series inspection tool**. The test case verifies the tool\u2019s sensitivity threshold, false positive rate, and defect size classification accuracy according to ",
+      "citation_match": true,
+      "prompt_tokens": 76,
+      "completion_tokens": 96
+    },
+    {
+      "question": "Which inspection system is used in KLA-MFG-TC-0078 and what defects does it target?",
+      "expected_answer": "Test case KLA-MFG-TC-0078 uses the Puma 9xxx system to detect Delamination defects during the Post-Implant step at the 7nm technology node, located at Hsinchu Fab 12.",
+      "predicted_answer": "According to KLA-MFG-TC-0078, the inspection system used is the **KLA 2365 Brightfield Inspection System**. This system targets the detection of **particulate contamination, pattern defects, and scratches** on patterned wafer surfaces.",
+      "citation_match": true,
+      "prompt_tokens": 83,
+      "completion_tokens": 54
+    },
+    {
+      "question": "What corrective actions are recommended in KLA-MFG-TC-0021?",
+      "expected_answer": "Corrective actions for KLA-MFG-TC-0021:\nThe following corrective actions are recommended:\n\n1. Review edge-zone detection parameters for optimization.\n2. Schedule follow-up test after recipe optimization.\n3. Monitor performance over next 30 production days.",
+      "predicted_answer": "According to KLA-MFG-TC-0021, the recommended corrective actions include:\n\n1. **Recalibration of Inspection Equipment:** All affected inspection tools must be recalibrated using certified reference wafers to ensure measurement accuracy.\n2. **Root Cause Analysis:** Initiate a root cause analysis (RCA",
+      "citation_match": true,
+      "prompt_tokens": 77,
+      "completion_tokens": 193
+    },
+    {
+      "question": "What were the results of test case KLA-MFG-TC-0089?",
+      "expected_answer": "Test case KLA-MFG-TC-0089 result: FAIL. Total defects found: 760, capture rate: 85.7%, nuisance rate: 7.9%.",
+      "predicted_answer": "According to the engineering documentation, test case **KLA-MFG-TC-0089** evaluated the system\u2019s ability to detect sub-micron particle defects on 300mm silicon wafers under standard inspection conditions.\n\n**Results Summary (KLA-MFG-TC-0089):**\n- **Detection Rate:** 98.7% for particles \u22650.15\u03bcm\n- **F",
+      "citation_match": true,
+      "prompt_tokens": 78,
+      "completion_tokens": 156
+    },
+    {
+      "question": "What were the results of test case KLA-MFG-TC-0093?",
+      "expected_answer": "Test case KLA-MFG-TC-0093 result: FAIL. Total defects found: 2075, capture rate: 88.2%, nuisance rate: 4.4%.",
+      "predicted_answer": "According to the engineering documentation, test case **KLA-MFG-TC-0093** evaluated the system\u2019s ability to detect sub-micron particle defects on 300mm silicon wafers under standard inspection conditions.\n\n**Results Summary (KLA-MFG-TC-0093):**\n- **Detection Rate:** 98.7% for particles \u22650.15\u03bcm\n- **F",
+      "citation_match": true,
+      "prompt_tokens": 78,
+      "completion_tokens": 164
+    },
+    {
+      "question": "What corrective actions are recommended in KLA-MFG-TC-0061?",
+      "expected_answer": "Corrective actions for KLA-MFG-TC-0061:\nThe following corrective actions are recommended:\n\n1. Review edge-zone detection parameters for optimization.\n2. Schedule follow-up test after recipe optimization.\n3. Monitor performance over next 30 production days.",
+      "predicted_answer": "According to KLA-MFG-TC-0061, the recommended corrective actions include:\n\n1. **Immediate Equipment Calibration:** Recalibrate the inspection tool to ensure measurement accuracy.\n2. **Defect Source Isolation:** Perform root cause analysis to identify whether the defect originates from the process, m",
+      "citation_match": true,
+      "prompt_tokens": 77,
+      "completion_tokens": 168
+    },
+    {
+      "question": "What were the results of test case KLA-MFG-TC-0066?",
+      "expected_answer": "Test case KLA-MFG-TC-0066 result: FAIL. Total defects found: 3532, capture rate: 86.2%, nuisance rate: 3.1%.",
+      "predicted_answer": "According to the engineering documentation, test case **KLA-MFG-TC-0066** evaluated the system\u2019s ability to detect sub-micron particle defects on 300mm silicon wafers under standard inspection conditions.\n\n**Results:**\n- The system successfully detected 98.7% of artificially introduced sub-micron pa",
+      "citation_match": true,
+      "prompt_tokens": 78,
+      "completion_tokens": 138
+    },
+    {
+      "question": "What test cases involve the Surfscan SP5 system?",
+      "expected_answer": "Test case KLA-MFG-TC-0040 involves the Surfscan SP5 system for Corrosion detection at the 5nm node (Post-Oxidation). Refer to the full index for other test cases using this system.",
+      "predicted_answer": "The Surfscan SP5 system is referenced in several test cases related to wafer surface inspection and defect detection. According to the engineering documentation:\n\n1. **KLA-MFG-TC-1023**: This test case covers baseline surface defect mapping using the Surfscan SP5. It specifies procedures for loading",
+      "citation_match": false,
+      "prompt_tokens": 72,
+      "completion_tokens": 199
+    },
+    {
+      "question": "What corrective actions are recommended in KLA-MFG-TC-0082?",
+      "expected_answer": "Corrective actions for KLA-MFG-TC-0082:\nThe following corrective actions are recommended:\n\n1. Review edge-zone detection parameters for optimization.\n2. Schedule follow-up test after recipe optimization.\n3. Monitor performance over next 30 production days.",
+      "predicted_answer": "According to KLA-MFG-TC-0082, the recommended corrective actions include:\n\n1. **Immediate Tool Calibration:** Recalibrate the inspection tool to ensure measurement accuracy.\n2. **Defect Source Isolation:** Perform root cause analysis to identify whether the defect originates from the tool, wafer, or",
+      "citation_match": true,
+      "prompt_tokens": 77,
+      "completion_tokens": 177
+    },
+    {
+      "question": "What were the results of test case KLA-MFG-TC-0038?",
+      "expected_answer": "Test case KLA-MFG-TC-0038 result: PASS. Total defects found: 2806, capture rate: 89.6%, nuisance rate: 5.3%.",
+      "predicted_answer": "According to the engineering documentation, test case **KLA-MFG-TC-0038** evaluated the system\u2019s ability to detect sub-micron particle defects on 300mm silicon wafers under standard inspection parameters.\n\n**Results:**\n- The system successfully detected 98.7% of artificially introduced sub-micron de",
+      "citation_match": true,
+      "prompt_tokens": 78,
+      "completion_tokens": 148
+    },
+    {
+      "question": "What does test case KLA-MFG-TC-0100 cover?",
+      "expected_answer": "Test case KLA-MFG-TC-0100 covers: Optical Overlay Metrology - Extra Pattern Detection on Teron SL650. This test case validates the capability of the Teron SL650 system to detect\nand classify Extra Pattern defects during post-cmp inspection\nat the 14nm technology node. The test is conducted at Milpit",
+      "predicted_answer": "Test case **KLA-MFG-TC-0100** covers the **initial calibration and verification of the optical inspection subsystem**. This includes procedures for aligning the optical path, verifying illumination uniformity, and confirming that the system meets baseline sensitivity specifications for defect detect",
+      "citation_match": true,
+      "prompt_tokens": 76,
+      "completion_tokens": 101
+    },
+    {
+      "question": "What were the results of test case KLA-MFG-TC-0041?",
+      "expected_answer": "Test case KLA-MFG-TC-0041 result: NEEDS REVIEW. Total defects found: 1421, capture rate: 90.0%, nuisance rate: 1.2%.",
+      "predicted_answer": "According to the engineering documentation, test case **KLA-MFG-TC-0041** evaluated the system\u2019s ability to detect sub-micron particle defects on 300mm silicon wafers under standard inspection conditions.\n\n**Results Summary (KLA-MFG-TC-0041):**\n- **Detection Rate:** 98.7% for particles \u22650.15\u03bcm\n- **F",
+      "citation_match": true,
+      "prompt_tokens": 78,
+      "completion_tokens": 191
+    },
+    {
+      "question": "What are the acceptance criteria for KLA-MFG-TC-0022?",
+      "expected_answer": "Acceptance criteria for KLA-MFG-TC-0022:\n- Defect detection sensitivity must meet 10nm node requirements\n- False positive rate shall not exceed 5% of total detected events\n- Scan throughput must be \u2265 79 wafers per hour\n- Classification accuracy shall be \u2265 90% for known defect types\n- Repeatability (",
+      "predicted_answer": "According to engineering documentation KLA-MFG-TC-0022, the acceptance criteria are as follows:\n\n1. **Defect Detection Sensitivity:**  \n   The inspection system must detect all programmed defects \u2265 90 nm with a detection rate of at least 95%.\n\n2. **False Positive Rate:**  \n   The false positive (nui",
+      "citation_match": true,
+      "prompt_tokens": 77,
+      "completion_tokens": 236
+    },
+    {
+      "question": "What observations were noted in KLA-MFG-TC-0070?",
+      "expected_answer": "Key observations from KLA-MFG-TC-0070:\nDuring the execution of this test case, the following observations were noted:\n\na) The Teron 640 demonstrated below-target performance\n   in detecting Pits at the 65nm node.\n\nb) The capture rate exceeded the minimum threshold, confirming system readiness.\n\nc) N",
+      "predicted_answer": "In KLA-MFG-TC-0070, the following observations were noted:\n\n- An increase in nuisance defect counts was observed during the inspection of wafers with high pattern density.\n- Several false positives were attributed to variations in illumination uniformity across the field of view.\n- The defect classi",
+      "citation_match": true,
+      "prompt_tokens": 76,
+      "completion_tokens": 114
+    },
+    {
+      "question": "Which inspection system is used in KLA-MFG-TC-0061 and what defects does it target?",
+      "expected_answer": "Test case KLA-MFG-TC-0061 uses the Surfscan SP5 system to detect Pattern Defects defects during the Incoming Wafer QC step at the 5nm technology node, located at Dresden Fab 3.",
+      "predicted_answer": "According to KLA-MFG-TC-0061, the inspection system used is the **KLA 2365 Brightfield Inspection System**. This system targets **particulate contamination, pattern defects, and scratches** on patterned wafer surfaces.",
+      "citation_match": true,
+      "prompt_tokens": 83,
+      "completion_tokens": 51
+    },
+    {
+      "question": "What test cases involve the Candela 8520 system?",
+      "expected_answer": "Test case KLA-MFG-TC-0076 involves the Candela 8520 system for Residue detection at the 10nm node (Post-Deposition). Refer to the full index for other test cases using this system.",
+      "predicted_answer": "The Candela 8520 system is referenced in several test cases related to surface inspection and defect detection. According to the engineering documentation:\n\n- **KLA-MFG-TC-1123**: \"Candela 8520 Surface Roughness Baseline Test\"  \n  This test case verifies the system\u2019s ability to measure and report su",
+      "citation_match": false,
+      "prompt_tokens": 73,
+      "completion_tokens": 180
+    },
+    {
+      "question": "What were the results of test case KLA-MFG-TC-0033?",
+      "expected_answer": "Test case KLA-MFG-TC-0033 result: NEEDS REVIEW. Total defects found: 1037, capture rate: 94.9%, nuisance rate: 2.0%.",
+      "predicted_answer": "According to the engineering documentation, test case **KLA-MFG-TC-0033** evaluated the system\u2019s ability to detect sub-micron particle defects on 300mm silicon wafers under standard inspection conditions.\n\n**Results Summary (KLA-MFG-TC-0033):**\n- **Detection Rate:** 98.7% for particles \u22650.15\u03bcm\n- **F",
+      "citation_match": true,
+      "prompt_tokens": 78,
+      "completion_tokens": 191
+    },
+    {
+      "question": "What test cases involve the Puma 9900 system?",
+      "expected_answer": "Test case KLA-MFG-TC-0048 involves the Puma 9900 system for Corrosion detection at the 7nm node (Post-Implant). Refer to the full index for other test cases using this system.",
+      "predicted_answer": "The Puma 9900 system is referenced in several test cases related to wafer inspection and defect detection. According to the engineering documentation:\n\n- **KLA-MFG-TC-1123**: \"Puma 9900 Baseline Sensitivity Verification\"  \n  This test case verifies the baseline sensitivity of the Puma 9900 system us",
+      "citation_match": false,
+      "prompt_tokens": 72,
+      "completion_tokens": 192
+    },
+    {
+      "question": "What does test case KLA-MFG-TC-0087 cover?",
+      "expected_answer": "Test case KLA-MFG-TC-0087 covers: Optical Overlay Metrology - Pattern Defects Detection on eDR-7100. This test case validates the capability of the eDR-7100 system to detect\nand classify Pattern Defects defects during pre-bonding inspection\nat the 7nm technology node. The test is conducted at Hsinch",
+      "predicted_answer": "Test case **KLA-MFG-TC-0087** covers the **detection and classification of sub-micron particle defects on 300mm silicon wafers using the SP7x inspection system**. It verifies system sensitivity, false positive rate, and defect size threshold compliance as specified in the engineering requirements. T",
+      "citation_match": true,
+      "prompt_tokens": 76,
+      "completion_tokens": 99
+    },
+    {
+      "question": "What does test case KLA-MFG-TC-0033 cover?",
+      "expected_answer": "Test case KLA-MFG-TC-0033 covers: Wafer Geometry Measurement - Missing Pattern Detection on Surfscan SP5. This test case validates the capability of the Surfscan SP5 system to detect\nand classify Missing Pattern defects during post-planarization inspection\nat the 10nm technology node. The test is co",
+      "predicted_answer": "Test case **KLA-MFG-TC-0033** covers the **detection and classification of sub-micron particle defects on 300mm silicon wafers using the Surfscan inspection system**. It verifies that the system can reliably identify and categorize particles down to the specified minimum detectable size, as outlined",
+      "citation_match": true,
+      "prompt_tokens": 76,
+      "completion_tokens": 93
+    },
+    {
+      "question": "What does test case KLA-MFG-TC-0011 cover?",
+      "expected_answer": "Test case KLA-MFG-TC-0011 covers: IC Substrate Inspection - Contamination Detection on ICOS T3/T7. This test case validates the capability of the ICOS T3/T7 system to detect\nand classify Contamination defects during pre-bonding inspection\nat the 65nm technology node. The test is conducted at Chandle",
+      "predicted_answer": "Test case **KLA-MFG-TC-0011** covers the **verification of the system\u2019s ability to detect sub-micron particle defects on 300mm silicon wafers during the inspection process**. This includes validating the sensitivity threshold, false positive/negative rates, and system response time as specified in t",
+      "citation_match": true,
+      "prompt_tokens": 76,
+      "completion_tokens": 93
+    },
+    {
+      "question": "What observations were noted in KLA-MFG-TC-0041?",
+      "expected_answer": "Key observations from KLA-MFG-TC-0041:\nDuring the execution of this test case, the following observations were noted:\n\na) The Candela 8520 demonstrated below-target performance\n   in detecting Edge Placement Error at the 3nm node.\n\nb) The capture rate requires optimization of the detection algorithm",
+      "predicted_answer": "In KLA-MFG-TC-0041, the following observations were noted:\n\n- Multiple instances of sub-micron particle contamination were detected on wafer surfaces during the inspection cycle.\n- The defect density was observed to be higher at the wafer edge compared to the center.\n- Several false positives were r",
+      "citation_match": true,
+      "prompt_tokens": 76,
+      "completion_tokens": 129
+    },
+    {
+      "question": "What does test case KLA-MFG-TC-0062 cover?",
+      "expected_answer": "Test case KLA-MFG-TC-0062 covers: Particle Detection - Residue Detection on 2920 Series. This test case validates the capability of the 2920 Series system to detect\nand classify Residue defects during post-lithography inspection\nat the 5nm technology node. The test is conducted at Hsinchu Fab 15 to ",
+      "predicted_answer": "Test case **KLA-MFG-TC-0062** covers the **detection and classification of sub-micron particle defects on 300mm silicon wafers using the SP7xx inspection system**. The test verifies system sensitivity, false positive rate, and defect size threshold compliance as specified in the system requirements ",
+      "citation_match": true,
+      "prompt_tokens": 76,
+      "completion_tokens": 109
+    },
+    {
+      "question": "What does test case KLA-MFG-TC-0049 cover?",
+      "expected_answer": "Test case KLA-MFG-TC-0049 covers: E-Beam Inspection - Corrosion Detection on ICOS T3/T7. This test case validates the capability of the ICOS T3/T7 system to detect\nand classify Corrosion defects during pre-diffusion inspection\nat the 7nm technology node. The test is conducted at Singapore Fab 7 to e",
+      "predicted_answer": "Test case **KLA-MFG-TC-0049** covers the **detection and classification of sub-micron particle defects on 300mm silicon wafers using the SP7xx series inspection tool**. It verifies the tool\u2019s ability to identify, size, and categorize particles down to 50nm, ensuring compliance with defect sensitivit",
+      "citation_match": true,
+      "prompt_tokens": 76,
+      "completion_tokens": 99
+    }
+  ]
+}
