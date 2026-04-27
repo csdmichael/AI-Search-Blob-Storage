@@ -15,12 +15,6 @@ Each use case has its own **README, architecture diagram, and demo script** read
 
 ## Architecture
 
-### Combined Architecture (both use cases)
-
-![Architecture Diagram](docs/architecture.png)
-
-### Per-Use-Case Architecture
-
 | Manufacturing Inspection | RF Filter Design |
 |:---:|:---:|
 | ![Eng Docs](use-cases/engineering-docs/architecture.png) | ![Filter Design](use-cases/filter-design/architecture.png) |
