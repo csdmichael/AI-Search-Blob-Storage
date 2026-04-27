@@ -1,0 +1,24 @@
+{
+  "use_cases": {
+    "engineering_docs": {
+      "document_prefix": "MFG-TC",
+      "total_documents": 100,
+      "data_subfolder": "engineering-docs",
+      "file_format": "txt",
+      "classification": "CONFIDENTIAL - Internal Use Only",
+      "domain": "Manufacturing Inspection"
+    },
+    "filter_design": {
+      "document_prefix": "FD-TC",
+      "total_documents": 100,
+      "data_subfolder": "filter-design-docs",
+      "file_format": "pdf",
+      "classification": "CONFIDENTIAL - Internal Use Only",
+      "domain": "RF Filter Design"
+    }
+  },
+  "architecture_diagram": {
+    "output_filename": "architecture.png",
+    "dpi": 150
+  }
+}

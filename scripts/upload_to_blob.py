@@ -1,20 +1,27 @@
 """
-Upload engineering documents from data folder to Azure Blob Storage.
+Upload documents from use-case data folder to Azure Blob Storage.
 
 Uses managed identity (DefaultAzureCredential) for authentication.
-Creates the 'engineering-docs' container if it doesn't exist and uploads all documents.
+Creates the container if it doesn't exist and uploads all documents.
+
+Set USE_CASE env var to select: engineering_docs (default) or filter_design
 """
 
 import os
 import sys
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import config
+
 from azure.identity import DefaultAzureCredential
 from azure.storage.blob import BlobServiceClient
 
-STORAGE_ACCOUNT_NAME = "aistoragemyaacoub"
-CONTAINER_NAME = "engineering-docs"
-STORAGE_URL = f"https://{STORAGE_ACCOUNT_NAME}.blob.core.windows.net"
-
-DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data")
+STORAGE_ACCOUNT_NAME = config.storage_account_name()
+CONTAINER_NAME = config.container_name()
+STORAGE_URL = config.storage_url()
+DATA_DIR = config.uc_data_dir()
+_doc_cfg = config.uc_document_config()
+FILE_FORMAT = _doc_cfg["file_format"]
 
 
 def main():
@@ -39,9 +46,10 @@ def main():
         print("Run generate_docs.py first to create the engineering documents.")
         sys.exit(1)
 
-    files = [f for f in os.listdir(DATA_DIR) if f.endswith(".txt")]
+    file_ext = f".{FILE_FORMAT}"
+    files = [f for f in os.listdir(DATA_DIR) if f.endswith(file_ext)]
     if not files:
-        print("No .txt files found in data directory.")
+        print(f"No {file_ext} files found in data directory.")
         sys.exit(1)
 
     print(f"\nUploading {len(files)} documents to container '{CONTAINER_NAME}'...")

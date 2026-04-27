@@ -1,0 +1,147 @@
+================================================================================
+ENGINEERING TEST CASE DOCUMENT
+================================================================================
+
+Document Number: MFG-TC-0070
+Revision: Rev C.9
+Classification: CONFIDENTIAL - Internal Use Only
+
+Title: LED Inspection - Scratches Detection on 2920 Series
+Subtitle: Post-Oxidation Quality Validation for 14nm Node Manufacturing
+
+────────────────────────────────────────────────────────────────────────────────
+DOCUMENT INFORMATION
+────────────────────────────────────────────────────────────────────────────────
+
+Author:           Dr. Priya Sharma
+Reviewer:         Lisa Johansson
+Fab Location:     Milpitas Fab B
+Created Date:     2024-12-05
+Last Modified:    2024-12-18
+Status:           PASS
+Priority:         P4 - Low
+Severity Level:   Informational
+
+────────────────────────────────────────────────────────────────────────────────
+1. OBJECTIVE
+────────────────────────────────────────────────────────────────────────────────
+
+This test case validates the capability of the 2920 Series system to detect
+and classify Scratches defects during post-oxidation inspection
+at the 14nm technology node. The test is conducted at Milpitas Fab B to ensure
+manufacturing quality standards are met for 450mm wafer production.
+
+The primary objective is to verify that the inspection system meets the required
+detection sensitivity and classification accuracy for Scratches defects
+that are critical to yield at the 14nm node. This test case is part of
+the ongoing qualification program for the 2920 Series platform.
+
+────────────────────────────────────────────────────────────────────────────────
+2. SCOPE
+────────────────────────────────────────────────────────────────────────────────
+
+- Product Line: 2920 Series
+- Inspection Type: LED Inspection
+- Target Defect: Scratches
+- Process Step: Post-Oxidation
+- Wafer Size: 450mm
+- Technology Node: 14nm
+- Fab Location: Milpitas Fab B
+
+This test case applies to all 2920 Series systems deployed at Milpitas Fab B
+for post-oxidation monitoring in the 14nm manufacturing line.
+Results from this test are used to establish baseline performance metrics
+and to qualify new recipe configurations.
+
+────────────────────────────────────────────────────────────────────────────────
+3. TEST CONFIGURATION
+────────────────────────────────────────────────────────────────────────────────
+
+System:                2920 Series
+Software Version:      v9.7.710
+Recipe:                LED_INSPECTION_14nm_POST_OXIDATION
+Illumination Mode:     Brightfield
+Scan Speed:            High (194 mm/s)
+Pixel Size:            0.1μm
+Edge Exclusion:        2mm
+Sampling Plan:         9-point sampling
+
+────────────────────────────────────────────────────────────────────────────────
+4. TEST PROCEDURE
+────────────────────────────────────────────────────────────────────────────────
+
+1. Power on the 2920 Series system and allow 30-minute warm-up period.
+2. Load the calibration wafer and run the standard calibration routine.
+3. Verify calibration results are within specification (±2% tolerance).
+4. Load the test wafer onto the stage using the automated handler.
+5. Select the 'LED Inspection' recipe from the recipe library.
+6. Configure detection sensitivity to target Scratches defects.
+7. Set scan parameters: full wafer scan with edge exclusion of 3mm.
+8. Initiate the inspection run and monitor real-time defect map.
+9. Upon completion, review the defect density map and classification results.
+10. Export results to the factory automation system (SECS/GEM interface).
+11. Compare results against the golden reference baseline.
+12. Document any anomalies and generate the summary report.
+
+────────────────────────────────────────────────────────────────────────────────
+5. ACCEPTANCE CRITERIA
+────────────────────────────────────────────────────────────────────────────────
+
+- Defect detection sensitivity must meet 14nm node requirements
+- False positive rate shall not exceed 5% of total detected events
+- Scan throughput must be ≥ 41 wafers per hour
+- Classification accuracy shall be ≥ 98% for known defect types
+- Repeatability (3-sigma) shall be within ±2.1% for LED Inspection
+- System uptime during test shall be ≥ 98%
+- All results must be traceable through the MES integration
+- Measurement correlation with reference tool shall be ≥ 0.92 R²
+
+────────────────────────────────────────────────────────────────────────────────
+6. TEST RESULTS
+────────────────────────────────────────────────────────────────────────────────
+
+Test Execution Date:   2024-12-18
+Wafers Tested:         20
+Total Defects Found:   1385
+Defect Density:        440.86 defects/cm²
+Nuisance Rate:         2.8%
+Capture Rate:          99.6%
+Test Duration:         293 minutes
+System Uptime:         98.1%
+
+Result Classification: PASS
+
+────────────────────────────────────────────────────────────────────────────────
+7. OBSERVATIONS AND FINDINGS
+────────────────────────────────────────────────────────────────────────────────
+
+During the execution of this test case, the following observations were noted:
+
+a) The 2920 Series demonstrated excellent performance
+   in detecting Scratches at the 14nm node.
+
+b) The capture rate exceeded the minimum threshold, confirming system readiness.
+
+c) Nuisance rate is within acceptable limits.
+
+d) Edge-zone defect detection showed improved performance compared to previous revision.
+
+e) The defect review station correlation was within specification.
+
+────────────────────────────────────────────────────────────────────────────────
+8. CORRECTIVE ACTIONS (if applicable)
+────────────────────────────────────────────────────────────────────────────────
+
+No corrective actions required. Test passed all acceptance criteria.
+
+────────────────────────────────────────────────────────────────────────────────
+9. SIGN-OFF
+────────────────────────────────────────────────────────────────────────────────
+
+Author:     Dr. Priya Sharma               Date: 2024-12-18
+Reviewer:   Lisa Johansson                 Date: 2024-12-20
+Approver:   Dr. Kenji Watanabe             Date: 2024-12-29
+
+================================================================================
+END OF DOCUMENT - MFG-TC-0070
+================================================================================

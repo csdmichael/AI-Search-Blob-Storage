@@ -1,0 +1,147 @@
+================================================================================
+ENGINEERING TEST CASE DOCUMENT
+================================================================================
+
+Document Number: MFG-TC-0062
+Revision: Rev B.1
+Classification: CONFIDENTIAL - Internal Use Only
+
+Title: CD-SEM Measurement - Mounds Detection on Zeta-388
+Subtitle: Post-Planarization Quality Validation for 10nm Node Manufacturing
+
+────────────────────────────────────────────────────────────────────────────────
+DOCUMENT INFORMATION
+────────────────────────────────────────────────────────────────────────────────
+
+Author:           Lisa Johansson
+Reviewer:         Robert Kim
+Fab Location:     Milpitas Fab A
+Created Date:     2024-10-13
+Last Modified:    2024-11-12
+Status:           PASS
+Priority:         P3 - Medium
+Severity Level:   Critical
+
+────────────────────────────────────────────────────────────────────────────────
+1. OBJECTIVE
+────────────────────────────────────────────────────────────────────────────────
+
+This test case validates the capability of the Zeta-388 system to detect
+and classify Mounds defects during post-planarization inspection
+at the 10nm technology node. The test is conducted at Milpitas Fab A to ensure
+manufacturing quality standards are met for 300mm wafer production.
+
+The primary objective is to verify that the inspection system meets the required
+detection sensitivity and classification accuracy for Mounds defects
+that are critical to yield at the 10nm node. This test case is part of
+the ongoing qualification program for the Zeta-388 platform.
+
+────────────────────────────────────────────────────────────────────────────────
+2. SCOPE
+────────────────────────────────────────────────────────────────────────────────
+
+- Product Line: Zeta-388
+- Inspection Type: CD-SEM Measurement
+- Target Defect: Mounds
+- Process Step: Post-Planarization
+- Wafer Size: 300mm
+- Technology Node: 10nm
+- Fab Location: Milpitas Fab A
+
+This test case applies to all Zeta-388 systems deployed at Milpitas Fab A
+for post-planarization monitoring in the 10nm manufacturing line.
+Results from this test are used to establish baseline performance metrics
+and to qualify new recipe configurations.
+
+────────────────────────────────────────────────────────────────────────────────
+3. TEST CONFIGURATION
+────────────────────────────────────────────────────────────────────────────────
+
+System:                Zeta-388
+Software Version:      v10.0.905
+Recipe:                CD-SEM_MEASUREMENT_10nm_POST_PLANARIZATION
+Illumination Mode:     Brightfield
+Scan Speed:            Low (140 mm/s)
+Pixel Size:            0.25μm
+Edge Exclusion:        3mm
+Sampling Plan:         21-point sampling
+
+────────────────────────────────────────────────────────────────────────────────
+4. TEST PROCEDURE
+────────────────────────────────────────────────────────────────────────────────
+
+1. Power on the Zeta-388 system and allow 30-minute warm-up period.
+2. Load the calibration wafer and run the standard calibration routine.
+3. Verify calibration results are within specification (±2% tolerance).
+4. Load the test wafer onto the stage using the automated handler.
+5. Select the 'CD-SEM Measurement' recipe from the recipe library.
+6. Configure detection sensitivity to target Mounds defects.
+7. Set scan parameters: full wafer scan with edge exclusion of 3mm.
+8. Initiate the inspection run and monitor real-time defect map.
+9. Upon completion, review the defect density map and classification results.
+10. Export results to the factory automation system (SECS/GEM interface).
+11. Compare results against the golden reference baseline.
+12. Document any anomalies and generate the summary report.
+
+────────────────────────────────────────────────────────────────────────────────
+5. ACCEPTANCE CRITERIA
+────────────────────────────────────────────────────────────────────────────────
+
+- Defect detection sensitivity must meet 10nm node requirements
+- False positive rate shall not exceed 5% of total detected events
+- Scan throughput must be ≥ 64 wafers per hour
+- Classification accuracy shall be ≥ 97% for known defect types
+- Repeatability (3-sigma) shall be within ±2.1% for CD-SEM Measurement
+- System uptime during test shall be ≥ 98%
+- All results must be traceable through the MES integration
+- Measurement correlation with reference tool shall be ≥ 0.98 R²
+
+────────────────────────────────────────────────────────────────────────────────
+6. TEST RESULTS
+────────────────────────────────────────────────────────────────────────────────
+
+Test Execution Date:   2024-11-12
+Wafers Tested:         13
+Total Defects Found:   4800
+Defect Density:        679.06 defects/cm²
+Nuisance Rate:         2.6%
+Capture Rate:          92.4%
+Test Duration:         372 minutes
+System Uptime:         96.7%
+
+Result Classification: PASS
+
+────────────────────────────────────────────────────────────────────────────────
+7. OBSERVATIONS AND FINDINGS
+────────────────────────────────────────────────────────────────────────────────
+
+During the execution of this test case, the following observations were noted:
+
+a) The Zeta-388 demonstrated excellent performance
+   in detecting Mounds at the 10nm node.
+
+b) The capture rate exceeded the minimum threshold, confirming system readiness.
+
+c) Nuisance rate is within acceptable limits.
+
+d) Throughput metrics met production requirements without sensitivity compromise.
+
+e) Statistical process control charts showed stable performance over the test period.
+
+────────────────────────────────────────────────────────────────────────────────
+8. CORRECTIVE ACTIONS (if applicable)
+────────────────────────────────────────────────────────────────────────────────
+
+No corrective actions required. Test passed all acceptance criteria.
+
+────────────────────────────────────────────────────────────────────────────────
+9. SIGN-OFF
+────────────────────────────────────────────────────────────────────────────────
+
+Author:     Lisa Johansson                 Date: 2024-11-12
+Reviewer:   Robert Kim                     Date: 2024-11-17
+Approver:   Dr. Hans Schmidt               Date: 2024-11-23
+
+================================================================================
+END OF DOCUMENT - MFG-TC-0062
+================================================================================

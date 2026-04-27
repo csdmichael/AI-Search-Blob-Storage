@@ -4,9 +4,16 @@ and schedule it to refresh daily at 8 AM PST.
 
 Supports both semantic and keyword search.
 Uses managed identity for authentication.
+
+Set USE_CASE env var to select: engineering_docs (default) or filter_design
 """
 
 import os
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import config
+
 from azure.identity import DefaultAzureCredential
 from azure.search.documents.indexes import SearchIndexClient, SearchIndexerClient
 from azure.search.documents.indexes.models import (
@@ -26,19 +33,20 @@ from azure.search.documents.indexes.models import (
     FieldMapping,
 )
 
-SEARCH_SERVICE_NAME = "ai-search-my"
-SEARCH_ENDPOINT = f"https://{SEARCH_SERVICE_NAME}.search.windows.net"
-INDEX_NAME = "engineering-docs-index"
-INDEXER_NAME = "engineering-docs-indexer"
-DATA_SOURCE_NAME = "engineering-docs-blob-datasource"
+_res = config.azure_resources()
+_uc_search = config.uc_search_config()
+_global_search = config.search_config()
 
-STORAGE_ACCOUNT_NAME = "aistoragemyaacoub"
-CONTAINER_NAME = "engineering-docs"
-STORAGE_RESOURCE_ID = (
-    "/subscriptions/86b37969-9445-49cf-b03f-d8866235171c"
-    "/resourceGroups/ai-myaacoub"
-    "/providers/Microsoft.Storage/storageAccounts/aistoragemyaacoub"
-)
+SEARCH_SERVICE_NAME = _res["search"]["service_name"]
+SEARCH_ENDPOINT = config.search_endpoint()
+INDEX_NAME = _uc_search["standard_index"]["name"]
+SEMANTIC_CONFIG_NAME = _uc_search["standard_index"]["semantic_config_name"]
+INDEXER_NAME = _uc_search["indexer"]["name"]
+DATA_SOURCE_NAME = _uc_search["indexer"]["data_source_name"]
+
+STORAGE_ACCOUNT_NAME = config.storage_account_name()
+CONTAINER_NAME = config.container_name()
+STORAGE_RESOURCE_ID = config.storage_resource_id()
 
 
 def create_index(index_client: SearchIndexClient):
@@ -85,7 +93,7 @@ def create_index(index_client: SearchIndexClient):
     ]
 
     semantic_config = SemanticConfiguration(
-        name="engineering-docs-semantic-config",
+        name=SEMANTIC_CONFIG_NAME,
         prioritized_fields=SemanticPrioritizedFields(
             content_fields=[SemanticField(field_name="content")],
             title_field=SemanticField(field_name="metadata_storage_name"),
@@ -132,8 +140,8 @@ def create_indexer(indexer_client: SearchIndexerClient):
         data_source_name=DATA_SOURCE_NAME,
         target_index_name=INDEX_NAME,
         schedule=IndexingSchedule(
-            interval="PT24H",  # Every 24 hours
-            start_time="2024-01-01T16:00:00Z",  # 8 AM PST = 4 PM UTC
+            interval=_global_search["schedule"]["interval"],
+            start_time=_global_search["schedule"]["start_time"],
         ),
         field_mappings=[
             FieldMapping(

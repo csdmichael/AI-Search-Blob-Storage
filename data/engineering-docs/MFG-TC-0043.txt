@@ -1,0 +1,147 @@
+================================================================================
+ENGINEERING TEST CASE DOCUMENT
+================================================================================
+
+Document Number: MFG-TC-0043
+Revision: Rev C.3
+Classification: CONFIDENTIAL - Internal Use Only
+
+Title: CD-SEM Measurement - Crystal Originated Particles (COP) Detection on ICOS T3/T7
+Subtitle: Incoming Wafer QC Quality Validation for 7nm Node Manufacturing
+
+────────────────────────────────────────────────────────────────────────────────
+DOCUMENT INFORMATION
+────────────────────────────────────────────────────────────────────────────────
+
+Author:           Dr. Wei Zhang
+Reviewer:         Dr. Thomas Mueller
+Fab Location:     Chandler Fab 42
+Created Date:     2025-04-27
+Last Modified:    2025-06-25
+Status:           PASS
+Priority:         P4 - Low
+Severity Level:   Major
+
+────────────────────────────────────────────────────────────────────────────────
+1. OBJECTIVE
+────────────────────────────────────────────────────────────────────────────────
+
+This test case validates the capability of the ICOS T3/T7 system to detect
+and classify Crystal Originated Particles (COP) defects during incoming wafer qc inspection
+at the 7nm technology node. The test is conducted at Chandler Fab 42 to ensure
+manufacturing quality standards are met for 200mm wafer production.
+
+The primary objective is to verify that the inspection system meets the required
+detection sensitivity and classification accuracy for Crystal Originated Particles (COP) defects
+that are critical to yield at the 7nm node. This test case is part of
+the ongoing qualification program for the ICOS T3/T7 platform.
+
+────────────────────────────────────────────────────────────────────────────────
+2. SCOPE
+────────────────────────────────────────────────────────────────────────────────
+
+- Product Line: ICOS T3/T7
+- Inspection Type: CD-SEM Measurement
+- Target Defect: Crystal Originated Particles (COP)
+- Process Step: Incoming Wafer QC
+- Wafer Size: 200mm
+- Technology Node: 7nm
+- Fab Location: Chandler Fab 42
+
+This test case applies to all ICOS T3/T7 systems deployed at Chandler Fab 42
+for incoming wafer qc monitoring in the 7nm manufacturing line.
+Results from this test are used to establish baseline performance metrics
+and to qualify new recipe configurations.
+
+────────────────────────────────────────────────────────────────────────────────
+3. TEST CONFIGURATION
+────────────────────────────────────────────────────────────────────────────────
+
+System:                ICOS T3/T7
+Software Version:      v14.4.639
+Recipe:                CD-SEM_MEASUREMENT_7nm_INCOMING WAFER QC
+Illumination Mode:     Darkfield
+Scan Speed:            Low (190 mm/s)
+Pixel Size:            1.0μm
+Edge Exclusion:        4mm
+Sampling Plan:         9-point sampling
+
+────────────────────────────────────────────────────────────────────────────────
+4. TEST PROCEDURE
+────────────────────────────────────────────────────────────────────────────────
+
+1. Power on the ICOS T3/T7 system and allow 30-minute warm-up period.
+2. Load the calibration wafer and run the standard calibration routine.
+3. Verify calibration results are within specification (±2% tolerance).
+4. Load the test wafer onto the stage using the automated handler.
+5. Select the 'CD-SEM Measurement' recipe from the recipe library.
+6. Configure detection sensitivity to target Crystal Originated Particles (COP) defects.
+7. Set scan parameters: full wafer scan with edge exclusion of 3mm.
+8. Initiate the inspection run and monitor real-time defect map.
+9. Upon completion, review the defect density map and classification results.
+10. Export results to the factory automation system (SECS/GEM interface).
+11. Compare results against the golden reference baseline.
+12. Document any anomalies and generate the summary report.
+
+────────────────────────────────────────────────────────────────────────────────
+5. ACCEPTANCE CRITERIA
+────────────────────────────────────────────────────────────────────────────────
+
+- Defect detection sensitivity must meet 7nm node requirements
+- False positive rate shall not exceed 5% of total detected events
+- Scan throughput must be ≥ 75 wafers per hour
+- Classification accuracy shall be ≥ 94% for known defect types
+- Repeatability (3-sigma) shall be within ±0.9% for CD-SEM Measurement
+- System uptime during test shall be ≥ 98%
+- All results must be traceable through the MES integration
+- Measurement correlation with reference tool shall be ≥ 0.97 R²
+
+────────────────────────────────────────────────────────────────────────────────
+6. TEST RESULTS
+────────────────────────────────────────────────────────────────────────────────
+
+Test Execution Date:   2025-06-25
+Wafers Tested:         33
+Total Defects Found:   2277
+Defect Density:        724.79 defects/cm²
+Nuisance Rate:         6.3%
+Capture Rate:          93.8%
+Test Duration:         354 minutes
+System Uptime:         99.5%
+
+Result Classification: PASS
+
+────────────────────────────────────────────────────────────────────────────────
+7. OBSERVATIONS AND FINDINGS
+────────────────────────────────────────────────────────────────────────────────
+
+During the execution of this test case, the following observations were noted:
+
+a) The ICOS T3/T7 demonstrated excellent performance
+   in detecting Crystal Originated Particles (COP) at the 7nm node.
+
+b) The capture rate exceeded the minimum threshold, confirming system readiness.
+
+c) Nuisance rate exceeds the target threshold; recipe tuning is recommended.
+
+d) Edge-zone defect detection showed improved performance compared to previous revision.
+
+e) The defect review station correlation was within specification.
+
+────────────────────────────────────────────────────────────────────────────────
+8. CORRECTIVE ACTIONS (if applicable)
+────────────────────────────────────────────────────────────────────────────────
+
+No corrective actions required. Test passed all acceptance criteria.
+
+────────────────────────────────────────────────────────────────────────────────
+9. SIGN-OFF
+────────────────────────────────────────────────────────────────────────────────
+
+Author:     Dr. Wei Zhang                  Date: 2025-06-25
+Reviewer:   Dr. Thomas Mueller             Date: 2025-06-29
+Approver:   Dr. Richard Lee                Date: 2025-07-03
+
+================================================================================
+END OF DOCUMENT - MFG-TC-0043
+================================================================================

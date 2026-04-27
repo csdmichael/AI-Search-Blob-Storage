@@ -1,0 +1,153 @@
+================================================================================
+ENGINEERING TEST CASE DOCUMENT
+================================================================================
+
+Document Number: MFG-TC-0021
+Revision: Rev C.1
+Classification: CONFIDENTIAL - Internal Use Only
+
+Title: E-Beam Inspection - Pattern Defects Detection on 2920 Series
+Subtitle: Pre-Diffusion Quality Validation for 28nm Node Manufacturing
+
+────────────────────────────────────────────────────────────────────────────────
+DOCUMENT INFORMATION
+────────────────────────────────────────────────────────────────────────────────
+
+Author:           Maria Gonzalez
+Reviewer:         Dr. Klaus Weber
+Fab Location:     Pyeongtaek Fab 2
+Created Date:     2024-04-29
+Last Modified:    2024-05-14
+Status:           CONDITIONAL PASS
+Priority:         P1 - Critical
+Severity Level:   Informational
+
+────────────────────────────────────────────────────────────────────────────────
+1. OBJECTIVE
+────────────────────────────────────────────────────────────────────────────────
+
+This test case validates the capability of the 2920 Series system to detect
+and classify Pattern Defects defects during pre-diffusion inspection
+at the 28nm technology node. The test is conducted at Pyeongtaek Fab 2 to ensure
+manufacturing quality standards are met for 300mm wafer production.
+
+The primary objective is to verify that the inspection system meets the required
+detection sensitivity and classification accuracy for Pattern Defects defects
+that are critical to yield at the 28nm node. This test case is part of
+the ongoing qualification program for the 2920 Series platform.
+
+────────────────────────────────────────────────────────────────────────────────
+2. SCOPE
+────────────────────────────────────────────────────────────────────────────────
+
+- Product Line: 2920 Series
+- Inspection Type: E-Beam Inspection
+- Target Defect: Pattern Defects
+- Process Step: Pre-Diffusion
+- Wafer Size: 300mm
+- Technology Node: 28nm
+- Fab Location: Pyeongtaek Fab 2
+
+This test case applies to all 2920 Series systems deployed at Pyeongtaek Fab 2
+for pre-diffusion monitoring in the 28nm manufacturing line.
+Results from this test are used to establish baseline performance metrics
+and to qualify new recipe configurations.
+
+────────────────────────────────────────────────────────────────────────────────
+3. TEST CONFIGURATION
+────────────────────────────────────────────────────────────────────────────────
+
+System:                2920 Series
+Software Version:      v13.1.368
+Recipe:                E-BEAM_INSPECTION_28nm_PRE_DIFFUSION
+Illumination Mode:     Brightfield
+Scan Speed:            Low (197 mm/s)
+Pixel Size:            0.1μm
+Edge Exclusion:        4mm
+Sampling Plan:         Full wafer sampling
+
+────────────────────────────────────────────────────────────────────────────────
+4. TEST PROCEDURE
+────────────────────────────────────────────────────────────────────────────────
+
+1. Power on the 2920 Series system and allow 30-minute warm-up period.
+2. Load the calibration wafer and run the standard calibration routine.
+3. Verify calibration results are within specification (±2% tolerance).
+4. Load the test wafer onto the stage using the automated handler.
+5. Select the 'E-Beam Inspection' recipe from the recipe library.
+6. Configure detection sensitivity to target Pattern Defects defects.
+7. Set scan parameters: full wafer scan with edge exclusion of 3mm.
+8. Initiate the inspection run and monitor real-time defect map.
+9. Upon completion, review the defect density map and classification results.
+10. Export results to the factory automation system (SECS/GEM interface).
+11. Compare results against the golden reference baseline.
+12. Document any anomalies and generate the summary report.
+
+────────────────────────────────────────────────────────────────────────────────
+5. ACCEPTANCE CRITERIA
+────────────────────────────────────────────────────────────────────────────────
+
+- Defect detection sensitivity must meet 28nm node requirements
+- False positive rate shall not exceed 5% of total detected events
+- Scan throughput must be ≥ 108 wafers per hour
+- Classification accuracy shall be ≥ 91% for known defect types
+- Repeatability (3-sigma) shall be within ±1.1% for E-Beam Inspection
+- System uptime during test shall be ≥ 98%
+- All results must be traceable through the MES integration
+- Measurement correlation with reference tool shall be ≥ 0.93 R²
+
+────────────────────────────────────────────────────────────────────────────────
+6. TEST RESULTS
+────────────────────────────────────────────────────────────────────────────────
+
+Test Execution Date:   2024-05-14
+Wafers Tested:         21
+Total Defects Found:   518
+Defect Density:        73.28 defects/cm²
+Nuisance Rate:         4.3%
+Capture Rate:          97.2%
+Test Duration:         85 minutes
+System Uptime:         97.3%
+
+Result Classification: CONDITIONAL PASS
+
+────────────────────────────────────────────────────────────────────────────────
+7. OBSERVATIONS AND FINDINGS
+────────────────────────────────────────────────────────────────────────────────
+
+During the execution of this test case, the following observations were noted:
+
+a) The 2920 Series demonstrated acceptable performance
+   in detecting Pattern Defects at the 28nm node.
+
+b) The capture rate exceeded the minimum threshold, confirming system readiness.
+
+c) Nuisance rate is within acceptable limits.
+
+d) Cross-correlation with the reference SEM confirmed classification accuracy.
+
+e) Recipe portability between systems at this fab was confirmed.
+
+────────────────────────────────────────────────────────────────────────────────
+8. CORRECTIVE ACTIONS (if applicable)
+────────────────────────────────────────────────────────────────────────────────
+
+
+The following corrective actions are recommended:
+
+1. Review edge-zone detection parameters for optimization.
+2. Schedule follow-up test after recipe optimization.
+3. Monitor performance over next 30 production days.
+
+
+────────────────────────────────────────────────────────────────────────────────
+9. SIGN-OFF
+────────────────────────────────────────────────────────────────────────────────
+
+Author:     Maria Gonzalez                 Date: 2024-05-14
+Reviewer:   Dr. Klaus Weber                Date: 2024-05-19
+Approver:   Dr. Susan Park                 Date: 2024-05-23
+
+================================================================================
+END OF DOCUMENT - MFG-TC-0021
+================================================================================

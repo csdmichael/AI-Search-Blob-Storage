@@ -1,0 +1,153 @@
+================================================================================
+ENGINEERING TEST CASE DOCUMENT
+================================================================================
+
+Document Number: MFG-TC-0005
+Revision: Rev C.7
+Classification: CONFIDENTIAL - Internal Use Only
+
+Title: LED Inspection - Delamination Detection on WaferSight PWG
+Subtitle: Final Inspection Quality Validation for 10nm Node Manufacturing
+
+────────────────────────────────────────────────────────────────────────────────
+DOCUMENT INFORMATION
+────────────────────────────────────────────────────────────────────────────────
+
+Author:           Lisa Johansson
+Reviewer:         Dr. Amir Patel
+Fab Location:     Milpitas Fab A
+Created Date:     2024-08-18
+Last Modified:    2024-10-07
+Status:           CONDITIONAL PASS
+Priority:         P3 - Medium
+Severity Level:   Major
+
+────────────────────────────────────────────────────────────────────────────────
+1. OBJECTIVE
+────────────────────────────────────────────────────────────────────────────────
+
+This test case validates the capability of the WaferSight PWG system to detect
+and classify Delamination defects during final inspection inspection
+at the 10nm technology node. The test is conducted at Milpitas Fab A to ensure
+manufacturing quality standards are met for 200mm wafer production.
+
+The primary objective is to verify that the inspection system meets the required
+detection sensitivity and classification accuracy for Delamination defects
+that are critical to yield at the 10nm node. This test case is part of
+the ongoing qualification program for the WaferSight PWG platform.
+
+────────────────────────────────────────────────────────────────────────────────
+2. SCOPE
+────────────────────────────────────────────────────────────────────────────────
+
+- Product Line: WaferSight PWG
+- Inspection Type: LED Inspection
+- Target Defect: Delamination
+- Process Step: Final Inspection
+- Wafer Size: 200mm
+- Technology Node: 10nm
+- Fab Location: Milpitas Fab A
+
+This test case applies to all WaferSight PWG systems deployed at Milpitas Fab A
+for final inspection monitoring in the 10nm manufacturing line.
+Results from this test are used to establish baseline performance metrics
+and to qualify new recipe configurations.
+
+────────────────────────────────────────────────────────────────────────────────
+3. TEST CONFIGURATION
+────────────────────────────────────────────────────────────────────────────────
+
+System:                WaferSight PWG
+Software Version:      v14.2.176
+Recipe:                LED_INSPECTION_10nm_FINAL INSPECTION
+Illumination Mode:     Darkfield
+Scan Speed:            Low (54 mm/s)
+Pixel Size:            0.5μm
+Edge Exclusion:        4mm
+Sampling Plan:         Full wafer sampling
+
+────────────────────────────────────────────────────────────────────────────────
+4. TEST PROCEDURE
+────────────────────────────────────────────────────────────────────────────────
+
+1. Power on the WaferSight PWG system and allow 30-minute warm-up period.
+2. Load the calibration wafer and run the standard calibration routine.
+3. Verify calibration results are within specification (±2% tolerance).
+4. Load the test wafer onto the stage using the automated handler.
+5. Select the 'LED Inspection' recipe from the recipe library.
+6. Configure detection sensitivity to target Delamination defects.
+7. Set scan parameters: full wafer scan with edge exclusion of 3mm.
+8. Initiate the inspection run and monitor real-time defect map.
+9. Upon completion, review the defect density map and classification results.
+10. Export results to the factory automation system (SECS/GEM interface).
+11. Compare results against the golden reference baseline.
+12. Document any anomalies and generate the summary report.
+
+────────────────────────────────────────────────────────────────────────────────
+5. ACCEPTANCE CRITERIA
+────────────────────────────────────────────────────────────────────────────────
+
+- Defect detection sensitivity must meet 10nm node requirements
+- False positive rate shall not exceed 5% of total detected events
+- Scan throughput must be ≥ 76 wafers per hour
+- Classification accuracy shall be ≥ 91% for known defect types
+- Repeatability (3-sigma) shall be within ±2.0% for LED Inspection
+- System uptime during test shall be ≥ 98%
+- All results must be traceable through the MES integration
+- Measurement correlation with reference tool shall be ≥ 0.98 R²
+
+────────────────────────────────────────────────────────────────────────────────
+6. TEST RESULTS
+────────────────────────────────────────────────────────────────────────────────
+
+Test Execution Date:   2024-10-07
+Wafers Tested:         12
+Total Defects Found:   4488
+Defect Density:        1428.58 defects/cm²
+Nuisance Rate:         4.4%
+Capture Rate:          95.2%
+Test Duration:         286 minutes
+System Uptime:         99.6%
+
+Result Classification: CONDITIONAL PASS
+
+────────────────────────────────────────────────────────────────────────────────
+7. OBSERVATIONS AND FINDINGS
+────────────────────────────────────────────────────────────────────────────────
+
+During the execution of this test case, the following observations were noted:
+
+a) The WaferSight PWG demonstrated acceptable performance
+   in detecting Delamination at the 10nm node.
+
+b) The capture rate exceeded the minimum threshold, confirming system readiness.
+
+c) Nuisance rate is within acceptable limits.
+
+d) Cross-correlation with the reference SEM confirmed classification accuracy.
+
+e) SECS/GEM communication was verified with zero packet loss during data transfer.
+
+────────────────────────────────────────────────────────────────────────────────
+8. CORRECTIVE ACTIONS (if applicable)
+────────────────────────────────────────────────────────────────────────────────
+
+
+The following corrective actions are recommended:
+
+1. Review edge-zone detection parameters for optimization.
+2. Schedule follow-up test after recipe optimization.
+3. Monitor performance over next 30 production days.
+
+
+────────────────────────────────────────────────────────────────────────────────
+9. SIGN-OFF
+────────────────────────────────────────────────────────────────────────────────
+
+Author:     Lisa Johansson                 Date: 2024-10-07
+Reviewer:   Dr. Amir Patel                 Date: 2024-10-09
+Approver:   Dr. Hans Schmidt               Date: 2024-10-16
+
+================================================================================
+END OF DOCUMENT - MFG-TC-0005
+================================================================================

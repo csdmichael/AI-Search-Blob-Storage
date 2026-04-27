@@ -1,0 +1,153 @@
+================================================================================
+ENGINEERING TEST CASE DOCUMENT
+================================================================================
+
+Document Number: MFG-TC-0059
+Revision: Rev B.5
+Classification: CONFIDENTIAL - Internal Use Only
+
+Title: Bare Wafer Inspection - Pits Detection on ICOS T3/T7
+Subtitle: Post-Anneal Quality Validation for 22nm Node Manufacturing
+
+────────────────────────────────────────────────────────────────────────────────
+DOCUMENT INFORMATION
+────────────────────────────────────────────────────────────────────────────────
+
+Author:           Dr. Wei Zhang
+Reviewer:         Dr. Priya Sharma
+Fab Location:     Dresden Fab 3
+Created Date:     2024-05-03
+Last Modified:    2024-05-23
+Status:           NEEDS REVIEW
+Priority:         P3 - Medium
+Severity Level:   Critical
+
+────────────────────────────────────────────────────────────────────────────────
+1. OBJECTIVE
+────────────────────────────────────────────────────────────────────────────────
+
+This test case validates the capability of the ICOS T3/T7 system to detect
+and classify Pits defects during post-anneal inspection
+at the 22nm technology node. The test is conducted at Dresden Fab 3 to ensure
+manufacturing quality standards are met for 450mm wafer production.
+
+The primary objective is to verify that the inspection system meets the required
+detection sensitivity and classification accuracy for Pits defects
+that are critical to yield at the 22nm node. This test case is part of
+the ongoing qualification program for the ICOS T3/T7 platform.
+
+────────────────────────────────────────────────────────────────────────────────
+2. SCOPE
+────────────────────────────────────────────────────────────────────────────────
+
+- Product Line: ICOS T3/T7
+- Inspection Type: Bare Wafer Inspection
+- Target Defect: Pits
+- Process Step: Post-Anneal
+- Wafer Size: 450mm
+- Technology Node: 22nm
+- Fab Location: Dresden Fab 3
+
+This test case applies to all ICOS T3/T7 systems deployed at Dresden Fab 3
+for post-anneal monitoring in the 22nm manufacturing line.
+Results from this test are used to establish baseline performance metrics
+and to qualify new recipe configurations.
+
+────────────────────────────────────────────────────────────────────────────────
+3. TEST CONFIGURATION
+────────────────────────────────────────────────────────────────────────────────
+
+System:                ICOS T3/T7
+Software Version:      v9.9.583
+Recipe:                BARE_WAFER_INSPECTION_22nm_POST_ANNEAL
+Illumination Mode:     Darkfield
+Scan Speed:            Medium (140 mm/s)
+Pixel Size:            1.0μm
+Edge Exclusion:        4mm
+Sampling Plan:         5-point sampling
+
+────────────────────────────────────────────────────────────────────────────────
+4. TEST PROCEDURE
+────────────────────────────────────────────────────────────────────────────────
+
+1. Power on the ICOS T3/T7 system and allow 30-minute warm-up period.
+2. Load the calibration wafer and run the standard calibration routine.
+3. Verify calibration results are within specification (±2% tolerance).
+4. Load the test wafer onto the stage using the automated handler.
+5. Select the 'Bare Wafer Inspection' recipe from the recipe library.
+6. Configure detection sensitivity to target Pits defects.
+7. Set scan parameters: full wafer scan with edge exclusion of 3mm.
+8. Initiate the inspection run and monitor real-time defect map.
+9. Upon completion, review the defect density map and classification results.
+10. Export results to the factory automation system (SECS/GEM interface).
+11. Compare results against the golden reference baseline.
+12. Document any anomalies and generate the summary report.
+
+────────────────────────────────────────────────────────────────────────────────
+5. ACCEPTANCE CRITERIA
+────────────────────────────────────────────────────────────────────────────────
+
+- Defect detection sensitivity must meet 22nm node requirements
+- False positive rate shall not exceed 5% of total detected events
+- Scan throughput must be ≥ 70 wafers per hour
+- Classification accuracy shall be ≥ 91% for known defect types
+- Repeatability (3-sigma) shall be within ±1.9% for Bare Wafer Inspection
+- System uptime during test shall be ≥ 98%
+- All results must be traceable through the MES integration
+- Measurement correlation with reference tool shall be ≥ 0.98 R²
+
+────────────────────────────────────────────────────────────────────────────────
+6. TEST RESULTS
+────────────────────────────────────────────────────────────────────────────────
+
+Test Execution Date:   2024-05-23
+Wafers Tested:         46
+Total Defects Found:   3981
+Defect Density:        1267.19 defects/cm²
+Nuisance Rate:         5.0%
+Capture Rate:          86.1%
+Test Duration:         402 minutes
+System Uptime:         96.2%
+
+Result Classification: NEEDS REVIEW
+
+────────────────────────────────────────────────────────────────────────────────
+7. OBSERVATIONS AND FINDINGS
+────────────────────────────────────────────────────────────────────────────────
+
+During the execution of this test case, the following observations were noted:
+
+a) The ICOS T3/T7 demonstrated below-target performance
+   in detecting Pits at the 22nm node.
+
+b) The capture rate requires optimization of the detection algorithm.
+
+c) Nuisance rate exceeds the target threshold; recipe tuning is recommended.
+
+d) Throughput metrics met production requirements without sensitivity compromise.
+
+e) Recipe portability between systems at this fab was confirmed.
+
+────────────────────────────────────────────────────────────────────────────────
+8. CORRECTIVE ACTIONS (if applicable)
+────────────────────────────────────────────────────────────────────────────────
+
+
+The following corrective actions are recommended:
+
+1. Review edge-zone detection parameters for optimization.
+2. Schedule follow-up test after recipe optimization.
+3. Monitor performance over next 30 production days.
+
+
+────────────────────────────────────────────────────────────────────────────────
+9. SIGN-OFF
+────────────────────────────────────────────────────────────────────────────────
+
+Author:     Dr. Wei Zhang                  Date: 2024-05-23
+Reviewer:   Dr. Priya Sharma               Date: 2024-05-27
+Approver:   Dr. Hans Schmidt               Date: 2024-05-26
+
+================================================================================
+END OF DOCUMENT - MFG-TC-0059
+================================================================================

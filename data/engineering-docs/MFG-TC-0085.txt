@@ -1,0 +1,153 @@
+================================================================================
+ENGINEERING TEST CASE DOCUMENT
+================================================================================
+
+Document Number: MFG-TC-0085
+Revision: Rev D.3
+Classification: CONFIDENTIAL - Internal Use Only
+
+Title: E-Beam Inspection - Contamination Detection on C205 Broadband Plasma
+Subtitle: Incoming Wafer QC Quality Validation for 3nm Node Manufacturing
+
+────────────────────────────────────────────────────────────────────────────────
+DOCUMENT INFORMATION
+────────────────────────────────────────────────────────────────────────────────
+
+Author:           Lisa Johansson
+Reviewer:         Maria Gonzalez
+Fab Location:     Chandler Fab 42
+Created Date:     2024-03-29
+Last Modified:    2024-03-31
+Status:           CONDITIONAL PASS
+Priority:         P3 - Medium
+Severity Level:   Critical
+
+────────────────────────────────────────────────────────────────────────────────
+1. OBJECTIVE
+────────────────────────────────────────────────────────────────────────────────
+
+This test case validates the capability of the C205 Broadband Plasma system to detect
+and classify Contamination defects during incoming wafer qc inspection
+at the 3nm technology node. The test is conducted at Chandler Fab 42 to ensure
+manufacturing quality standards are met for 200mm wafer production.
+
+The primary objective is to verify that the inspection system meets the required
+detection sensitivity and classification accuracy for Contamination defects
+that are critical to yield at the 3nm node. This test case is part of
+the ongoing qualification program for the C205 Broadband Plasma platform.
+
+────────────────────────────────────────────────────────────────────────────────
+2. SCOPE
+────────────────────────────────────────────────────────────────────────────────
+
+- Product Line: C205 Broadband Plasma
+- Inspection Type: E-Beam Inspection
+- Target Defect: Contamination
+- Process Step: Incoming Wafer QC
+- Wafer Size: 200mm
+- Technology Node: 3nm
+- Fab Location: Chandler Fab 42
+
+This test case applies to all C205 Broadband Plasma systems deployed at Chandler Fab 42
+for incoming wafer qc monitoring in the 3nm manufacturing line.
+Results from this test are used to establish baseline performance metrics
+and to qualify new recipe configurations.
+
+────────────────────────────────────────────────────────────────────────────────
+3. TEST CONFIGURATION
+────────────────────────────────────────────────────────────────────────────────
+
+System:                C205 Broadband Plasma
+Software Version:      v9.2.154
+Recipe:                E-BEAM_INSPECTION_3nm_INCOMING WAFER QC
+Illumination Mode:     Darkfield
+Scan Speed:            High (144 mm/s)
+Pixel Size:            0.1μm
+Edge Exclusion:        2mm
+Sampling Plan:         9-point sampling
+
+────────────────────────────────────────────────────────────────────────────────
+4. TEST PROCEDURE
+────────────────────────────────────────────────────────────────────────────────
+
+1. Power on the C205 Broadband Plasma system and allow 30-minute warm-up period.
+2. Load the calibration wafer and run the standard calibration routine.
+3. Verify calibration results are within specification (±2% tolerance).
+4. Load the test wafer onto the stage using the automated handler.
+5. Select the 'E-Beam Inspection' recipe from the recipe library.
+6. Configure detection sensitivity to target Contamination defects.
+7. Set scan parameters: full wafer scan with edge exclusion of 3mm.
+8. Initiate the inspection run and monitor real-time defect map.
+9. Upon completion, review the defect density map and classification results.
+10. Export results to the factory automation system (SECS/GEM interface).
+11. Compare results against the golden reference baseline.
+12. Document any anomalies and generate the summary report.
+
+────────────────────────────────────────────────────────────────────────────────
+5. ACCEPTANCE CRITERIA
+────────────────────────────────────────────────────────────────────────────────
+
+- Defect detection sensitivity must meet 3nm node requirements
+- False positive rate shall not exceed 5% of total detected events
+- Scan throughput must be ≥ 114 wafers per hour
+- Classification accuracy shall be ≥ 98% for known defect types
+- Repeatability (3-sigma) shall be within ±1.4% for E-Beam Inspection
+- System uptime during test shall be ≥ 98%
+- All results must be traceable through the MES integration
+- Measurement correlation with reference tool shall be ≥ 0.95 R²
+
+────────────────────────────────────────────────────────────────────────────────
+6. TEST RESULTS
+────────────────────────────────────────────────────────────────────────────────
+
+Test Execution Date:   2024-03-31
+Wafers Tested:         15
+Total Defects Found:   2934
+Defect Density:        933.92 defects/cm²
+Nuisance Rate:         1.7%
+Capture Rate:          97.7%
+Test Duration:         181 minutes
+System Uptime:         99.1%
+
+Result Classification: CONDITIONAL PASS
+
+────────────────────────────────────────────────────────────────────────────────
+7. OBSERVATIONS AND FINDINGS
+────────────────────────────────────────────────────────────────────────────────
+
+During the execution of this test case, the following observations were noted:
+
+a) The C205 Broadband Plasma demonstrated acceptable performance
+   in detecting Contamination at the 3nm node.
+
+b) The capture rate exceeded the minimum threshold, confirming system readiness.
+
+c) Nuisance rate is within acceptable limits.
+
+d) Minor calibration drift was detected after extended run; re-calibration resolved the issue.
+
+e) The defect review station correlation was within specification.
+
+────────────────────────────────────────────────────────────────────────────────
+8. CORRECTIVE ACTIONS (if applicable)
+────────────────────────────────────────────────────────────────────────────────
+
+
+The following corrective actions are recommended:
+
+1. Review edge-zone detection parameters for optimization.
+2. Schedule follow-up test after recipe optimization.
+3. Monitor performance over next 30 production days.
+
+
+────────────────────────────────────────────────────────────────────────────────
+9. SIGN-OFF
+────────────────────────────────────────────────────────────────────────────────
+
+Author:     Lisa Johansson                 Date: 2024-03-31
+Reviewer:   Maria Gonzalez                 Date: 2024-04-02
+Approver:   Dr. Susan Park                 Date: 2024-04-06
+
+================================================================================
+END OF DOCUMENT - MFG-TC-0085
+================================================================================

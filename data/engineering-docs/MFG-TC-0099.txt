@@ -1,0 +1,147 @@
+================================================================================
+ENGINEERING TEST CASE DOCUMENT
+================================================================================
+
+Document Number: MFG-TC-0099
+Revision: Rev A.5
+Classification: CONFIDENTIAL - Internal Use Only
+
+Title: Unpatterned Wafer Inspection - Delamination Detection on Puma 9xxx
+Subtitle: Post-Oxidation Quality Validation for 7nm Node Manufacturing
+
+────────────────────────────────────────────────────────────────────────────────
+DOCUMENT INFORMATION
+────────────────────────────────────────────────────────────────────────────────
+
+Author:           Michael Torres
+Reviewer:         Robert Kim
+Fab Location:     Hsinchu Fab 15
+Created Date:     2024-11-18
+Last Modified:    2024-12-31
+Status:           PASS
+Priority:         P4 - Low
+Severity Level:   Informational
+
+────────────────────────────────────────────────────────────────────────────────
+1. OBJECTIVE
+────────────────────────────────────────────────────────────────────────────────
+
+This test case validates the capability of the Puma 9xxx system to detect
+and classify Delamination defects during post-oxidation inspection
+at the 7nm technology node. The test is conducted at Hsinchu Fab 15 to ensure
+manufacturing quality standards are met for 450mm wafer production.
+
+The primary objective is to verify that the inspection system meets the required
+detection sensitivity and classification accuracy for Delamination defects
+that are critical to yield at the 7nm node. This test case is part of
+the ongoing qualification program for the Puma 9xxx platform.
+
+────────────────────────────────────────────────────────────────────────────────
+2. SCOPE
+────────────────────────────────────────────────────────────────────────────────
+
+- Product Line: Puma 9xxx
+- Inspection Type: Unpatterned Wafer Inspection
+- Target Defect: Delamination
+- Process Step: Post-Oxidation
+- Wafer Size: 450mm
+- Technology Node: 7nm
+- Fab Location: Hsinchu Fab 15
+
+This test case applies to all Puma 9xxx systems deployed at Hsinchu Fab 15
+for post-oxidation monitoring in the 7nm manufacturing line.
+Results from this test are used to establish baseline performance metrics
+and to qualify new recipe configurations.
+
+────────────────────────────────────────────────────────────────────────────────
+3. TEST CONFIGURATION
+────────────────────────────────────────────────────────────────────────────────
+
+System:                Puma 9xxx
+Software Version:      v11.4.680
+Recipe:                UNPATTERNED_WAFER_INSPECTION_7nm_POST_OXIDATION
+Illumination Mode:     Brightfield
+Scan Speed:            High (118 mm/s)
+Pixel Size:            1.0μm
+Edge Exclusion:        2mm
+Sampling Plan:         5-point sampling
+
+────────────────────────────────────────────────────────────────────────────────
+4. TEST PROCEDURE
+────────────────────────────────────────────────────────────────────────────────
+
+1. Power on the Puma 9xxx system and allow 30-minute warm-up period.
+2. Load the calibration wafer and run the standard calibration routine.
+3. Verify calibration results are within specification (±2% tolerance).
+4. Load the test wafer onto the stage using the automated handler.
+5. Select the 'Unpatterned Wafer Inspection' recipe from the recipe library.
+6. Configure detection sensitivity to target Delamination defects.
+7. Set scan parameters: full wafer scan with edge exclusion of 3mm.
+8. Initiate the inspection run and monitor real-time defect map.
+9. Upon completion, review the defect density map and classification results.
+10. Export results to the factory automation system (SECS/GEM interface).
+11. Compare results against the golden reference baseline.
+12. Document any anomalies and generate the summary report.
+
+────────────────────────────────────────────────────────────────────────────────
+5. ACCEPTANCE CRITERIA
+────────────────────────────────────────────────────────────────────────────────
+
+- Defect detection sensitivity must meet 7nm node requirements
+- False positive rate shall not exceed 5% of total detected events
+- Scan throughput must be ≥ 112 wafers per hour
+- Classification accuracy shall be ≥ 97% for known defect types
+- Repeatability (3-sigma) shall be within ±0.5% for Unpatterned Wafer Inspection
+- System uptime during test shall be ≥ 98%
+- All results must be traceable through the MES integration
+- Measurement correlation with reference tool shall be ≥ 0.94 R²
+
+────────────────────────────────────────────────────────────────────────────────
+6. TEST RESULTS
+────────────────────────────────────────────────────────────────────────────────
+
+Test Execution Date:   2024-12-31
+Wafers Tested:         37
+Total Defects Found:   3140
+Defect Density:        999.49 defects/cm²
+Nuisance Rate:         3.5%
+Capture Rate:          98.1%
+Test Duration:         196 minutes
+System Uptime:         98.7%
+
+Result Classification: PASS
+
+────────────────────────────────────────────────────────────────────────────────
+7. OBSERVATIONS AND FINDINGS
+────────────────────────────────────────────────────────────────────────────────
+
+During the execution of this test case, the following observations were noted:
+
+a) The Puma 9xxx demonstrated excellent performance
+   in detecting Delamination at the 7nm node.
+
+b) The capture rate exceeded the minimum threshold, confirming system readiness.
+
+c) Nuisance rate is within acceptable limits.
+
+d) Edge-zone defect detection showed improved performance compared to previous revision.
+
+e) Statistical process control charts showed stable performance over the test period.
+
+────────────────────────────────────────────────────────────────────────────────
+8. CORRECTIVE ACTIONS (if applicable)
+────────────────────────────────────────────────────────────────────────────────
+
+No corrective actions required. Test passed all acceptance criteria.
+
+────────────────────────────────────────────────────────────────────────────────
+9. SIGN-OFF
+────────────────────────────────────────────────────────────────────────────────
+
+Author:     Michael Torres                 Date: 2024-12-31
+Reviewer:   Robert Kim                     Date: 2025-01-06
+Approver:   Dr. Hans Schmidt               Date: 2025-01-06
+
+================================================================================
+END OF DOCUMENT - MFG-TC-0099
+================================================================================

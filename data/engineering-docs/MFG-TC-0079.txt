@@ -1,0 +1,153 @@
+================================================================================
+ENGINEERING TEST CASE DOCUMENT
+================================================================================
+
+Document Number: MFG-TC-0079
+Revision: Rev B.5
+Classification: CONFIDENTIAL - Internal Use Only
+
+Title: IC Substrate Inspection - Micro-cracks Detection on Archer 700
+Subtitle: Pre-Bonding Quality Validation for 28nm Node Manufacturing
+
+────────────────────────────────────────────────────────────────────────────────
+DOCUMENT INFORMATION
+────────────────────────────────────────────────────────────────────────────────
+
+Author:           Robert Kim
+Reviewer:         Dr. Klaus Weber
+Fab Location:     Chandler Fab 42
+Created Date:     2024-04-15
+Last Modified:    2024-06-07
+Status:           FAIL
+Priority:         P4 - Low
+Severity Level:   Informational
+
+────────────────────────────────────────────────────────────────────────────────
+1. OBJECTIVE
+────────────────────────────────────────────────────────────────────────────────
+
+This test case validates the capability of the Archer 700 system to detect
+and classify Micro-cracks defects during pre-bonding inspection
+at the 28nm technology node. The test is conducted at Chandler Fab 42 to ensure
+manufacturing quality standards are met for 200mm wafer production.
+
+The primary objective is to verify that the inspection system meets the required
+detection sensitivity and classification accuracy for Micro-cracks defects
+that are critical to yield at the 28nm node. This test case is part of
+the ongoing qualification program for the Archer 700 platform.
+
+────────────────────────────────────────────────────────────────────────────────
+2. SCOPE
+────────────────────────────────────────────────────────────────────────────────
+
+- Product Line: Archer 700
+- Inspection Type: IC Substrate Inspection
+- Target Defect: Micro-cracks
+- Process Step: Pre-Bonding
+- Wafer Size: 200mm
+- Technology Node: 28nm
+- Fab Location: Chandler Fab 42
+
+This test case applies to all Archer 700 systems deployed at Chandler Fab 42
+for pre-bonding monitoring in the 28nm manufacturing line.
+Results from this test are used to establish baseline performance metrics
+and to qualify new recipe configurations.
+
+────────────────────────────────────────────────────────────────────────────────
+3. TEST CONFIGURATION
+────────────────────────────────────────────────────────────────────────────────
+
+System:                Archer 700
+Software Version:      v15.0.782
+Recipe:                IC_SUBSTRATE_INSPECTION_28nm_PRE_BONDING
+Illumination Mode:     Darkfield
+Scan Speed:            Low (109 mm/s)
+Pixel Size:            0.1μm
+Edge Exclusion:        2mm
+Sampling Plan:         9-point sampling
+
+────────────────────────────────────────────────────────────────────────────────
+4. TEST PROCEDURE
+────────────────────────────────────────────────────────────────────────────────
+
+1. Power on the Archer 700 system and allow 30-minute warm-up period.
+2. Load the calibration wafer and run the standard calibration routine.
+3. Verify calibration results are within specification (±2% tolerance).
+4. Load the test wafer onto the stage using the automated handler.
+5. Select the 'IC Substrate Inspection' recipe from the recipe library.
+6. Configure detection sensitivity to target Micro-cracks defects.
+7. Set scan parameters: full wafer scan with edge exclusion of 3mm.
+8. Initiate the inspection run and monitor real-time defect map.
+9. Upon completion, review the defect density map and classification results.
+10. Export results to the factory automation system (SECS/GEM interface).
+11. Compare results against the golden reference baseline.
+12. Document any anomalies and generate the summary report.
+
+────────────────────────────────────────────────────────────────────────────────
+5. ACCEPTANCE CRITERIA
+────────────────────────────────────────────────────────────────────────────────
+
+- Defect detection sensitivity must meet 28nm node requirements
+- False positive rate shall not exceed 5% of total detected events
+- Scan throughput must be ≥ 69 wafers per hour
+- Classification accuracy shall be ≥ 92% for known defect types
+- Repeatability (3-sigma) shall be within ±1.3% for IC Substrate Inspection
+- System uptime during test shall be ≥ 98%
+- All results must be traceable through the MES integration
+- Measurement correlation with reference tool shall be ≥ 0.96 R²
+
+────────────────────────────────────────────────────────────────────────────────
+6. TEST RESULTS
+────────────────────────────────────────────────────────────────────────────────
+
+Test Execution Date:   2024-06-07
+Wafers Tested:         36
+Total Defects Found:   4391
+Defect Density:        1397.7 defects/cm²
+Nuisance Rate:         5.9%
+Capture Rate:          98.1%
+Test Duration:         205 minutes
+System Uptime:         98.5%
+
+Result Classification: FAIL
+
+────────────────────────────────────────────────────────────────────────────────
+7. OBSERVATIONS AND FINDINGS
+────────────────────────────────────────────────────────────────────────────────
+
+During the execution of this test case, the following observations were noted:
+
+a) The Archer 700 demonstrated below-target performance
+   in detecting Micro-cracks at the 28nm node.
+
+b) The capture rate exceeded the minimum threshold, confirming system readiness.
+
+c) Nuisance rate exceeds the target threshold; recipe tuning is recommended.
+
+d) No significant drift was observed during the test duration.
+
+e) The system successfully integrated with the factory automation host.
+
+────────────────────────────────────────────────────────────────────────────────
+8. CORRECTIVE ACTIONS (if applicable)
+────────────────────────────────────────────────────────────────────────────────
+
+
+The following corrective actions are recommended:
+
+1. Re-tune detection algorithm thresholds for Micro-cracks at 28nm node.
+2. Schedule follow-up test after recipe optimization.
+3. Escalate to R&D for algorithm enhancement if re-tuning does not resolve sensitivity gap.
+
+
+────────────────────────────────────────────────────────────────────────────────
+9. SIGN-OFF
+────────────────────────────────────────────────────────────────────────────────
+
+Author:     Robert Kim                     Date: 2024-06-07
+Reviewer:   Dr. Klaus Weber                Date: 2024-06-11
+Approver:   Dr. Hans Schmidt               Date: 2024-06-10
+
+================================================================================
+END OF DOCUMENT - MFG-TC-0079
+================================================================================

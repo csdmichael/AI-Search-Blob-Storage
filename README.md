@@ -1,20 +1,40 @@
-# KLA Engineering Docs - AI Search & Foundry Agent
+# AI Search & Foundry Agent — Multi Use-Case Solution
 
-An end-to-end solution that indexes 100 KLA manufacturing engineering test case documents in Azure Blob Storage, creates an Azure AI Search index with semantic and keyword search, and exposes a Foundry Agent that answers questions exclusively from the indexed documents.
+An end-to-end, **reusable** solution that indexes engineering documents in Azure Blob Storage, creates Azure AI Search indexes with semantic and keyword search, and exposes Foundry Agents that answer questions exclusively from the indexed documents. The project supports **multiple use cases** via a single codebase driven by configuration.
+
+## Pick Your Use Case
+
+Each use case has its own **README, architecture diagram, and demo script** ready for customer presentations:
+
+| Use Case | Folder | Demo Focus | Agent | Docs |
+|----------|--------|-----------|-------|------|
+| **Manufacturing Inspection** | [`use-cases/engineering-docs/`](use-cases/engineering-docs/) | AI Search best practices + **Fine-tuning & evaluation** | `Eng-Docs-Search-Agent` | 100 `.txt` (MFG-TC-XXXX) |
+| **RF Filter Design** | [`use-cases/filter-design/`](use-cases/filter-design/) | AI Search best practices + **Ranking & feedback loop** (90%→95%) | `Filter-Design-Agent` | 100 `.pdf` (FD-TC-XXXX) |
+
+> **Solution Engineers**: Go directly to the use case folder for a self-contained README and [DEMO_SCRIPT.md](use-cases/engineering-docs/DEMO_SCRIPT.md) tailored for customer presentations.
 
 ## Architecture
 
+### Combined Architecture (both use cases)
+
 ![Architecture Diagram](docs/architecture.png)
 
-**Components:**
+### Per-Use-Case Architecture
+
+| Manufacturing Inspection | RF Filter Design |
+|:---:|:---:|
+| ![Eng Docs](use-cases/engineering-docs/architecture.png) | ![Filter Design](use-cases/filter-design/architecture.png) |
+
+### Components
 
 | Component | Resource | Description |
 |-----------|----------|-------------|
-| **Azure Blob Storage** | `aistoragemyaacoub` | Stores 100 engineering test case documents in the `engineering-docs` container |
-| **Private VNET & Endpoints** | Existing VNET | Blob Storage accessed via private endpoint for secure data transfer |
+| **Azure Blob Storage** | `aistoragemyaacoub` | Stores documents in separate containers per use case |
+| **Private VNET & Endpoints** | Existing VNET | Blob Storage and AI Search accessed via private endpoints |
 | **Azure AI Search** | `ai-search-my` | Indexes documents with semantic + keyword search; refreshes daily at 8 AM PST |
-| **AI Foundry Agent** | `Eng-Docs-Search-Agent` | Answers engineering queries using only the AI Search index — no web search or fabrication |
+| **AI Foundry Agents** | `Eng-Docs-Search-Agent`, `Filter-Design-Agent` | Answer queries using only AI Search — no web search or fabrication |
 | **Managed Identity** | `DefaultAzureCredential` | All authentication uses managed identity — no keys or secrets |
+| **Ranking & Feedback** | `ranking_feedback.py` | Feedback-driven re-ranking to improve accuracy from 90% to 95% |
 
 ---
 
@@ -26,7 +46,39 @@ An end-to-end solution that indexes 100 KLA manufacturing engineering test case 
   - Storage Account: `aistoragemyaacoub` (with private VNET and private endpoint)
   - AI Search Service: `ai-search-my`
   - AI Foundry Project: `001-ai-poc / 001-ai-proj`
-  - A deployed model (e.g., `gpt-4o`) in the Foundry project
+  - A deployed model (e.g., `gpt-4.1`) in the Foundry project
+
+---
+
+## Configuration
+
+All settings are in the `config/` folder — **nothing is hardcoded** in scripts.
+
+| Config File | Purpose |
+|-------------|---------|
+| [`config/azure_resources.json`](config/azure_resources.json) | Azure subscription, resource group, storage/search/foundry endpoints |
+| [`config/agent_config.json`](config/agent_config.json) | Agent names, instructions, model deployment, fine-tuning params per use case |
+| [`config/search_config.json`](config/search_config.json) | Index names, semantic configs, indexer schedule, chunking params, scoring weights |
+| [`config/storage_config.json`](config/storage_config.json) | Container names per use case, upload settings |
+| [`config/document_config.json`](config/document_config.json) | Document prefix, total count, classification, diagram settings per use case |
+| [`config/__init__.py`](config/__init__.py) | Python config loader with `USE_CASE` env var support |
+
+### Selecting a Use Case
+
+Set the `USE_CASE` environment variable before running any script:
+
+```bash
+# Engineering docs (default)
+export USE_CASE=engineering_docs
+
+# Filter design
+export USE_CASE=filter_design
+```
+
+On Windows PowerShell:
+```powershell
+$env:USE_CASE = "filter_design"
+```
 
 ---
 
@@ -43,38 +95,34 @@ pip install -r requirements.txt
 ### 2. Authenticate with Azure
 
 ```bash
-# Login with your Azure account
 az login
-
-# Set the subscription
 az account set --subscription "86b37969-9445-49cf-b03f-d8866235171c"
 ```
 
 ### 3. Assign managed identity roles
 
 ```bash
-# Get your signed-in user object ID
 USER_OBJECT_ID=$(az ad signed-in-user show --query id -o tsv)
 
-# Storage Blob Data Contributor on the storage account
+# Storage Blob Data Contributor
 az role assignment create \
   --assignee "$USER_OBJECT_ID" \
   --role "Storage Blob Data Contributor" \
   --scope "/subscriptions/86b37969-9445-49cf-b03f-d8866235171c/resourceGroups/ai-myaacoub/providers/Microsoft.Storage/storageAccounts/aistoragemyaacoub"
 
-# Search Index Data Contributor on the search service
+# Search Index Data Contributor
 az role assignment create \
   --assignee "$USER_OBJECT_ID" \
   --role "Search Index Data Contributor" \
   --scope "/subscriptions/86b37969-9445-49cf-b03f-d8866235171c/resourceGroups/ai-myaacoub/providers/Microsoft.Search/searchServices/ai-search-my"
 
-# Search Service Contributor on the search service
+# Search Service Contributor
 az role assignment create \
   --assignee "$USER_OBJECT_ID" \
   --role "Search Service Contributor" \
   --scope "/subscriptions/86b37969-9445-49cf-b03f-d8866235171c/resourceGroups/ai-myaacoub/providers/Microsoft.Search/searchServices/ai-search-my"
 
-# Azure AI Developer on the Foundry project
+# Azure AI Developer
 az role assignment create \
   --assignee "$USER_OBJECT_ID" \
   --role "Azure AI Developer" \
@@ -92,110 +140,132 @@ az role assignment create \
   --scope "/subscriptions/86b37969-9445-49cf-b03f-d8866235171c/resourceGroups/ai-myaacoub/providers/Microsoft.Storage/storageAccounts/aistoragemyaacoub"
 ```
 
-### 4. Generate engineering documents
+### 4. Deploy Engineering Docs Use Case
 
 ```bash
+export USE_CASE=engineering_docs
+
+# Generate 100 manufacturing test case documents (.txt)
 python scripts/generate_docs.py
-```
 
-### 5. Upload documents to Blob Storage
-
-```bash
+# Upload to Blob Storage (engineering-docs container)
 python scripts/upload_to_blob.py
-```
 
-### 6. Create AI Search index and indexer
-
-```bash
+# Create AI Search index and indexer (daily 8 AM PST refresh)
 python scripts/create_search_index.py
-```
 
-### 6b. (Enhanced) Chunk documents by section and index
-
-```bash
+# Create enhanced chunked index with scoring profile
 python scripts/chunk_and_index.py
-```
 
-This creates an optimized `engineering-docs-chunked-index` with section-level chunking, metadata facets, and custom scoring. See [AI Search Best Practices](#ai-search-best-practices) below.
-
-### 7. Create Foundry agent
-
-```bash
-# Set environment variables (update connection name if different)
+# Create Foundry agent (Eng-Docs-Search-Agent)
 export AZURE_AI_SEARCH_CONNECTION_NAME="ai-search-my"
-export MODEL_DEPLOYMENT_NAME="gpt-4o"
-
 python scripts/create_agent.py
+
+# Fine-tune and evaluate
+python scripts/fine_tune_and_evaluate.py
+
+# Run ranking & feedback evaluation
+python scripts/ranking_feedback.py
+
+# Test
+python scripts/test_search.py
 ```
 
-### 8. Fine-tune and evaluate model
+### 5. Deploy Filter Design Use Case
 
 ```bash
-# Optional: specify base model (default: gpt-4o-mini)
-export FINE_TUNE_BASE_MODEL="gpt-4o-mini"
+export USE_CASE=filter_design
 
+# Generate 100 RF filter design documents (.pdf)
+python scripts/generate_filter_docs.py
+
+# Upload to Blob Storage (filter-design-docs container)
+python scripts/upload_to_blob.py
+
+# Create AI Search index and indexer
+python scripts/create_search_index.py
+
+# Create enhanced chunked index
+python scripts/chunk_and_index.py
+
+# Create Foundry agent (Filter-Design-Agent)
+python scripts/create_agent.py
+
+# Fine-tune and evaluate
 python scripts/fine_tune_and_evaluate.py
+
+# Run ranking & feedback evaluation
+python scripts/ranking_feedback.py
+
+# Test
+python scripts/test_search.py
 ```
 
-This generates training data from the engineering docs, fine-tunes the model, evaluates accuracy, and produces [docs/evaluation_results.md](docs/evaluation_results.md). See [Fine-Tuning & Evaluation](#fine-tuning--evaluation) below.
-
-### 9. Generate architecture diagram
+### 6. Generate architecture diagram
 
 ```bash
 python scripts/generate_architecture_diagram.py
-```
-
-### 10. Run tests
-
-```bash
-python scripts/test_search.py
 ```
 
 ---
 
 ## Sample Search Prompts
 
-### Semantic Search (Natural Language)
-
-These queries use AI-powered semantic understanding to find relevant documents:
+### Engineering Docs — Semantic Search
 
 | # | Prompt | Expected Results |
 |---|--------|-----------------|
-| 1 | *"What are the most common defect types found during wafer inspection?"* | Documents covering various defect types like COP, scratches, haze, contamination |
-| 2 | *"Which test cases failed and what corrective actions were recommended?"* | Test cases with FAIL status and their Section 8 corrective actions |
+| 1 | *"What are the most common defect types found during wafer inspection?"* | Documents covering COP, scratches, haze, contamination |
+| 2 | *"Which test cases failed and what corrective actions were recommended?"* | Test cases with FAIL status and their corrective actions |
 | 3 | *"How does the Surfscan system detect crystal originated particles?"* | Surfscan SP7/SP5 test cases for COP/particle detection |
-| 4 | *"What is the acceptance criteria for 5nm node patterned wafer inspection?"* | Test cases at the 5nm technology node with acceptance criteria details |
-| 5 | *"Show me test results for post-CMP contamination inspection"* | Post-CMP process step documents covering contamination defects |
-| 6 | *"What inspection systems are used for FinFET manufacturing?"* | FinFET-related test cases across different KLA product lines |
+| 4 | *"What is the acceptance criteria for 5nm node patterned wafer inspection?"* | 5nm technology node test cases with acceptance criteria |
+| 5 | *"Show me test results for post-CMP contamination inspection"* | Post-CMP process step documents covering contamination |
+| 6 | *"What inspection systems are used for FinFET manufacturing?"* | FinFET-related test cases across product lines |
 | 7 | *"Find documents about overlay metrology using the Archer system"* | Archer 700/750 overlay measurement test cases |
-| 8 | *"What are the throughput requirements for 300mm wafer inspection?"* | 300mm wafer test cases with throughput acceptance criteria |
+| 8 | *"What are the throughput requirements for 300mm wafer inspection?"* | 300mm wafer test cases with throughput criteria |
 
-### Keyword Search (Exact Match)
-
-These queries use traditional keyword matching:
+### Engineering Docs — Keyword Search
 
 | # | Prompt | Expected Results |
 |---|--------|-----------------|
-| 1 | *"Surfscan SP7 particle detection"* | Documents mentioning Surfscan SP7 and particle detection |
-| 2 | *"FinFET inspection post-etch defect"* | FinFET test cases at the post-etch process step |
-| 3 | *"3nm technology node scratch detection"* | 3nm node documents covering scratch defects |
-| 4 | *"CMP process wafer inspection FAIL"* | Failed test cases from CMP process steps |
-| 5 | *"overlay metrology Archer 700"* | Archer 700 overlay measurement documents |
-| 6 | *"KLA-MFG-TC-0042"* | Specific test case document by number |
-| 7 | *"Milpitas Fab A calibration"* | Documents from Milpitas Fab A |
-| 8 | *"nuisance rate corrective action"* | Documents discussing nuisance rate issues and fixes |
+| 1 | *"Surfscan SP7 particle detection"* | Surfscan SP7 particle detection documents |
+| 2 | *"FinFET inspection post-etch defect"* | FinFET post-etch test cases |
+| 3 | *"3nm technology node scratch detection"* | 3nm node scratch defect documents |
+| 4 | *"CMP process wafer inspection FAIL"* | Failed CMP process test cases |
+| 5 | *"MFG-TC-0042"* | Specific test case by document number |
+
+### Filter Design — Semantic Search
+
+| # | Prompt | Expected Results |
+|---|--------|-----------------|
+| 1 | *"What filter designs target 5G NR sub-6 GHz bands?"* | SAW/BAW filters for n77/n78/n79 bands |
+| 2 | *"Which filter test cases failed and what corrective actions exist?"* | Failed designs with recommended geometry/material changes |
+| 3 | *"How does temperature affect SAW filter frequency stability?"* | TC-SAW and temperature coefficient documents |
+| 4 | *"What are the acceptance criteria for BAW filter insertion loss?"* | BAW/FBAR filter acceptance criteria sections |
+| 5 | *"Show me test results for WiFi 6E coexistence filters"* | WiFi 6E (6 GHz) filter test results |
+
+### Filter Design — Keyword Search
+
+| # | Prompt | Expected Results |
+|---|--------|-----------------|
+| 1 | *"SAW filter Band 7 insertion loss"* | Band 7 SAW filter documents |
+| 2 | *"BAW FBAR 5G NR n77"* | BAW/FBAR 5G NR Band n77 designs |
+| 3 | *"TC-SAW temperature compensation"* | TC-SAW temperature stability documents |
+| 4 | *"duplexer isolation rejection"* | Duplexer module isolation specs |
+| 5 | *"FD-TC-0015"* | Specific filter design document by number |
 
 ---
 
 ## GitHub Actions Deployment
 
-The repository includes a GitHub Actions workflow (`.github/workflows/deploy.yml`) that automates the full deployment:
+The workflow (`.github/workflows/deploy.yml`) automates deployment of both use cases in parallel:
 
-1. Generates engineering documents
-2. Uploads to Blob Storage
-3. Creates the AI Search index and indexer
-4. Creates the Foundry agent
-5. Runs search tests to validate
+- **`deploy-engineering-docs`**: Generates, uploads, indexes, and creates the engineering docs agent
+- **`deploy-filter-design`**: Generates PDFs, uploads, indexes, and creates the filter design agent
+- **`generate-assets`**: Creates the architecture diagram
+- **`test`**: Runs search tests for both use cases (matrix strategy)
+
+Manual trigger supports selecting a specific use case via `workflow_dispatch`.
 
 ### Required GitHub Secrets
 
@@ -204,49 +274,24 @@ The repository includes a GitHub Actions workflow (`.github/workflows/deploy.yml
 | `AZURE_CLIENT_ID` | Service principal or managed identity client ID |
 | `AZURE_TENANT_ID` | Azure AD tenant ID |
 | `AZURE_AI_SEARCH_CONNECTION_NAME` | AI Search connection name in Foundry project |
-| `MODEL_DEPLOYMENT_NAME` | Model deployment name (default: `gpt-4o`) |
 
 ---
 
 ## AI Search Best Practices
 
-This project implements the following best practices for Azure AI Search to maximize result accuracy and relevance.
-
 ### 1. Section-Level Chunking
 
-**Problem:** Indexing full documents as single records dilutes search relevance — a query about "acceptance criteria" matches a 5KB document even though only 200 characters are relevant.
-
-**Solution:** The `chunk_and_index.py` script splits each engineering document into section-level chunks:
-
-| Section | Purpose | Typical Size |
-|---------|---------|-------------|
-| Document Header | Metadata, author, dates, classification | ~500 chars |
-| 1. OBJECTIVE | What the test validates | ~400 chars |
-| 2. SCOPE | Equipment, defect type, fab location | ~300 chars |
-| 3. TEST CONFIGURATION | System settings, recipe, scan parameters | ~400 chars |
-| 4. TEST PROCEDURE | Step-by-step instructions | ~800 chars |
-| 5. ACCEPTANCE CRITERIA | Pass/fail thresholds | ~500 chars |
-| 6. TEST RESULTS | Defect counts, capture rate, nuisance rate | ~400 chars |
-| 7. OBSERVATIONS | Findings and notes | ~500 chars |
-| 8. CORRECTIVE ACTIONS | Recommended fixes | ~300 chars |
-| 9. SIGN-OFF | Approvals | ~200 chars |
-
-Each chunk retains a context prefix (`Document: KLA-MFG-TC-XXXX | Title\nSection: ...`) so the search engine understands provenance even for standalone chunks.
+Each document is split into section-level chunks (Objective, Scope, Test Configuration, etc.) instead of full-document indexing. Each chunk retains a context prefix (`Document: MFG-TC-XXXX | Title\nSection: ...`) for provenance.
 
 ### 2. Metadata-Enriched Fields
 
 Every chunk includes structured filterable/facetable metadata:
-
 ```
 document_number, title, status, product_line, target_defect,
 process_step, technology_node, fab_location, section_name, source_file
 ```
 
-This enables **faceted navigation** (e.g., "show all FAIL results for 5nm node") and **filtered search** (e.g., `$filter=technology_node eq '3nm'`).
-
 ### 3. Custom Scoring Profile
-
-A `boost-title-section` scoring profile weights fields by relevance:
 
 | Field | Weight | Rationale |
 |-------|--------|-----------|
@@ -257,89 +302,72 @@ A `boost-title-section` scoring profile weights fields by relevance:
 
 ### 4. Semantic Configuration with Keywords
 
-The semantic config includes `keywords_fields` for `document_number` and `section_name`, improving the semantic ranker's ability to prioritize results when users mention specific doc IDs or section names.
+Includes `keywords_fields` for `document_number` and `section_name` to improve the semantic ranker.
 
 ### 5. Overlap for Large Sections
 
-When a section exceeds `MAX_CHUNK_SIZE` (2000 chars), it's split into sub-chunks with 200-character overlap at line boundaries. This prevents information loss at chunk boundaries.
+Sections exceeding 2000 chars are split with 200-char overlap at line boundaries.
 
 ### 6. English Microsoft Analyzer
 
-All searchable text fields use the `en.microsoft` analyzer, which provides:
-- Lemmatization (e.g., "inspecting" → "inspect")
-- Compound word splitting
-- Better handling of technical vocabulary than the default Lucene analyzer
+All searchable fields use `en.microsoft` for lemmatization and technical vocabulary handling.
 
 ### 7. Idempotent Operations
 
-All index, data source, and indexer creation uses `create_or_update_*` methods, making the pipeline safe to re-run without manual cleanup.
+All creation uses `create_or_update_*` methods — safe to re-run without cleanup.
 
 ### 8. Batch Upload with BufferedSender
 
-`SearchIndexingBufferedSender` handles automatic batching, retries, and throttling when uploading chunks — critical for reliable indexing of 700+ chunks.
+`SearchIndexingBufferedSender` handles batching, retries, and throttling for 700+ chunks.
 
 ### 9. Daily Scheduled Refresh
 
-The indexer runs at 8:00 AM PST (16:00 UTC) daily, ensuring new or updated documents in Blob Storage are automatically reflected in search results.
+Indexer runs at 8:00 AM PST (16:00 UTC) daily.
 
 ### 10. Managed Identity Authentication
 
-All connections (Blob Storage data source, Search API, Foundry) use `DefaultAzureCredential` / managed identity — no connection strings or keys stored in code.
+All connections use `DefaultAzureCredential` — no secrets in code.
+
+---
+
+## Ranking & Feedback Loop
+
+The project includes a ranking and feedback system (`scripts/ranking_feedback.py`) to improve agent accuracy from 90% to 95%.
+
+### How It Works
+
+1. **Feedback Collection**: Each query-document pair is rated as relevant/irrelevant
+2. **Boost Map**: Documents with positive feedback get boost factors (up to 1.5×) applied on top of semantic reranker scores
+3. **Re-Ranking**: Results are re-sorted using `base_score × boost_factor`
+4. **Threshold Filtering**: Results below the configured relevance threshold are suppressed
+5. **Evaluation**: Measures both search ranking accuracy and agent citation accuracy
+
+### Running
+
+```bash
+# For engineering docs
+USE_CASE=engineering_docs python scripts/ranking_feedback.py
+
+# For filter design
+USE_CASE=filter_design python scripts/ranking_feedback.py
+```
+
+See [docs/ranking_report.md](docs/ranking_report.md) for the latest evaluation report.
 
 ---
 
 ## Fine-Tuning & Evaluation
 
-The project includes a pipeline to fine-tune a model on the KLA engineering documents and evaluate its accuracy. If fine-tuning is not available in the Foundry project's region, the script gracefully falls back to evaluating the deployed base model.
+Q&A pairs are auto-extracted from documents. The model is fine-tuned (or evaluated with the base model if fine-tuning is unavailable in the region).
 
-### How It Works
-
-1. **Training Data Generation**: Q&A pairs are automatically extracted from all 100 documents. Each document yields 5-7 pairs covering objectives, results, systems, acceptance criteria, observations, and corrective actions.
-
-2. **Fine-Tuning**: The training data (JSONL format) is uploaded to Azure AI Foundry, and a fine-tuning job is created on the base model (default: `gpt-4.1`). If fine-tuning is unavailable in the region, the script skips this step and proceeds to evaluation.
-
-3. **Evaluation**: The fine-tuned (or base) model is evaluated on a held-out 20% validation set. Key metrics:
-   - **Citation Accuracy**: Does the model correctly cite KLA-MFG-TC document numbers?
-   - **Response Relevance**: Does the response contain expected information?
-   - **Token Efficiency**: Cost per query
-
-### Running Fine-Tuning
+### Running
 
 ```bash
-# Use default base model (gpt-4.1)
-python scripts/fine_tune_and_evaluate.py
-
-# Or specify a different base model
-export FINE_TUNE_BASE_MODEL="gpt-4.1"
-python scripts/fine_tune_and_evaluate.py
+USE_CASE=engineering_docs python scripts/fine_tune_and_evaluate.py
+USE_CASE=filter_design python scripts/fine_tune_and_evaluate.py
 ```
 
-### Latest Evaluation Results (April 2026)
-
-| Metric | Value |
-|--------|-------|
-| **Model Evaluated** | `gpt-4.1` |
-| **Training Examples** | 539 |
-| **Validation Examples** | 135 |
-| **Evaluated Samples** | 50 |
-| **Citation Accuracy** | **90.0%** |
-| **Avg Tokens/Query** | 222.8 |
-
-> **Note**: Fine-tuning is not currently available in the `westus` region. The evaluation above reflects the base `gpt-4.1` model's performance on the KLA engineering Q&A dataset. When fine-tuning becomes available, re-run the script to compare fine-tuned vs. base model accuracy.
-
-See [docs/evaluation_results.md](docs/evaluation_results.md) for the full report including:
-- Per-example citation match results
-- Sample predictions with expected vs. actual answers
-- Recommendations for improvement
-
-### Generated Files
-
-| File | Description |
-|------|-------------|
-| `data/fine_tuning_train.jsonl` | Training dataset (~80% of Q&A pairs) |
-| `data/fine_tuning_validation.jsonl` | Validation dataset (~20% of Q&A pairs) |
-| `data/evaluation_metrics.json` | Raw evaluation metrics (JSON) |
-| `docs/evaluation_results.md` | Human-readable evaluation report |
+See [docs/evaluation_results.md](docs/evaluation_results.md) for the latest evaluation report.
 
 ---
 
@@ -347,33 +375,52 @@ See [docs/evaluation_results.md](docs/evaluation_results.md) for the full report
 
 ```
 AI-Search-Blob-Storage/
+├── use-cases/
+│   ├── engineering-docs/                 # ★ Clone this for manufacturing inspection
+│   │   ├── README.md                     # Self-contained setup guide
+│   │   ├── DEMO_SCRIPT.md               # 30-min demo: fine-tuning + AI Search
+│   │   └── architecture.png             # Standalone architecture diagram
+│   └── filter-design/                    # ★ Clone this for RF filter design
+│       ├── README.md                     # Self-contained setup guide
+│       ├── DEMO_SCRIPT.md               # 30-min demo: ranking + feedback loop
+│       └── architecture.png             # Standalone architecture diagram
 ├── .github/
 │   └── workflows/
-│       └── deploy.yml              # GitHub Actions CI/CD pipeline
-├── data/                           # Generated engineering documents (100 files)
-│   ├── KLA-MFG-TC-0001.txt
-│   ├── ...
-│   ├── KLA-MFG-TC-0100.txt
-│   ├── manifest.json
-│   ├── fine_tuning_train.jsonl     # Training data for fine-tuning
-│   ├── fine_tuning_validation.jsonl # Validation data for evaluation
-│   └── evaluation_metrics.json     # Raw evaluation metrics
+│       └── deploy.yml                    # GitHub Actions CI/CD (multi use-case)
+├── config/
+│   ├── __init__.py                       # Config loader (USE_CASE aware)
+│   ├── azure_resources.json              # Azure resource IDs and endpoints
+│   ├── agent_config.json                 # Agent instructions, fine-tuning per use case
+│   ├── search_config.json                # Index names, scoring, chunking config
+│   ├── storage_config.json               # Container names, upload settings
+│   └── document_config.json              # Doc prefix, count, classification per use case
+├── data/
+│   ├── engineering-docs/                 # 100 manufacturing test cases (.txt)
+│   │   ├── MFG-TC-0001.txt ... MFG-TC-0100.txt
+│   │   └── manifest.json
+│   └── filter-design-docs/              # 100 filter design specs (.pdf)
+│       ├── FD-TC-0001.pdf ... FD-TC-0100.pdf
+│       └── manifest.json
 ├── docs/
-│   ├── architecture.png            # Architecture diagram
-│   ├── evaluation_results.md       # Fine-tuning evaluation report
-│   └── Prompt.txt                  # Original project requirements
+│   ├── architecture.png                  # Combined architecture diagram
+│   ├── evaluation_results.md             # Fine-tuning evaluation report
+│   ├── ranking_report.md                 # Ranking & feedback evaluation report
+│   └── Prompt.txt                        # Original project requirements
 ├── scripts/
-│   ├── generate_docs.py            # Generate 100 KLA test case documents
-│   ├── upload_to_blob.py           # Upload docs to Blob Storage
-│   ├── create_search_index.py      # Create AI Search index + indexer
-│   ├── chunk_and_index.py          # Section-level chunking + enhanced index
-│   ├── create_agent.py             # Create Foundry agent
-│   ├── fine_tune_and_evaluate.py   # Fine-tune model + evaluate accuracy
-│   ├── generate_architecture_diagram.py  # Generate architecture PNG
-│   └── test_search.py              # Test semantic + keyword search
-├── requirements.txt                # Python dependencies
-├── LICENSE                         # MIT License
-└── README.md                       # This file
+│   ├── generate_docs.py                  # Generate manufacturing test case docs
+│   ├── generate_filter_docs.py           # Generate filter design PDFs
+│   ├── upload_to_blob.py                 # Upload docs to Blob Storage
+│   ├── create_search_index.py            # Create AI Search index + indexer
+│   ├── chunk_and_index.py                # Section-level chunking + enhanced index
+│   ├── create_agent.py                   # Create Foundry agent
+│   ├── fine_tune_and_evaluate.py         # Fine-tune model + evaluate accuracy
+│   ├── ranking_feedback.py               # Ranking & feedback loop
+│   ├── generate_architecture_diagram.py  # Generate all architecture PNGs
+│   ├── test_search.py                    # Test semantic + keyword search
+│   └── _list_connections.py              # Utility: list Foundry connections
+├── requirements.txt
+├── LICENSE
+└── README.md
 ```
 
 ---

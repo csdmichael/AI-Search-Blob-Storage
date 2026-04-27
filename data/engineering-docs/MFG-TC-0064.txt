@@ -1,0 +1,153 @@
+================================================================================
+ENGINEERING TEST CASE DOCUMENT
+================================================================================
+
+Document Number: MFG-TC-0064
+Revision: Rev B.3
+Classification: CONFIDENTIAL - Internal Use Only
+
+Title: IC Substrate Inspection - CD Variation Detection on Zeta-20
+Subtitle: Post-Metallization Quality Validation for 45nm Node Manufacturing
+
+────────────────────────────────────────────────────────────────────────────────
+DOCUMENT INFORMATION
+────────────────────────────────────────────────────────────────────────────────
+
+Author:           Dr. Priya Sharma
+Reviewer:         Dr. Thomas Mueller
+Fab Location:     Hsinchu Fab 15
+Created Date:     2024-02-23
+Last Modified:    2024-04-09
+Status:           FAIL
+Priority:         P2 - High
+Severity Level:   Critical
+
+────────────────────────────────────────────────────────────────────────────────
+1. OBJECTIVE
+────────────────────────────────────────────────────────────────────────────────
+
+This test case validates the capability of the Zeta-20 system to detect
+and classify CD Variation defects during post-metallization inspection
+at the 45nm technology node. The test is conducted at Hsinchu Fab 15 to ensure
+manufacturing quality standards are met for 450mm wafer production.
+
+The primary objective is to verify that the inspection system meets the required
+detection sensitivity and classification accuracy for CD Variation defects
+that are critical to yield at the 45nm node. This test case is part of
+the ongoing qualification program for the Zeta-20 platform.
+
+────────────────────────────────────────────────────────────────────────────────
+2. SCOPE
+────────────────────────────────────────────────────────────────────────────────
+
+- Product Line: Zeta-20
+- Inspection Type: IC Substrate Inspection
+- Target Defect: CD Variation
+- Process Step: Post-Metallization
+- Wafer Size: 450mm
+- Technology Node: 45nm
+- Fab Location: Hsinchu Fab 15
+
+This test case applies to all Zeta-20 systems deployed at Hsinchu Fab 15
+for post-metallization monitoring in the 45nm manufacturing line.
+Results from this test are used to establish baseline performance metrics
+and to qualify new recipe configurations.
+
+────────────────────────────────────────────────────────────────────────────────
+3. TEST CONFIGURATION
+────────────────────────────────────────────────────────────────────────────────
+
+System:                Zeta-20
+Software Version:      v12.1.764
+Recipe:                IC_SUBSTRATE_INSPECTION_45nm_POST_METALLIZATION
+Illumination Mode:     Brightfield
+Scan Speed:            Medium (91 mm/s)
+Pixel Size:            0.25μm
+Edge Exclusion:        4mm
+Sampling Plan:         5-point sampling
+
+────────────────────────────────────────────────────────────────────────────────
+4. TEST PROCEDURE
+────────────────────────────────────────────────────────────────────────────────
+
+1. Power on the Zeta-20 system and allow 30-minute warm-up period.
+2. Load the calibration wafer and run the standard calibration routine.
+3. Verify calibration results are within specification (±2% tolerance).
+4. Load the test wafer onto the stage using the automated handler.
+5. Select the 'IC Substrate Inspection' recipe from the recipe library.
+6. Configure detection sensitivity to target CD Variation defects.
+7. Set scan parameters: full wafer scan with edge exclusion of 3mm.
+8. Initiate the inspection run and monitor real-time defect map.
+9. Upon completion, review the defect density map and classification results.
+10. Export results to the factory automation system (SECS/GEM interface).
+11. Compare results against the golden reference baseline.
+12. Document any anomalies and generate the summary report.
+
+────────────────────────────────────────────────────────────────────────────────
+5. ACCEPTANCE CRITERIA
+────────────────────────────────────────────────────────────────────────────────
+
+- Defect detection sensitivity must meet 45nm node requirements
+- False positive rate shall not exceed 5% of total detected events
+- Scan throughput must be ≥ 60 wafers per hour
+- Classification accuracy shall be ≥ 96% for known defect types
+- Repeatability (3-sigma) shall be within ±2.3% for IC Substrate Inspection
+- System uptime during test shall be ≥ 98%
+- All results must be traceable through the MES integration
+- Measurement correlation with reference tool shall be ≥ 0.98 R²
+
+────────────────────────────────────────────────────────────────────────────────
+6. TEST RESULTS
+────────────────────────────────────────────────────────────────────────────────
+
+Test Execution Date:   2024-04-09
+Wafers Tested:         26
+Total Defects Found:   3635
+Defect Density:        1157.06 defects/cm²
+Nuisance Rate:         4.1%
+Capture Rate:          99.6%
+Test Duration:         357 minutes
+System Uptime:         96.6%
+
+Result Classification: FAIL
+
+────────────────────────────────────────────────────────────────────────────────
+7. OBSERVATIONS AND FINDINGS
+────────────────────────────────────────────────────────────────────────────────
+
+During the execution of this test case, the following observations were noted:
+
+a) The Zeta-20 demonstrated below-target performance
+   in detecting CD Variation at the 45nm node.
+
+b) The capture rate exceeded the minimum threshold, confirming system readiness.
+
+c) Nuisance rate is within acceptable limits.
+
+d) Cross-correlation with the reference SEM confirmed classification accuracy.
+
+e) The system successfully integrated with the factory automation host.
+
+────────────────────────────────────────────────────────────────────────────────
+8. CORRECTIVE ACTIONS (if applicable)
+────────────────────────────────────────────────────────────────────────────────
+
+
+The following corrective actions are recommended:
+
+1. Re-tune detection algorithm thresholds for CD Variation at 45nm node.
+2. Schedule follow-up test after recipe optimization.
+3. Escalate to R&D for algorithm enhancement if re-tuning does not resolve sensitivity gap.
+
+
+────────────────────────────────────────────────────────────────────────────────
+9. SIGN-OFF
+────────────────────────────────────────────────────────────────────────────────
+
+Author:     Dr. Priya Sharma               Date: 2024-04-09
+Reviewer:   Dr. Thomas Mueller             Date: 2024-04-13
+Approver:   Dr. Hans Schmidt               Date: 2024-04-12
+
+================================================================================
+END OF DOCUMENT - MFG-TC-0064
+================================================================================

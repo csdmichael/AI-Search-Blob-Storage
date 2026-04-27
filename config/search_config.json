@@ -1,0 +1,48 @@
+{
+  "use_cases": {
+    "engineering_docs": {
+      "standard_index": {
+        "name": "engineering-docs-index",
+        "semantic_config_name": "engineering-docs-semantic-config"
+      },
+      "chunked_index": {
+        "name": "engineering-docs-chunked-index",
+        "semantic_config_name": "chunked-semantic-config",
+        "scoring_profile_name": "boost-title-section"
+      },
+      "indexer": {
+        "name": "engineering-docs-indexer",
+        "data_source_name": "engineering-docs-blob-datasource"
+      }
+    },
+    "filter_design": {
+      "standard_index": {
+        "name": "filter-design-index",
+        "semantic_config_name": "filter-design-semantic-config"
+      },
+      "chunked_index": {
+        "name": "filter-design-chunked-index",
+        "semantic_config_name": "fd-chunked-semantic-config",
+        "scoring_profile_name": "boost-title-section"
+      },
+      "indexer": {
+        "name": "filter-design-indexer",
+        "data_source_name": "filter-design-blob-datasource"
+      }
+    }
+  },
+  "schedule": {
+    "interval": "PT24H",
+    "start_time": "2024-01-01T16:00:00Z"
+  },
+  "chunking": {
+    "max_chunk_size": 2000,
+    "overlap_size": 200
+  },
+  "scoring_weights": {
+    "title": 3.0,
+    "section_name": 2.0,
+    "content": 1.0,
+    "document_number": 2.5
+  }
+}

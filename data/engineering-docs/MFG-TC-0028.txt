@@ -1,0 +1,153 @@
+================================================================================
+ENGINEERING TEST CASE DOCUMENT
+================================================================================
+
+Document Number: MFG-TC-0028
+Revision: Rev B.6
+Classification: CONFIDENTIAL - Internal Use Only
+
+Title: FinFET Inspection - CD Variation Detection on eDR-7100
+Subtitle: Post-Anneal Quality Validation for 14nm Node Manufacturing
+
+────────────────────────────────────────────────────────────────────────────────
+DOCUMENT INFORMATION
+────────────────────────────────────────────────────────────────────────────────
+
+Author:           Dr. Sarah Chen
+Reviewer:         James Rodriguez
+Fab Location:     Pyeongtaek Fab 2
+Created Date:     2024-11-02
+Last Modified:    2024-11-27
+Status:           NEEDS REVIEW
+Priority:         P2 - High
+Severity Level:   Minor
+
+────────────────────────────────────────────────────────────────────────────────
+1. OBJECTIVE
+────────────────────────────────────────────────────────────────────────────────
+
+This test case validates the capability of the eDR-7100 system to detect
+and classify CD Variation defects during post-anneal inspection
+at the 14nm technology node. The test is conducted at Pyeongtaek Fab 2 to ensure
+manufacturing quality standards are met for 450mm wafer production.
+
+The primary objective is to verify that the inspection system meets the required
+detection sensitivity and classification accuracy for CD Variation defects
+that are critical to yield at the 14nm node. This test case is part of
+the ongoing qualification program for the eDR-7100 platform.
+
+────────────────────────────────────────────────────────────────────────────────
+2. SCOPE
+────────────────────────────────────────────────────────────────────────────────
+
+- Product Line: eDR-7100
+- Inspection Type: FinFET Inspection
+- Target Defect: CD Variation
+- Process Step: Post-Anneal
+- Wafer Size: 450mm
+- Technology Node: 14nm
+- Fab Location: Pyeongtaek Fab 2
+
+This test case applies to all eDR-7100 systems deployed at Pyeongtaek Fab 2
+for post-anneal monitoring in the 14nm manufacturing line.
+Results from this test are used to establish baseline performance metrics
+and to qualify new recipe configurations.
+
+────────────────────────────────────────────────────────────────────────────────
+3. TEST CONFIGURATION
+────────────────────────────────────────────────────────────────────────────────
+
+System:                eDR-7100
+Software Version:      v12.9.490
+Recipe:                FINFET_INSPECTION_14nm_POST_ANNEAL
+Illumination Mode:     Darkfield
+Scan Speed:            Low (87 mm/s)
+Pixel Size:            0.5μm
+Edge Exclusion:        5mm
+Sampling Plan:         21-point sampling
+
+────────────────────────────────────────────────────────────────────────────────
+4. TEST PROCEDURE
+────────────────────────────────────────────────────────────────────────────────
+
+1. Power on the eDR-7100 system and allow 30-minute warm-up period.
+2. Load the calibration wafer and run the standard calibration routine.
+3. Verify calibration results are within specification (±2% tolerance).
+4. Load the test wafer onto the stage using the automated handler.
+5. Select the 'FinFET Inspection' recipe from the recipe library.
+6. Configure detection sensitivity to target CD Variation defects.
+7. Set scan parameters: full wafer scan with edge exclusion of 3mm.
+8. Initiate the inspection run and monitor real-time defect map.
+9. Upon completion, review the defect density map and classification results.
+10. Export results to the factory automation system (SECS/GEM interface).
+11. Compare results against the golden reference baseline.
+12. Document any anomalies and generate the summary report.
+
+────────────────────────────────────────────────────────────────────────────────
+5. ACCEPTANCE CRITERIA
+────────────────────────────────────────────────────────────────────────────────
+
+- Defect detection sensitivity must meet 14nm node requirements
+- False positive rate shall not exceed 5% of total detected events
+- Scan throughput must be ≥ 113 wafers per hour
+- Classification accuracy shall be ≥ 95% for known defect types
+- Repeatability (3-sigma) shall be within ±2.4% for FinFET Inspection
+- System uptime during test shall be ≥ 98%
+- All results must be traceable through the MES integration
+- Measurement correlation with reference tool shall be ≥ 0.96 R²
+
+────────────────────────────────────────────────────────────────────────────────
+6. TEST RESULTS
+────────────────────────────────────────────────────────────────────────────────
+
+Test Execution Date:   2024-11-27
+Wafers Tested:         32
+Total Defects Found:   3074
+Defect Density:        978.49 defects/cm²
+Nuisance Rate:         5.7%
+Capture Rate:          89.1%
+Test Duration:         119 minutes
+System Uptime:         99.6%
+
+Result Classification: NEEDS REVIEW
+
+────────────────────────────────────────────────────────────────────────────────
+7. OBSERVATIONS AND FINDINGS
+────────────────────────────────────────────────────────────────────────────────
+
+During the execution of this test case, the following observations were noted:
+
+a) The eDR-7100 demonstrated below-target performance
+   in detecting CD Variation at the 14nm node.
+
+b) The capture rate requires optimization of the detection algorithm.
+
+c) Nuisance rate exceeds the target threshold; recipe tuning is recommended.
+
+d) Cross-correlation with the reference SEM confirmed classification accuracy.
+
+e) The system successfully integrated with the factory automation host.
+
+────────────────────────────────────────────────────────────────────────────────
+8. CORRECTIVE ACTIONS (if applicable)
+────────────────────────────────────────────────────────────────────────────────
+
+
+The following corrective actions are recommended:
+
+1. Review edge-zone detection parameters for optimization.
+2. Schedule follow-up test after recipe optimization.
+3. Monitor performance over next 30 production days.
+
+
+────────────────────────────────────────────────────────────────────────────────
+9. SIGN-OFF
+────────────────────────────────────────────────────────────────────────────────
+
+Author:     Dr. Sarah Chen                 Date: 2024-11-27
+Reviewer:   James Rodriguez                Date: 2024-12-04
+Approver:   Dr. Hans Schmidt               Date: 2024-12-05
+
+================================================================================
+END OF DOCUMENT - MFG-TC-0028
+================================================================================

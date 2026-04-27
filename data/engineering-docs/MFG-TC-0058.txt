@@ -1,0 +1,153 @@
+================================================================================
+ENGINEERING TEST CASE DOCUMENT
+================================================================================
+
+Document Number: MFG-TC-0058
+Revision: Rev B.4
+Classification: CONFIDENTIAL - Internal Use Only
+
+Title: 3D NAND Inspection - Residue Detection on Surfscan SP7
+Subtitle: Pre-Diffusion Quality Validation for 14nm Node Manufacturing
+
+────────────────────────────────────────────────────────────────────────────────
+DOCUMENT INFORMATION
+────────────────────────────────────────────────────────────────────────────────
+
+Author:           Dr. Anna Petrova
+Reviewer:         Michael Torres
+Fab Location:     Hsinchu Fab 15
+Created Date:     2024-12-26
+Last Modified:    2025-01-17
+Status:           FAIL
+Priority:         P1 - Critical
+Severity Level:   Informational
+
+────────────────────────────────────────────────────────────────────────────────
+1. OBJECTIVE
+────────────────────────────────────────────────────────────────────────────────
+
+This test case validates the capability of the Surfscan SP7 system to detect
+and classify Residue defects during pre-diffusion inspection
+at the 14nm technology node. The test is conducted at Hsinchu Fab 15 to ensure
+manufacturing quality standards are met for 300mm wafer production.
+
+The primary objective is to verify that the inspection system meets the required
+detection sensitivity and classification accuracy for Residue defects
+that are critical to yield at the 14nm node. This test case is part of
+the ongoing qualification program for the Surfscan SP7 platform.
+
+────────────────────────────────────────────────────────────────────────────────
+2. SCOPE
+────────────────────────────────────────────────────────────────────────────────
+
+- Product Line: Surfscan SP7
+- Inspection Type: 3D NAND Inspection
+- Target Defect: Residue
+- Process Step: Pre-Diffusion
+- Wafer Size: 300mm
+- Technology Node: 14nm
+- Fab Location: Hsinchu Fab 15
+
+This test case applies to all Surfscan SP7 systems deployed at Hsinchu Fab 15
+for pre-diffusion monitoring in the 14nm manufacturing line.
+Results from this test are used to establish baseline performance metrics
+and to qualify new recipe configurations.
+
+────────────────────────────────────────────────────────────────────────────────
+3. TEST CONFIGURATION
+────────────────────────────────────────────────────────────────────────────────
+
+System:                Surfscan SP7
+Software Version:      v15.3.868
+Recipe:                3D_NAND_INSPECTION_14nm_PRE_DIFFUSION
+Illumination Mode:     Brightfield
+Scan Speed:            High (129 mm/s)
+Pixel Size:            0.5μm
+Edge Exclusion:        3mm
+Sampling Plan:         5-point sampling
+
+────────────────────────────────────────────────────────────────────────────────
+4. TEST PROCEDURE
+────────────────────────────────────────────────────────────────────────────────
+
+1. Power on the Surfscan SP7 system and allow 30-minute warm-up period.
+2. Load the calibration wafer and run the standard calibration routine.
+3. Verify calibration results are within specification (±2% tolerance).
+4. Load the test wafer onto the stage using the automated handler.
+5. Select the '3D NAND Inspection' recipe from the recipe library.
+6. Configure detection sensitivity to target Residue defects.
+7. Set scan parameters: full wafer scan with edge exclusion of 3mm.
+8. Initiate the inspection run and monitor real-time defect map.
+9. Upon completion, review the defect density map and classification results.
+10. Export results to the factory automation system (SECS/GEM interface).
+11. Compare results against the golden reference baseline.
+12. Document any anomalies and generate the summary report.
+
+────────────────────────────────────────────────────────────────────────────────
+5. ACCEPTANCE CRITERIA
+────────────────────────────────────────────────────────────────────────────────
+
+- Defect detection sensitivity must meet 14nm node requirements
+- False positive rate shall not exceed 5% of total detected events
+- Scan throughput must be ≥ 41 wafers per hour
+- Classification accuracy shall be ≥ 95% for known defect types
+- Repeatability (3-sigma) shall be within ±1.0% for 3D NAND Inspection
+- System uptime during test shall be ≥ 98%
+- All results must be traceable through the MES integration
+- Measurement correlation with reference tool shall be ≥ 0.99 R²
+
+────────────────────────────────────────────────────────────────────────────────
+6. TEST RESULTS
+────────────────────────────────────────────────────────────────────────────────
+
+Test Execution Date:   2025-01-17
+Wafers Tested:         42
+Total Defects Found:   1503
+Defect Density:        212.63 defects/cm²
+Nuisance Rate:         6.2%
+Capture Rate:          86.9%
+Test Duration:         206 minutes
+System Uptime:         97.6%
+
+Result Classification: FAIL
+
+────────────────────────────────────────────────────────────────────────────────
+7. OBSERVATIONS AND FINDINGS
+────────────────────────────────────────────────────────────────────────────────
+
+During the execution of this test case, the following observations were noted:
+
+a) The Surfscan SP7 demonstrated below-target performance
+   in detecting Residue at the 14nm node.
+
+b) The capture rate requires optimization of the detection algorithm.
+
+c) Nuisance rate exceeds the target threshold; recipe tuning is recommended.
+
+d) Minor calibration drift was detected after extended run; re-calibration resolved the issue.
+
+e) The defect review station correlation was within specification.
+
+────────────────────────────────────────────────────────────────────────────────
+8. CORRECTIVE ACTIONS (if applicable)
+────────────────────────────────────────────────────────────────────────────────
+
+
+The following corrective actions are recommended:
+
+1. Re-tune detection algorithm thresholds for Residue at 14nm node.
+2. Schedule follow-up test after recipe optimization.
+3. Escalate to R&D for algorithm enhancement if re-tuning does not resolve sensitivity gap.
+
+
+────────────────────────────────────────────────────────────────────────────────
+9. SIGN-OFF
+────────────────────────────────────────────────────────────────────────────────
+
+Author:     Dr. Anna Petrova               Date: 2025-01-17
+Reviewer:   Michael Torres                 Date: 2025-01-23
+Approver:   Dr. Hans Schmidt               Date: 2025-01-31
+
+================================================================================
+END OF DOCUMENT - MFG-TC-0058
+================================================================================

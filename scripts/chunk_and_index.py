@@ -13,6 +13,11 @@ import os
 import re
 import json
 import hashlib
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import config
+
 from azure.identity import DefaultAzureCredential
 from azure.search.documents import SearchIndexingBufferedSender
 from azure.search.documents.indexes import SearchIndexClient
@@ -30,21 +35,72 @@ from azure.search.documents.indexes.models import (
     TextWeights,
 )
 
-SEARCH_ENDPOINT = "https://ai-search-my.search.windows.net"
-INDEX_NAME = "engineering-docs-chunked-index"
-DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data")
+_uc_search = config.uc_search_config()
+_global_search = config.search_config()
+_doc_cfg = config.uc_document_config()
+
+SEARCH_ENDPOINT = config.search_endpoint()
+INDEX_NAME = _uc_search["chunked_index"]["name"]
+SEMANTIC_CONFIG_NAME = _uc_search["chunked_index"]["semantic_config_name"]
+SCORING_PROFILE_NAME = _uc_search["chunked_index"]["scoring_profile_name"]
+DATA_DIR = config.uc_data_dir()
 
 # Chunking configuration
-MAX_CHUNK_SIZE = 2000  # characters per chunk
-OVERLAP_SIZE = 200     # overlap between sub-chunks of large sections
+MAX_CHUNK_SIZE = _global_search["chunking"]["max_chunk_size"]
+OVERLAP_SIZE = _global_search["chunking"]["overlap_size"]
+DOC_PREFIX = _doc_cfg["document_prefix"]
+FILE_FORMAT = _doc_cfg["file_format"]
+
+
+def _read_file_text(filepath: str) -> str:
+    """Read text content from a .txt or .pdf file."""
+    if filepath.lower().endswith(".pdf"):
+        try:
+            from fpdf import FPDF  # noqa: F401 — just to verify fpdf2 is installed
+            import subprocess
+            # Use a simple PDF-to-text approach: read raw bytes and extract text objects
+            # For production, use a proper PDF parser; here we use the built-in pdfminer or fallback
+        except ImportError:
+            pass
+        # Try PyPDF2 / pypdf first, then fallback to raw extraction
+        try:
+            from pypdf import PdfReader
+            reader = PdfReader(filepath)
+            text = "\n".join(page.extract_text() or "" for page in reader.pages)
+            if text.strip():
+                return text
+        except ImportError:
+            pass
+        # Fallback: read the binary and try basic text extraction
+        import struct
+        with open(filepath, "rb") as f:
+            raw = f.read()
+        # Extract text between BT and ET markers (basic PDF text extraction)
+        text_parts = []
+        for match in re.finditer(rb"\(([^)]+)\)", raw):
+            try:
+                text_parts.append(match.group(1).decode("latin-1"))
+            except Exception:
+                pass
+        return "\n".join(text_parts) if text_parts else ""
+    else:
+        with open(filepath, "r", encoding="utf-8") as f:
+            return f.read()
 
 
 # ─────────────────────────────────────────────────────────────────────
 # Section-based chunking
 # ─────────────────────────────────────────────────────────────────────
 
-SECTION_PATTERN = re.compile(
+# Pattern for .txt documents (sections separated by ─ lines)
+SECTION_PATTERN_TXT = re.compile(
     r"^─{20,}\n(\d+\.\s+[A-Z\s\(\)]+)\n─{20,}$",
+    re.MULTILINE,
+)
+
+# Pattern for PDF-extracted text (section headers on own line, e.g. "1. OBJECTIVE")
+SECTION_PATTERN_PDF = re.compile(
+    r"^(\d+\.\s+[A-Z\s\(\)&]+)$",
     re.MULTILINE,
 )
 
@@ -57,6 +113,8 @@ TITLE_PATTERN = re.compile(
 STATUS_PATTERN = re.compile(
     r"^Status:\s*(.+)$", re.MULTILINE
 )
+
+# ── Engineering docs metadata patterns ─────────────────────────────
 PRODUCT_PATTERN = re.compile(
     r"^- Product Line:\s*(.+)$", re.MULTILINE
 )
@@ -73,50 +131,110 @@ FAB_PATTERN = re.compile(
     r"^Fab Location:\s*(.+)$", re.MULTILINE
 )
 
+# ── Filter design metadata patterns ────────────────────────────────
+FILTER_TYPE_PATTERN = re.compile(
+    r"^- Filter Type:\s*(.+)$", re.MULTILINE
+)
+FREQ_BAND_PATTERN = re.compile(
+    r"^- Frequency Band:\s*(.+)$", re.MULTILINE
+)
+SUBSTRATE_PATTERN = re.compile(
+    r"^- Substrate:\s*(.+)$", re.MULTILINE
+)
+APPLICATION_PATTERN = re.compile(
+    r"^- Application:\s*(.+)$", re.MULTILINE
+)
+DESIGN_CENTER_PATTERN = re.compile(
+    r"^Design Center:\s*(.+)$", re.MULTILINE
+)
+PACKAGE_PATTERN = re.compile(
+    r"^- Package:\s*(.+)$", re.MULTILINE
+)
+
+USE_CASE = config.get_use_case()
+
 
 def extract_metadata(content: str) -> dict:
-    """Extract structured metadata from a document."""
+    """Extract structured metadata from a document, use-case-aware."""
     def _match(pattern):
         m = pattern.search(content)
         return m.group(1).strip() if m else ""
 
-    return {
+    common = {
         "document_number": _match(HEADER_PATTERN),
         "title": _match(TITLE_PATTERN),
         "status": _match(STATUS_PATTERN),
-        "product_line": _match(PRODUCT_PATTERN),
-        "target_defect": _match(DEFECT_PATTERN),
-        "process_step": _match(PROCESS_PATTERN),
-        "technology_node": _match(TECHNODE_PATTERN),
-        "fab_location": _match(FAB_PATTERN),
     }
+
+    if USE_CASE == "filter_design":
+        common.update({
+            "filter_type": _match(FILTER_TYPE_PATTERN),
+            "frequency_band": _match(FREQ_BAND_PATTERN),
+            "substrate_material": _match(SUBSTRATE_PATTERN),
+            "application": _match(APPLICATION_PATTERN),
+            "design_center": _match(DESIGN_CENTER_PATTERN),
+            "package_type": _match(PACKAGE_PATTERN),
+        })
+    else:
+        common.update({
+            "product_line": _match(PRODUCT_PATTERN),
+            "target_defect": _match(DEFECT_PATTERN),
+            "process_step": _match(PROCESS_PATTERN),
+            "technology_node": _match(TECHNODE_PATTERN),
+            "fab_location": _match(FAB_PATTERN),
+        })
+
+    return common
+
+
+def _metadata_fields_for_chunk(metadata: dict, filename: str) -> dict:
+    """Build the metadata portion of a chunk dict from extracted metadata."""
+    base = {
+        "document_number": metadata["document_number"],
+        "title": metadata["title"],
+        "status": metadata["status"],
+        "source_file": filename,
+    }
+    if USE_CASE == "filter_design":
+        base.update({
+            "filter_type": metadata.get("filter_type", ""),
+            "frequency_band": metadata.get("frequency_band", ""),
+            "substrate_material": metadata.get("substrate_material", ""),
+            "application": metadata.get("application", ""),
+            "design_center": metadata.get("design_center", ""),
+            "package_type": metadata.get("package_type", ""),
+        })
+    else:
+        base.update({
+            "product_line": metadata.get("product_line", ""),
+            "target_defect": metadata.get("target_defect", ""),
+            "process_step": metadata.get("process_step", ""),
+            "technology_node": metadata.get("technology_node", ""),
+            "fab_location": metadata.get("fab_location", ""),
+        })
+    return base
 
 
 def chunk_document(content: str, filename: str) -> list[dict]:
     """Split a document into section-level chunks with metadata."""
     metadata = extract_metadata(content)
-    doc_number = metadata["document_number"] or filename.replace(".txt", "")
+    doc_number = metadata["document_number"] or filename.replace(".txt", "").replace(".pdf", "")
 
-    # Find all section boundaries
-    section_matches = list(SECTION_PATTERN.finditer(content))
+    # Find all section boundaries — try TXT pattern first, then PDF pattern
+    section_matches = list(SECTION_PATTERN_TXT.finditer(content))
+    if not section_matches:
+        section_matches = list(SECTION_PATTERN_PDF.finditer(content))
 
     if not section_matches:
         # No sections found — index as a single chunk
         chunk_id = hashlib.md5(f"{doc_number}:full".encode()).hexdigest()
-        return [{
+        chunk = {
             "id": chunk_id,
             "content": content[:MAX_CHUNK_SIZE * 3],
             "section_name": "Full Document",
-            "document_number": doc_number,
-            "title": metadata["title"],
-            "status": metadata["status"],
-            "product_line": metadata["product_line"],
-            "target_defect": metadata["target_defect"],
-            "process_step": metadata["process_step"],
-            "technology_node": metadata["technology_node"],
-            "fab_location": metadata["fab_location"],
-            "source_file": filename,
-        }]
+        }
+        chunk.update(_metadata_fields_for_chunk(metadata, filename))
+        return [chunk]
 
     chunks = []
 
@@ -125,20 +243,13 @@ def chunk_document(content: str, filename: str) -> list[dict]:
     header_text = content[:header_end].strip()
     if header_text:
         chunk_id = hashlib.md5(f"{doc_number}:header".encode()).hexdigest()
-        chunks.append({
+        chunk = {
             "id": chunk_id,
             "content": header_text,
             "section_name": "Document Header",
-            "document_number": doc_number,
-            "title": metadata["title"],
-            "status": metadata["status"],
-            "product_line": metadata["product_line"],
-            "target_defect": metadata["target_defect"],
-            "process_step": metadata["process_step"],
-            "technology_node": metadata["technology_node"],
-            "fab_location": metadata["fab_location"],
-            "source_file": filename,
-        })
+        }
+        chunk.update(_metadata_fields_for_chunk(metadata, filename))
+        chunks.append(chunk)
 
     # Extract each numbered section
     for i, match in enumerate(section_matches):
@@ -172,20 +283,13 @@ def chunk_document(content: str, filename: str) -> list[dict]:
                 f"{doc_number}:{section_name}{suffix}".encode()
             ).hexdigest()
 
-            chunks.append({
+            chunk = {
                 "id": chunk_id,
                 "content": context_prefix + sub_text,
                 "section_name": section_name,
-                "document_number": doc_number,
-                "title": metadata["title"],
-                "status": metadata["status"],
-                "product_line": metadata["product_line"],
-                "target_defect": metadata["target_defect"],
-                "process_step": metadata["process_step"],
-                "technology_node": metadata["technology_node"],
-                "fab_location": metadata["fab_location"],
-                "source_file": filename,
-            })
+            }
+            chunk.update(_metadata_fields_for_chunk(metadata, filename))
+            chunks.append(chunk)
 
     return chunks
 
@@ -228,7 +332,12 @@ def _split_large_text(text: str, max_size: int) -> list[str]:
 # ─────────────────────────────────────────────────────────────────────
 
 def create_chunked_index(index_client: SearchIndexClient):
-    """Create an enhanced search index optimized for chunked documents."""
+    """Create an enhanced search index optimized for chunked documents.
+
+    Engineering docs fields: product_line, target_defect, process_step, technology_node, fab_location
+    Filter design fields:   filter_type, frequency_band, substrate_material, application, design_center, package_type
+    """
+    # Common fields
     fields = [
         SimpleField(name="id", type=SearchFieldDataType.String, key=True, filterable=True),
         SearchableField(name="content", type=SearchFieldDataType.String, analyzer_name="en.microsoft"),
@@ -236,17 +345,31 @@ def create_chunked_index(index_client: SearchIndexClient):
         SearchableField(name="document_number", type=SearchFieldDataType.String, filterable=True, sortable=True),
         SearchableField(name="title", type=SearchFieldDataType.String, analyzer_name="en.microsoft"),
         SimpleField(name="status", type=SearchFieldDataType.String, filterable=True, facetable=True),
-        SimpleField(name="product_line", type=SearchFieldDataType.String, filterable=True, facetable=True),
-        SimpleField(name="target_defect", type=SearchFieldDataType.String, filterable=True, facetable=True),
-        SimpleField(name="process_step", type=SearchFieldDataType.String, filterable=True, facetable=True),
-        SimpleField(name="technology_node", type=SearchFieldDataType.String, filterable=True, facetable=True),
-        SimpleField(name="fab_location", type=SearchFieldDataType.String, filterable=True, facetable=True),
         SimpleField(name="source_file", type=SearchFieldDataType.String, filterable=True),
     ]
 
+    # Use-case-specific metadata fields
+    if USE_CASE == "filter_design":
+        fields.extend([
+            SimpleField(name="filter_type", type=SearchFieldDataType.String, filterable=True, facetable=True),
+            SimpleField(name="frequency_band", type=SearchFieldDataType.String, filterable=True, facetable=True),
+            SimpleField(name="substrate_material", type=SearchFieldDataType.String, filterable=True, facetable=True),
+            SimpleField(name="application", type=SearchFieldDataType.String, filterable=True, facetable=True),
+            SimpleField(name="design_center", type=SearchFieldDataType.String, filterable=True, facetable=True),
+            SimpleField(name="package_type", type=SearchFieldDataType.String, filterable=True, facetable=True),
+        ])
+    else:
+        fields.extend([
+            SimpleField(name="product_line", type=SearchFieldDataType.String, filterable=True, facetable=True),
+            SimpleField(name="target_defect", type=SearchFieldDataType.String, filterable=True, facetable=True),
+            SimpleField(name="process_step", type=SearchFieldDataType.String, filterable=True, facetable=True),
+            SimpleField(name="technology_node", type=SearchFieldDataType.String, filterable=True, facetable=True),
+            SimpleField(name="fab_location", type=SearchFieldDataType.String, filterable=True, facetable=True),
+        ])
+
     # Semantic configuration: prioritize content and title
     semantic_config = SemanticConfiguration(
-        name="chunked-semantic-config",
+        name=SEMANTIC_CONFIG_NAME,
         prioritized_fields=SemanticPrioritizedFields(
             content_fields=[SemanticField(field_name="content")],
             title_field=SemanticField(field_name="title"),
@@ -259,14 +382,9 @@ def create_chunked_index(index_client: SearchIndexClient):
 
     # Scoring profile: boost title and section matches
     scoring_profile = ScoringProfile(
-        name="boost-title-section",
+        name=SCORING_PROFILE_NAME,
         text_weights=TextWeights(
-            weights={
-                "title": 3.0,
-                "section_name": 2.0,
-                "content": 1.0,
-                "document_number": 2.5,
-            }
+            weights=_global_search["scoring_weights"]
         ),
     )
 
@@ -275,11 +393,18 @@ def create_chunked_index(index_client: SearchIndexClient):
         fields=fields,
         semantic_search=SemanticSearch(configurations=[semantic_config]),
         scoring_profiles=[scoring_profile],
-        default_scoring_profile="boost-title-section",
+        default_scoring_profile=SCORING_PROFILE_NAME,
     )
 
+    # Delete existing index if schema has changed (fields cannot be removed in-place)
+    try:
+        index_client.delete_index(INDEX_NAME)
+        print(f"Deleted existing index '{INDEX_NAME}' (schema update required)")
+    except Exception:
+        pass  # Index doesn't exist yet — fine
+
     result = index_client.create_or_update_index(index)
-    print(f"Created/updated chunked index: {result.name}")
+    print(f"Created chunked index: {result.name}")
     return result
 
 
@@ -311,17 +436,17 @@ def main():
         print("Run generate_docs.py first.")
         return
 
-    files = sorted(f for f in os.listdir(DATA_DIR) if f.startswith("KLA-MFG-TC-") and f.endswith(".txt"))
+    file_ext = f".{FILE_FORMAT}"
+    files = sorted(f for f in os.listdir(DATA_DIR) if f.startswith(DOC_PREFIX) and f.endswith(file_ext))
     print(f"\nChunking {len(files)} documents...")
 
     all_chunks = []
     for filename in files:
         filepath = os.path.join(DATA_DIR, filename)
-        with open(filepath, "r", encoding="utf-8") as f:
-            content = f.read()
+        content = _read_file_text(filepath)
         chunks = chunk_document(content, filename)
         all_chunks.extend(chunks)
-        print(f"  {filename} → {len(chunks)} chunks")
+        print(f"  {filename} -> {len(chunks)} chunks")
 
     print(f"\nTotal chunks: {len(all_chunks)}")
 

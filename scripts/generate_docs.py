@@ -1,18 +1,26 @@
 """
-Generate 100 Engineering Documents for KLA Manufacturing Test Cases.
+Generate 100 Engineering Documents for Manufacturing Test Cases.
 
 These documents simulate semiconductor inspection and metrology test cases
-used in KLA's manufacturing quality assurance processes.
+used in manufacturing quality assurance processes.
 """
 
 import os
 import json
 import random
+import sys
 from datetime import datetime, timedelta
 
-DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data")
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import config
 
-# KLA product lines and systems
+_doc_cfg = config.uc_document_config("engineering_docs")
+DATA_DIR = config.uc_data_dir("engineering_docs")
+DOC_PREFIX = _doc_cfg["document_prefix"]
+TOTAL_DOCUMENTS = _doc_cfg["total_documents"]
+CLASSIFICATION = _doc_cfg["classification"]
+
+# Semiconductor inspection product lines and systems
 PRODUCT_LINES = [
     "Surfscan SP7", "Surfscan SP5", "Puma 9xxx", "Puma 9900",
     "2920 Series", "eDR-7100", "Candela 8520",
@@ -125,7 +133,7 @@ def generate_document(doc_id):
     created_date = base_date + timedelta(days=random.randint(0, 500))
     modified_date = created_date + timedelta(days=random.randint(1, 60))
 
-    doc_number = f"KLA-MFG-TC-{doc_id:04d}"
+    doc_number = f"{DOC_PREFIX}-{doc_id:04d}"
     revision = f"Rev {random.choice(['A', 'B', 'C', 'D'])}.{random.randint(1, 9)}"
 
     defect_count = random.randint(0, 5000)
@@ -139,7 +147,7 @@ ENGINEERING TEST CASE DOCUMENT
 
 Document Number: {doc_number}
 Revision: {revision}
-Classification: CONFIDENTIAL - KLA Internal Use Only
+Classification: {CLASSIFICATION}
 
 Title: {inspection_type} - {defect_type} Detection on {product_line}
 Subtitle: {process_step} Quality Validation for {tech_node} Node Manufacturing
@@ -287,10 +295,10 @@ END OF DOCUMENT - {doc_number}
 def main():
     os.makedirs(DATA_DIR, exist_ok=True)
 
-    print(f"Generating 100 engineering test case documents in: {DATA_DIR}")
+    print(f"Generating {TOTAL_DOCUMENTS} engineering test case documents in: {DATA_DIR}")
     manifest = []
 
-    for i in range(1, 101):
+    for i in range(1, TOTAL_DOCUMENTS + 1):
         doc_number, content = generate_document(i)
         filename = f"{doc_number}.txt"
         filepath = os.path.join(DATA_DIR, filename)
@@ -306,7 +314,7 @@ def main():
     with open(manifest_path, "w", encoding="utf-8") as f:
         json.dump(manifest, f, indent=2)
 
-    print(f"\nSuccessfully generated 100 documents and manifest.json in {DATA_DIR}")
+    print(f"\nSuccessfully generated {TOTAL_DOCUMENTS} documents and manifest.json in {DATA_DIR}")
 
 
 if __name__ == "__main__":

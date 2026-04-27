@@ -1,0 +1,153 @@
+================================================================================
+ENGINEERING TEST CASE DOCUMENT
+================================================================================
+
+Document Number: MFG-TC-0010
+Revision: Rev D.5
+Classification: CONFIDENTIAL - Internal Use Only
+
+Title: LED Inspection - Pattern Defects Detection on Teron SL650
+Subtitle: Post-CMP Quality Validation for 65nm Node Manufacturing
+
+────────────────────────────────────────────────────────────────────────────────
+DOCUMENT INFORMATION
+────────────────────────────────────────────────────────────────────────────────
+
+Author:           Dr. Wei Zhang
+Reviewer:         Lisa Johansson
+Fab Location:     Milpitas Fab B
+Created Date:     2024-10-22
+Last Modified:    2024-10-24
+Status:           NEEDS REVIEW
+Priority:         P4 - Low
+Severity Level:   Minor
+
+────────────────────────────────────────────────────────────────────────────────
+1. OBJECTIVE
+────────────────────────────────────────────────────────────────────────────────
+
+This test case validates the capability of the Teron SL650 system to detect
+and classify Pattern Defects defects during post-cmp inspection
+at the 65nm technology node. The test is conducted at Milpitas Fab B to ensure
+manufacturing quality standards are met for 450mm wafer production.
+
+The primary objective is to verify that the inspection system meets the required
+detection sensitivity and classification accuracy for Pattern Defects defects
+that are critical to yield at the 65nm node. This test case is part of
+the ongoing qualification program for the Teron SL650 platform.
+
+────────────────────────────────────────────────────────────────────────────────
+2. SCOPE
+────────────────────────────────────────────────────────────────────────────────
+
+- Product Line: Teron SL650
+- Inspection Type: LED Inspection
+- Target Defect: Pattern Defects
+- Process Step: Post-CMP
+- Wafer Size: 450mm
+- Technology Node: 65nm
+- Fab Location: Milpitas Fab B
+
+This test case applies to all Teron SL650 systems deployed at Milpitas Fab B
+for post-cmp monitoring in the 65nm manufacturing line.
+Results from this test are used to establish baseline performance metrics
+and to qualify new recipe configurations.
+
+────────────────────────────────────────────────────────────────────────────────
+3. TEST CONFIGURATION
+────────────────────────────────────────────────────────────────────────────────
+
+System:                Teron SL650
+Software Version:      v9.8.976
+Recipe:                LED_INSPECTION_65nm_POST_CMP
+Illumination Mode:     Darkfield
+Scan Speed:            Medium (136 mm/s)
+Pixel Size:            0.25μm
+Edge Exclusion:        3mm
+Sampling Plan:         Full wafer sampling
+
+────────────────────────────────────────────────────────────────────────────────
+4. TEST PROCEDURE
+────────────────────────────────────────────────────────────────────────────────
+
+1. Power on the Teron SL650 system and allow 30-minute warm-up period.
+2. Load the calibration wafer and run the standard calibration routine.
+3. Verify calibration results are within specification (±2% tolerance).
+4. Load the test wafer onto the stage using the automated handler.
+5. Select the 'LED Inspection' recipe from the recipe library.
+6. Configure detection sensitivity to target Pattern Defects defects.
+7. Set scan parameters: full wafer scan with edge exclusion of 3mm.
+8. Initiate the inspection run and monitor real-time defect map.
+9. Upon completion, review the defect density map and classification results.
+10. Export results to the factory automation system (SECS/GEM interface).
+11. Compare results against the golden reference baseline.
+12. Document any anomalies and generate the summary report.
+
+────────────────────────────────────────────────────────────────────────────────
+5. ACCEPTANCE CRITERIA
+────────────────────────────────────────────────────────────────────────────────
+
+- Defect detection sensitivity must meet 65nm node requirements
+- False positive rate shall not exceed 5% of total detected events
+- Scan throughput must be ≥ 75 wafers per hour
+- Classification accuracy shall be ≥ 93% for known defect types
+- Repeatability (3-sigma) shall be within ±1.8% for LED Inspection
+- System uptime during test shall be ≥ 98%
+- All results must be traceable through the MES integration
+- Measurement correlation with reference tool shall be ≥ 0.97 R²
+
+────────────────────────────────────────────────────────────────────────────────
+6. TEST RESULTS
+────────────────────────────────────────────────────────────────────────────────
+
+Test Execution Date:   2024-10-24
+Wafers Tested:         22
+Total Defects Found:   1520
+Defect Density:        483.83 defects/cm²
+Nuisance Rate:         2.1%
+Capture Rate:          97.4%
+Test Duration:         377 minutes
+System Uptime:         97.3%
+
+Result Classification: NEEDS REVIEW
+
+────────────────────────────────────────────────────────────────────────────────
+7. OBSERVATIONS AND FINDINGS
+────────────────────────────────────────────────────────────────────────────────
+
+During the execution of this test case, the following observations were noted:
+
+a) The Teron SL650 demonstrated below-target performance
+   in detecting Pattern Defects at the 65nm node.
+
+b) The capture rate exceeded the minimum threshold, confirming system readiness.
+
+c) Nuisance rate is within acceptable limits.
+
+d) No significant drift was observed during the test duration.
+
+e) Statistical process control charts showed stable performance over the test period.
+
+────────────────────────────────────────────────────────────────────────────────
+8. CORRECTIVE ACTIONS (if applicable)
+────────────────────────────────────────────────────────────────────────────────
+
+
+The following corrective actions are recommended:
+
+1. Review edge-zone detection parameters for optimization.
+2. Schedule follow-up test after recipe optimization.
+3. Monitor performance over next 30 production days.
+
+
+────────────────────────────────────────────────────────────────────────────────
+9. SIGN-OFF
+────────────────────────────────────────────────────────────────────────────────
+
+Author:     Dr. Wei Zhang                  Date: 2024-10-24
+Reviewer:   Lisa Johansson                 Date: 2024-10-31
+Approver:   Dr. Richard Lee                Date: 2024-10-28
+
+================================================================================
+END OF DOCUMENT - MFG-TC-0010
+================================================================================

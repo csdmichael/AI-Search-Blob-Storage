@@ -1,0 +1,153 @@
+================================================================================
+ENGINEERING TEST CASE DOCUMENT
+================================================================================
+
+Document Number: MFG-TC-0076
+Revision: Rev A.7
+Classification: CONFIDENTIAL - Internal Use Only
+
+Title: LED Inspection - Contamination Detection on Zeta-388
+Subtitle: Final Inspection Quality Validation for 45nm Node Manufacturing
+
+────────────────────────────────────────────────────────────────────────────────
+DOCUMENT INFORMATION
+────────────────────────────────────────────────────────────────────────────────
+
+Author:           Dr. Thomas Mueller
+Reviewer:         James Rodriguez
+Fab Location:     Singapore Fab 7
+Created Date:     2024-10-09
+Last Modified:    2024-10-10
+Status:           NEEDS REVIEW
+Priority:         P3 - Medium
+Severity Level:   Informational
+
+────────────────────────────────────────────────────────────────────────────────
+1. OBJECTIVE
+────────────────────────────────────────────────────────────────────────────────
+
+This test case validates the capability of the Zeta-388 system to detect
+and classify Contamination defects during final inspection inspection
+at the 45nm technology node. The test is conducted at Singapore Fab 7 to ensure
+manufacturing quality standards are met for 300mm wafer production.
+
+The primary objective is to verify that the inspection system meets the required
+detection sensitivity and classification accuracy for Contamination defects
+that are critical to yield at the 45nm node. This test case is part of
+the ongoing qualification program for the Zeta-388 platform.
+
+────────────────────────────────────────────────────────────────────────────────
+2. SCOPE
+────────────────────────────────────────────────────────────────────────────────
+
+- Product Line: Zeta-388
+- Inspection Type: LED Inspection
+- Target Defect: Contamination
+- Process Step: Final Inspection
+- Wafer Size: 300mm
+- Technology Node: 45nm
+- Fab Location: Singapore Fab 7
+
+This test case applies to all Zeta-388 systems deployed at Singapore Fab 7
+for final inspection monitoring in the 45nm manufacturing line.
+Results from this test are used to establish baseline performance metrics
+and to qualify new recipe configurations.
+
+────────────────────────────────────────────────────────────────────────────────
+3. TEST CONFIGURATION
+────────────────────────────────────────────────────────────────────────────────
+
+System:                Zeta-388
+Software Version:      v14.6.929
+Recipe:                LED_INSPECTION_45nm_FINAL INSPECTION
+Illumination Mode:     Brightfield
+Scan Speed:            Medium (75 mm/s)
+Pixel Size:            0.5μm
+Edge Exclusion:        3mm
+Sampling Plan:         Full wafer sampling
+
+────────────────────────────────────────────────────────────────────────────────
+4. TEST PROCEDURE
+────────────────────────────────────────────────────────────────────────────────
+
+1. Power on the Zeta-388 system and allow 30-minute warm-up period.
+2. Load the calibration wafer and run the standard calibration routine.
+3. Verify calibration results are within specification (±2% tolerance).
+4. Load the test wafer onto the stage using the automated handler.
+5. Select the 'LED Inspection' recipe from the recipe library.
+6. Configure detection sensitivity to target Contamination defects.
+7. Set scan parameters: full wafer scan with edge exclusion of 3mm.
+8. Initiate the inspection run and monitor real-time defect map.
+9. Upon completion, review the defect density map and classification results.
+10. Export results to the factory automation system (SECS/GEM interface).
+11. Compare results against the golden reference baseline.
+12. Document any anomalies and generate the summary report.
+
+────────────────────────────────────────────────────────────────────────────────
+5. ACCEPTANCE CRITERIA
+────────────────────────────────────────────────────────────────────────────────
+
+- Defect detection sensitivity must meet 45nm node requirements
+- False positive rate shall not exceed 5% of total detected events
+- Scan throughput must be ≥ 55 wafers per hour
+- Classification accuracy shall be ≥ 92% for known defect types
+- Repeatability (3-sigma) shall be within ±1.3% for LED Inspection
+- System uptime during test shall be ≥ 98%
+- All results must be traceable through the MES integration
+- Measurement correlation with reference tool shall be ≥ 0.98 R²
+
+────────────────────────────────────────────────────────────────────────────────
+6. TEST RESULTS
+────────────────────────────────────────────────────────────────────────────────
+
+Test Execution Date:   2024-10-10
+Wafers Tested:         13
+Total Defects Found:   1192
+Defect Density:        168.63 defects/cm²
+Nuisance Rate:         2.4%
+Capture Rate:          90.7%
+Test Duration:         211 minutes
+System Uptime:         96.8%
+
+Result Classification: NEEDS REVIEW
+
+────────────────────────────────────────────────────────────────────────────────
+7. OBSERVATIONS AND FINDINGS
+────────────────────────────────────────────────────────────────────────────────
+
+During the execution of this test case, the following observations were noted:
+
+a) The Zeta-388 demonstrated below-target performance
+   in detecting Contamination at the 45nm node.
+
+b) The capture rate exceeded the minimum threshold, confirming system readiness.
+
+c) Nuisance rate is within acceptable limits.
+
+d) Cross-correlation with the reference SEM confirmed classification accuracy.
+
+e) SECS/GEM communication was verified with zero packet loss during data transfer.
+
+────────────────────────────────────────────────────────────────────────────────
+8. CORRECTIVE ACTIONS (if applicable)
+────────────────────────────────────────────────────────────────────────────────
+
+
+The following corrective actions are recommended:
+
+1. Review edge-zone detection parameters for optimization.
+2. Schedule follow-up test after recipe optimization.
+3. Monitor performance over next 30 production days.
+
+
+────────────────────────────────────────────────────────────────────────────────
+9. SIGN-OFF
+────────────────────────────────────────────────────────────────────────────────
+
+Author:     Dr. Thomas Mueller             Date: 2024-10-10
+Reviewer:   James Rodriguez                Date: 2024-10-14
+Approver:   Dr. Susan Park                 Date: 2024-10-21
+
+================================================================================
+END OF DOCUMENT - MFG-TC-0076
+================================================================================

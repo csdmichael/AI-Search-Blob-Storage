@@ -6,3 +6,5 @@ azure-ai-agents
 azure-ai-evaluation
 openai
 matplotlib
+fpdf2
+pypdf

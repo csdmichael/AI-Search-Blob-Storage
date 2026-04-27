@@ -1,5 +1,5 @@
 """
-Fine-tune a model on KLA Engineering Documents and evaluate accuracy.
+Fine-tune a model on engineering documents and evaluate accuracy.
 
 This script:
 1. Generates training data (Q&A pairs) from the engineering documents
@@ -11,6 +11,8 @@ This script:
 
 Note: Fine-tuning requires a compatible base model (e.g., gpt-4o-mini)
       and sufficient quota in your Foundry project.
+
+Set USE_CASE env var to select: engineering_docs (default) or filter_design
 """
 
 import os
@@ -18,23 +20,32 @@ import re
 import json
 import random
 import time
+import sys
 from datetime import datetime
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import config
+
 from azure.identity import DefaultAzureCredential
 from azure.ai.projects import AIProjectClient
 
-PROJECT_ENDPOINT = "https://001-ai-poc.services.ai.azure.com/api/projects/001-ai-proj"
-BASE_MODEL = os.environ.get("FINE_TUNE_BASE_MODEL", "gpt-4.1")
-DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data")
-DOCS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "docs")
+_ft_cfg = config.uc_agent_config()["fine_tuning"]
+_doc_cfg = config.uc_document_config()
+
+PROJECT_ENDPOINT = config.project_endpoint()
+BASE_MODEL = os.environ.get("FINE_TUNE_BASE_MODEL", _ft_cfg["base_model"])
+DATA_DIR = config.uc_data_dir()
+DOCS_DIR = config.DOCS_DIR
 TRAINING_FILE = os.path.join(DATA_DIR, "fine_tuning_train.jsonl")
 VALIDATION_FILE = os.path.join(DATA_DIR, "fine_tuning_validation.jsonl")
+DOC_PREFIX = _doc_cfg["document_prefix"]
+TOTAL_DOCUMENTS = _doc_cfg["total_documents"]
 
-SYSTEM_PROMPT = (
-    "You are a KLA manufacturing engineering assistant. Answer questions about "
-    "semiconductor inspection test cases, defect detection, and quality assurance "
-    "based solely on the engineering documentation provided. Be precise and cite "
-    "document numbers (KLA-MFG-TC-XXXX) when applicable."
-)
+SYSTEM_PROMPT = _ft_cfg["system_prompt"]
+FINE_TUNE_SUFFIX = _ft_cfg["suffix"]
+N_EPOCHS = _ft_cfg["n_epochs"]
+TRAIN_SPLIT = _ft_cfg["train_split"]
+EVAL_SAMPLE_SIZE = _ft_cfg["eval_sample_size"]
 
 
 # ─────────────────────────────────────────────────────────────────────
@@ -161,7 +172,7 @@ def extract_qa_pairs(content: str, doc_number: str) -> list[dict]:
 
 def generate_training_data():
     """Generate JSONL training and validation files from engineering docs."""
-    files = sorted(f for f in os.listdir(DATA_DIR) if f.startswith("KLA-MFG-TC-") and f.endswith(".txt"))
+    files = sorted(f for f in os.listdir(DATA_DIR) if f.startswith(DOC_PREFIX) and f.endswith(".txt"))
     all_pairs = []
 
     for filename in files:
@@ -175,8 +186,8 @@ def generate_training_data():
     random.seed(42)
     random.shuffle(all_pairs)
 
-    # 80/20 train/validation split
-    split_idx = int(len(all_pairs) * 0.8)
+    # train/validation split
+    split_idx = int(len(all_pairs) * TRAIN_SPLIT)
     train_pairs = all_pairs[:split_idx]
     val_pairs = all_pairs[split_idx:]
 
@@ -229,9 +240,9 @@ def fine_tune_model(project_client: AIProjectClient):
         validation_file=val_file.id,
         model=BASE_MODEL,
         hyperparameters={
-            "n_epochs": 3,
+            "n_epochs": N_EPOCHS,
         },
-        suffix="kla-eng-docs",
+        suffix=FINE_TUNE_SUFFIX,
     )
 
     print(f"  Fine-tuning job ID: {job.id}")
@@ -265,8 +276,8 @@ def evaluate_model(project_client: AIProjectClient, model_name: str, val_pairs: 
     total_evaluated = 0
     total_tokens = 0
 
-    # Sample up to 50 for evaluation
-    eval_sample = val_pairs[:50] if len(val_pairs) > 50 else val_pairs
+    # Sample up to configured size for evaluation
+    eval_sample = val_pairs[:EVAL_SAMPLE_SIZE] if len(val_pairs) > EVAL_SAMPLE_SIZE else val_pairs
 
     print(f"\nEvaluating {len(eval_sample)} validation examples...")
     for i, pair in enumerate(eval_sample):
@@ -285,8 +296,9 @@ def evaluate_model(project_client: AIProjectClient, model_name: str, val_pairs: 
 
             # Evaluate: check if key entities from expected answer appear in prediction
             expected = pair["answer"]
-            doc_refs = re.findall(r"KLA-MFG-TC-\d{4}", expected)
-            predicted_refs = re.findall(r"KLA-MFG-TC-\d{4}", predicted)
+            doc_pattern = re.escape(DOC_PREFIX) + r"-\d{4}"
+            doc_refs = re.findall(doc_pattern, expected)
+            predicted_refs = re.findall(doc_pattern, predicted)
             citation_match = bool(set(doc_refs) & set(predicted_refs)) if doc_refs else True
 
             if citation_match:
@@ -356,19 +368,19 @@ def generate_eval_report(metrics: dict, train_count: int, val_count: int):
 ## Methodology
 
 ### Training Data Generation
-- Q&A pairs were automatically extracted from all 100 KLA engineering test case documents
+- Q&A pairs were automatically extracted from all {TOTAL_DOCUMENTS} engineering test case documents
 - Each document yields 5-7 question-answer pairs covering: objectives, results, systems, acceptance criteria, observations, and corrective actions
 - Training/validation split: 80/20 with fixed random seed for reproducibility
 
 ### Fine-Tuning Configuration
 - Base model: `{metrics['base_model']}`
-- Epochs: 3
+- Epochs: {N_EPOCHS}
 - Batch size: auto
 - Learning rate multiplier: auto
-- Suffix: `kla-eng-docs`
+- Suffix: `{FINE_TUNE_SUFFIX}`
 
 ### Evaluation Criteria
-1. **Citation Accuracy**: Does the response correctly cite the relevant KLA-MFG-TC document number?
+1. **Citation Accuracy**: Does the response correctly cite the relevant {DOC_PREFIX} document number?
 2. **Response Relevance**: Does the response contain key information from the expected answer?
 3. **Token Efficiency**: Average tokens used per query (lower is better for cost)
 

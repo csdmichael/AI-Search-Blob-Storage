@@ -1,0 +1,153 @@
+================================================================================
+ENGINEERING TEST CASE DOCUMENT
+================================================================================
+
+Document Number: MFG-TC-0034
+Revision: Rev D.1
+Classification: CONFIDENTIAL - Internal Use Only
+
+Title: CD-SEM Measurement - Pattern Defects Detection on Surfscan SP7
+Subtitle: Post-Clean Quality Validation for 10nm Node Manufacturing
+
+────────────────────────────────────────────────────────────────────────────────
+DOCUMENT INFORMATION
+────────────────────────────────────────────────────────────────────────────────
+
+Author:           Dr. Priya Sharma
+Reviewer:         Lisa Johansson
+Fab Location:     Milpitas Fab B
+Created Date:     2024-09-30
+Last Modified:    2024-10-23
+Status:           NEEDS REVIEW
+Priority:         P4 - Low
+Severity Level:   Informational
+
+────────────────────────────────────────────────────────────────────────────────
+1. OBJECTIVE
+────────────────────────────────────────────────────────────────────────────────
+
+This test case validates the capability of the Surfscan SP7 system to detect
+and classify Pattern Defects defects during post-clean inspection
+at the 10nm technology node. The test is conducted at Milpitas Fab B to ensure
+manufacturing quality standards are met for 200mm wafer production.
+
+The primary objective is to verify that the inspection system meets the required
+detection sensitivity and classification accuracy for Pattern Defects defects
+that are critical to yield at the 10nm node. This test case is part of
+the ongoing qualification program for the Surfscan SP7 platform.
+
+────────────────────────────────────────────────────────────────────────────────
+2. SCOPE
+────────────────────────────────────────────────────────────────────────────────
+
+- Product Line: Surfscan SP7
+- Inspection Type: CD-SEM Measurement
+- Target Defect: Pattern Defects
+- Process Step: Post-Clean
+- Wafer Size: 200mm
+- Technology Node: 10nm
+- Fab Location: Milpitas Fab B
+
+This test case applies to all Surfscan SP7 systems deployed at Milpitas Fab B
+for post-clean monitoring in the 10nm manufacturing line.
+Results from this test are used to establish baseline performance metrics
+and to qualify new recipe configurations.
+
+────────────────────────────────────────────────────────────────────────────────
+3. TEST CONFIGURATION
+────────────────────────────────────────────────────────────────────────────────
+
+System:                Surfscan SP7
+Software Version:      v13.5.974
+Recipe:                CD-SEM_MEASUREMENT_10nm_POST_CLEAN
+Illumination Mode:     Darkfield
+Scan Speed:            High (112 mm/s)
+Pixel Size:            0.25μm
+Edge Exclusion:        2mm
+Sampling Plan:         9-point sampling
+
+────────────────────────────────────────────────────────────────────────────────
+4. TEST PROCEDURE
+────────────────────────────────────────────────────────────────────────────────
+
+1. Power on the Surfscan SP7 system and allow 30-minute warm-up period.
+2. Load the calibration wafer and run the standard calibration routine.
+3. Verify calibration results are within specification (±2% tolerance).
+4. Load the test wafer onto the stage using the automated handler.
+5. Select the 'CD-SEM Measurement' recipe from the recipe library.
+6. Configure detection sensitivity to target Pattern Defects defects.
+7. Set scan parameters: full wafer scan with edge exclusion of 3mm.
+8. Initiate the inspection run and monitor real-time defect map.
+9. Upon completion, review the defect density map and classification results.
+10. Export results to the factory automation system (SECS/GEM interface).
+11. Compare results against the golden reference baseline.
+12. Document any anomalies and generate the summary report.
+
+────────────────────────────────────────────────────────────────────────────────
+5. ACCEPTANCE CRITERIA
+────────────────────────────────────────────────────────────────────────────────
+
+- Defect detection sensitivity must meet 10nm node requirements
+- False positive rate shall not exceed 5% of total detected events
+- Scan throughput must be ≥ 67 wafers per hour
+- Classification accuracy shall be ≥ 98% for known defect types
+- Repeatability (3-sigma) shall be within ±3.0% for CD-SEM Measurement
+- System uptime during test shall be ≥ 98%
+- All results must be traceable through the MES integration
+- Measurement correlation with reference tool shall be ≥ 0.93 R²
+
+────────────────────────────────────────────────────────────────────────────────
+6. TEST RESULTS
+────────────────────────────────────────────────────────────────────────────────
+
+Test Execution Date:   2024-10-23
+Wafers Tested:         22
+Total Defects Found:   486
+Defect Density:        154.7 defects/cm²
+Nuisance Rate:         4.3%
+Capture Rate:          96.6%
+Test Duration:         407 minutes
+System Uptime:         97.0%
+
+Result Classification: NEEDS REVIEW
+
+────────────────────────────────────────────────────────────────────────────────
+7. OBSERVATIONS AND FINDINGS
+────────────────────────────────────────────────────────────────────────────────
+
+During the execution of this test case, the following observations were noted:
+
+a) The Surfscan SP7 demonstrated below-target performance
+   in detecting Pattern Defects at the 10nm node.
+
+b) The capture rate exceeded the minimum threshold, confirming system readiness.
+
+c) Nuisance rate is within acceptable limits.
+
+d) Throughput metrics met production requirements without sensitivity compromise.
+
+e) The defect review station correlation was within specification.
+
+────────────────────────────────────────────────────────────────────────────────
+8. CORRECTIVE ACTIONS (if applicable)
+────────────────────────────────────────────────────────────────────────────────
+
+
+The following corrective actions are recommended:
+
+1. Review edge-zone detection parameters for optimization.
+2. Schedule follow-up test after recipe optimization.
+3. Monitor performance over next 30 production days.
+
+
+────────────────────────────────────────────────────────────────────────────────
+9. SIGN-OFF
+────────────────────────────────────────────────────────────────────────────────
+
+Author:     Dr. Priya Sharma               Date: 2024-10-23
+Reviewer:   Lisa Johansson                 Date: 2024-10-26
+Approver:   Dr. Kenji Watanabe             Date: 2024-11-02
+
+================================================================================
+END OF DOCUMENT - MFG-TC-0034
+================================================================================

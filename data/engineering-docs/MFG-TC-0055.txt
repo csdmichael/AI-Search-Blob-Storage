@@ -1,0 +1,153 @@
+================================================================================
+ENGINEERING TEST CASE DOCUMENT
+================================================================================
+
+Document Number: MFG-TC-0055
+Revision: Rev B.9
+Classification: CONFIDENTIAL - Internal Use Only
+
+Title: Unpatterned Wafer Inspection - Delamination Detection on Teron SL650
+Subtitle: Final Inspection Quality Validation for 5nm Node Manufacturing
+
+────────────────────────────────────────────────────────────────────────────────
+DOCUMENT INFORMATION
+────────────────────────────────────────────────────────────────────────────────
+
+Author:           Dr. Yuki Tanaka
+Reviewer:         Emily Nakamura
+Fab Location:     Milpitas Fab B
+Created Date:     2024-06-23
+Last Modified:    2024-07-24
+Status:           CONDITIONAL PASS
+Priority:         P3 - Medium
+Severity Level:   Informational
+
+────────────────────────────────────────────────────────────────────────────────
+1. OBJECTIVE
+────────────────────────────────────────────────────────────────────────────────
+
+This test case validates the capability of the Teron SL650 system to detect
+and classify Delamination defects during final inspection inspection
+at the 5nm technology node. The test is conducted at Milpitas Fab B to ensure
+manufacturing quality standards are met for 450mm wafer production.
+
+The primary objective is to verify that the inspection system meets the required
+detection sensitivity and classification accuracy for Delamination defects
+that are critical to yield at the 5nm node. This test case is part of
+the ongoing qualification program for the Teron SL650 platform.
+
+────────────────────────────────────────────────────────────────────────────────
+2. SCOPE
+────────────────────────────────────────────────────────────────────────────────
+
+- Product Line: Teron SL650
+- Inspection Type: Unpatterned Wafer Inspection
+- Target Defect: Delamination
+- Process Step: Final Inspection
+- Wafer Size: 450mm
+- Technology Node: 5nm
+- Fab Location: Milpitas Fab B
+
+This test case applies to all Teron SL650 systems deployed at Milpitas Fab B
+for final inspection monitoring in the 5nm manufacturing line.
+Results from this test are used to establish baseline performance metrics
+and to qualify new recipe configurations.
+
+────────────────────────────────────────────────────────────────────────────────
+3. TEST CONFIGURATION
+────────────────────────────────────────────────────────────────────────────────
+
+System:                Teron SL650
+Software Version:      v11.0.389
+Recipe:                UNPATTERNED_WAFER_INSPECTION_5nm_FINAL INSPECTION
+Illumination Mode:     Brightfield
+Scan Speed:            High (159 mm/s)
+Pixel Size:            0.5μm
+Edge Exclusion:        3mm
+Sampling Plan:         Full wafer sampling
+
+────────────────────────────────────────────────────────────────────────────────
+4. TEST PROCEDURE
+────────────────────────────────────────────────────────────────────────────────
+
+1. Power on the Teron SL650 system and allow 30-minute warm-up period.
+2. Load the calibration wafer and run the standard calibration routine.
+3. Verify calibration results are within specification (±2% tolerance).
+4. Load the test wafer onto the stage using the automated handler.
+5. Select the 'Unpatterned Wafer Inspection' recipe from the recipe library.
+6. Configure detection sensitivity to target Delamination defects.
+7. Set scan parameters: full wafer scan with edge exclusion of 3mm.
+8. Initiate the inspection run and monitor real-time defect map.
+9. Upon completion, review the defect density map and classification results.
+10. Export results to the factory automation system (SECS/GEM interface).
+11. Compare results against the golden reference baseline.
+12. Document any anomalies and generate the summary report.
+
+────────────────────────────────────────────────────────────────────────────────
+5. ACCEPTANCE CRITERIA
+────────────────────────────────────────────────────────────────────────────────
+
+- Defect detection sensitivity must meet 5nm node requirements
+- False positive rate shall not exceed 5% of total detected events
+- Scan throughput must be ≥ 71 wafers per hour
+- Classification accuracy shall be ≥ 94% for known defect types
+- Repeatability (3-sigma) shall be within ±1.0% for Unpatterned Wafer Inspection
+- System uptime during test shall be ≥ 98%
+- All results must be traceable through the MES integration
+- Measurement correlation with reference tool shall be ≥ 0.98 R²
+
+────────────────────────────────────────────────────────────────────────────────
+6. TEST RESULTS
+────────────────────────────────────────────────────────────────────────────────
+
+Test Execution Date:   2024-07-24
+Wafers Tested:         49
+Total Defects Found:   4946
+Defect Density:        1574.36 defects/cm²
+Nuisance Rate:         4.6%
+Capture Rate:          95.1%
+Test Duration:         207 minutes
+System Uptime:         97.0%
+
+Result Classification: CONDITIONAL PASS
+
+────────────────────────────────────────────────────────────────────────────────
+7. OBSERVATIONS AND FINDINGS
+────────────────────────────────────────────────────────────────────────────────
+
+During the execution of this test case, the following observations were noted:
+
+a) The Teron SL650 demonstrated acceptable performance
+   in detecting Delamination at the 5nm node.
+
+b) The capture rate exceeded the minimum threshold, confirming system readiness.
+
+c) Nuisance rate is within acceptable limits.
+
+d) Minor calibration drift was detected after extended run; re-calibration resolved the issue.
+
+e) The system successfully integrated with the factory automation host.
+
+────────────────────────────────────────────────────────────────────────────────
+8. CORRECTIVE ACTIONS (if applicable)
+────────────────────────────────────────────────────────────────────────────────
+
+
+The following corrective actions are recommended:
+
+1. Review edge-zone detection parameters for optimization.
+2. Schedule follow-up test after recipe optimization.
+3. Monitor performance over next 30 production days.
+
+
+────────────────────────────────────────────────────────────────────────────────
+9. SIGN-OFF
+────────────────────────────────────────────────────────────────────────────────
+
+Author:     Dr. Yuki Tanaka                Date: 2024-07-24
+Reviewer:   Emily Nakamura                 Date: 2024-07-26
+Approver:   Dr. Richard Lee                Date: 2024-07-30
+
+================================================================================
+END OF DOCUMENT - MFG-TC-0055
+================================================================================

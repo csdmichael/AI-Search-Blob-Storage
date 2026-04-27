@@ -1,0 +1,153 @@
+================================================================================
+ENGINEERING TEST CASE DOCUMENT
+================================================================================
+
+Document Number: MFG-TC-0004
+Revision: Rev D.1
+Classification: CONFIDENTIAL - Internal Use Only
+
+Title: Macro Defect Inspection - Bridge Defects Detection on WaferSight PWG
+Subtitle: Post-Etch Quality Validation for 3nm Node Manufacturing
+
+────────────────────────────────────────────────────────────────────────────────
+DOCUMENT INFORMATION
+────────────────────────────────────────────────────────────────────────────────
+
+Author:           Dr. Wei Zhang
+Reviewer:         Emily Nakamura
+Fab Location:     Singapore Fab 7
+Created Date:     2024-05-04
+Last Modified:    2024-06-30
+Status:           FAIL
+Priority:         P3 - Medium
+Severity Level:   Informational
+
+────────────────────────────────────────────────────────────────────────────────
+1. OBJECTIVE
+────────────────────────────────────────────────────────────────────────────────
+
+This test case validates the capability of the WaferSight PWG system to detect
+and classify Bridge Defects defects during post-etch inspection
+at the 3nm technology node. The test is conducted at Singapore Fab 7 to ensure
+manufacturing quality standards are met for 300mm wafer production.
+
+The primary objective is to verify that the inspection system meets the required
+detection sensitivity and classification accuracy for Bridge Defects defects
+that are critical to yield at the 3nm node. This test case is part of
+the ongoing qualification program for the WaferSight PWG platform.
+
+────────────────────────────────────────────────────────────────────────────────
+2. SCOPE
+────────────────────────────────────────────────────────────────────────────────
+
+- Product Line: WaferSight PWG
+- Inspection Type: Macro Defect Inspection
+- Target Defect: Bridge Defects
+- Process Step: Post-Etch
+- Wafer Size: 300mm
+- Technology Node: 3nm
+- Fab Location: Singapore Fab 7
+
+This test case applies to all WaferSight PWG systems deployed at Singapore Fab 7
+for post-etch monitoring in the 3nm manufacturing line.
+Results from this test are used to establish baseline performance metrics
+and to qualify new recipe configurations.
+
+────────────────────────────────────────────────────────────────────────────────
+3. TEST CONFIGURATION
+────────────────────────────────────────────────────────────────────────────────
+
+System:                WaferSight PWG
+Software Version:      v9.1.424
+Recipe:                MACRO_DEFECT_INSPECTION_3nm_POST_ETCH
+Illumination Mode:     Brightfield
+Scan Speed:            Medium (137 mm/s)
+Pixel Size:            0.25μm
+Edge Exclusion:        5mm
+Sampling Plan:         9-point sampling
+
+────────────────────────────────────────────────────────────────────────────────
+4. TEST PROCEDURE
+────────────────────────────────────────────────────────────────────────────────
+
+1. Power on the WaferSight PWG system and allow 30-minute warm-up period.
+2. Load the calibration wafer and run the standard calibration routine.
+3. Verify calibration results are within specification (±2% tolerance).
+4. Load the test wafer onto the stage using the automated handler.
+5. Select the 'Macro Defect Inspection' recipe from the recipe library.
+6. Configure detection sensitivity to target Bridge Defects defects.
+7. Set scan parameters: full wafer scan with edge exclusion of 3mm.
+8. Initiate the inspection run and monitor real-time defect map.
+9. Upon completion, review the defect density map and classification results.
+10. Export results to the factory automation system (SECS/GEM interface).
+11. Compare results against the golden reference baseline.
+12. Document any anomalies and generate the summary report.
+
+────────────────────────────────────────────────────────────────────────────────
+5. ACCEPTANCE CRITERIA
+────────────────────────────────────────────────────────────────────────────────
+
+- Defect detection sensitivity must meet 3nm node requirements
+- False positive rate shall not exceed 5% of total detected events
+- Scan throughput must be ≥ 68 wafers per hour
+- Classification accuracy shall be ≥ 99% for known defect types
+- Repeatability (3-sigma) shall be within ±1.3% for Macro Defect Inspection
+- System uptime during test shall be ≥ 98%
+- All results must be traceable through the MES integration
+- Measurement correlation with reference tool shall be ≥ 0.93 R²
+
+────────────────────────────────────────────────────────────────────────────────
+6. TEST RESULTS
+────────────────────────────────────────────────────────────────────────────────
+
+Test Execution Date:   2024-06-30
+Wafers Tested:         24
+Total Defects Found:   3832
+Defect Density:        542.12 defects/cm²
+Nuisance Rate:         8.0%
+Capture Rate:          89.7%
+Test Duration:         276 minutes
+System Uptime:         97.5%
+
+Result Classification: FAIL
+
+────────────────────────────────────────────────────────────────────────────────
+7. OBSERVATIONS AND FINDINGS
+────────────────────────────────────────────────────────────────────────────────
+
+During the execution of this test case, the following observations were noted:
+
+a) The WaferSight PWG demonstrated below-target performance
+   in detecting Bridge Defects at the 3nm node.
+
+b) The capture rate requires optimization of the detection algorithm.
+
+c) Nuisance rate exceeds the target threshold; recipe tuning is recommended.
+
+d) No significant drift was observed during the test duration.
+
+e) SECS/GEM communication was verified with zero packet loss during data transfer.
+
+────────────────────────────────────────────────────────────────────────────────
+8. CORRECTIVE ACTIONS (if applicable)
+────────────────────────────────────────────────────────────────────────────────
+
+
+The following corrective actions are recommended:
+
+1. Re-tune detection algorithm thresholds for Bridge Defects at 3nm node.
+2. Schedule follow-up test after recipe optimization.
+3. Escalate to R&D for algorithm enhancement if re-tuning does not resolve sensitivity gap.
+
+
+────────────────────────────────────────────────────────────────────────────────
+9. SIGN-OFF
+────────────────────────────────────────────────────────────────────────────────
+
+Author:     Dr. Wei Zhang                  Date: 2024-06-30
+Reviewer:   Emily Nakamura                 Date: 2024-07-01
+Approver:   Dr. Susan Park                 Date: 2024-07-12
+
+================================================================================
+END OF DOCUMENT - MFG-TC-0004
+================================================================================

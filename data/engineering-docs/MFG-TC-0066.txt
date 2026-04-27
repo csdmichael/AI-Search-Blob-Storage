@@ -1,0 +1,153 @@
+================================================================================
+ENGINEERING TEST CASE DOCUMENT
+================================================================================
+
+Document Number: MFG-TC-0066
+Revision: Rev D.7
+Classification: CONFIDENTIAL - Internal Use Only
+
+Title: Surface Roughness Analysis - Contamination Detection on Zeta-388
+Subtitle: Final Inspection Quality Validation for 65nm Node Manufacturing
+
+────────────────────────────────────────────────────────────────────────────────
+DOCUMENT INFORMATION
+────────────────────────────────────────────────────────────────────────────────
+
+Author:           Dr. Priya Sharma
+Reviewer:         Dr. Yuki Tanaka
+Fab Location:     Singapore Fab 7
+Created Date:     2024-05-26
+Last Modified:    2024-06-11
+Status:           FAIL
+Priority:         P1 - Critical
+Severity Level:   Informational
+
+────────────────────────────────────────────────────────────────────────────────
+1. OBJECTIVE
+────────────────────────────────────────────────────────────────────────────────
+
+This test case validates the capability of the Zeta-388 system to detect
+and classify Contamination defects during final inspection inspection
+at the 65nm technology node. The test is conducted at Singapore Fab 7 to ensure
+manufacturing quality standards are met for 450mm wafer production.
+
+The primary objective is to verify that the inspection system meets the required
+detection sensitivity and classification accuracy for Contamination defects
+that are critical to yield at the 65nm node. This test case is part of
+the ongoing qualification program for the Zeta-388 platform.
+
+────────────────────────────────────────────────────────────────────────────────
+2. SCOPE
+────────────────────────────────────────────────────────────────────────────────
+
+- Product Line: Zeta-388
+- Inspection Type: Surface Roughness Analysis
+- Target Defect: Contamination
+- Process Step: Final Inspection
+- Wafer Size: 450mm
+- Technology Node: 65nm
+- Fab Location: Singapore Fab 7
+
+This test case applies to all Zeta-388 systems deployed at Singapore Fab 7
+for final inspection monitoring in the 65nm manufacturing line.
+Results from this test are used to establish baseline performance metrics
+and to qualify new recipe configurations.
+
+────────────────────────────────────────────────────────────────────────────────
+3. TEST CONFIGURATION
+────────────────────────────────────────────────────────────────────────────────
+
+System:                Zeta-388
+Software Version:      v12.3.133
+Recipe:                SURFACE_ROUGHNESS_ANALYSIS_65nm_FINAL INSPECTION
+Illumination Mode:     Brightfield
+Scan Speed:            Medium (131 mm/s)
+Pixel Size:            0.25μm
+Edge Exclusion:        2mm
+Sampling Plan:         Full wafer sampling
+
+────────────────────────────────────────────────────────────────────────────────
+4. TEST PROCEDURE
+────────────────────────────────────────────────────────────────────────────────
+
+1. Power on the Zeta-388 system and allow 30-minute warm-up period.
+2. Load the calibration wafer and run the standard calibration routine.
+3. Verify calibration results are within specification (±2% tolerance).
+4. Load the test wafer onto the stage using the automated handler.
+5. Select the 'Surface Roughness Analysis' recipe from the recipe library.
+6. Configure detection sensitivity to target Contamination defects.
+7. Set scan parameters: full wafer scan with edge exclusion of 3mm.
+8. Initiate the inspection run and monitor real-time defect map.
+9. Upon completion, review the defect density map and classification results.
+10. Export results to the factory automation system (SECS/GEM interface).
+11. Compare results against the golden reference baseline.
+12. Document any anomalies and generate the summary report.
+
+────────────────────────────────────────────────────────────────────────────────
+5. ACCEPTANCE CRITERIA
+────────────────────────────────────────────────────────────────────────────────
+
+- Defect detection sensitivity must meet 65nm node requirements
+- False positive rate shall not exceed 5% of total detected events
+- Scan throughput must be ≥ 42 wafers per hour
+- Classification accuracy shall be ≥ 99% for known defect types
+- Repeatability (3-sigma) shall be within ±1.3% for Surface Roughness Analysis
+- System uptime during test shall be ≥ 98%
+- All results must be traceable through the MES integration
+- Measurement correlation with reference tool shall be ≥ 0.94 R²
+
+────────────────────────────────────────────────────────────────────────────────
+6. TEST RESULTS
+────────────────────────────────────────────────────────────────────────────────
+
+Test Execution Date:   2024-06-11
+Wafers Tested:         16
+Total Defects Found:   2408
+Defect Density:        766.49 defects/cm²
+Nuisance Rate:         2.8%
+Capture Rate:          91.2%
+Test Duration:         97 minutes
+System Uptime:         99.0%
+
+Result Classification: FAIL
+
+────────────────────────────────────────────────────────────────────────────────
+7. OBSERVATIONS AND FINDINGS
+────────────────────────────────────────────────────────────────────────────────
+
+During the execution of this test case, the following observations were noted:
+
+a) The Zeta-388 demonstrated below-target performance
+   in detecting Contamination at the 65nm node.
+
+b) The capture rate exceeded the minimum threshold, confirming system readiness.
+
+c) Nuisance rate is within acceptable limits.
+
+d) Edge-zone defect detection showed improved performance compared to previous revision.
+
+e) The defect review station correlation was within specification.
+
+────────────────────────────────────────────────────────────────────────────────
+8. CORRECTIVE ACTIONS (if applicable)
+────────────────────────────────────────────────────────────────────────────────
+
+
+The following corrective actions are recommended:
+
+1. Re-tune detection algorithm thresholds for Contamination at 65nm node.
+2. Schedule follow-up test after recipe optimization.
+3. Escalate to R&D for algorithm enhancement if re-tuning does not resolve sensitivity gap.
+
+
+────────────────────────────────────────────────────────────────────────────────
+9. SIGN-OFF
+────────────────────────────────────────────────────────────────────────────────
+
+Author:     Dr. Priya Sharma               Date: 2024-06-11
+Reviewer:   Dr. Yuki Tanaka                Date: 2024-06-13
+Approver:   Dr. Richard Lee                Date: 2024-06-14
+
+================================================================================
+END OF DOCUMENT - MFG-TC-0066
+================================================================================

@@ -1,9 +1,15 @@
 """List all connections in the Foundry project."""
+import os
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import config
+
 from azure.identity import DefaultAzureCredential
 from azure.ai.projects import AIProjectClient
 
 client = AIProjectClient(
-    endpoint="https://001-ai-poc.services.ai.azure.com/api/projects/001-ai-proj",
+    endpoint=config.project_endpoint(),
     credential=DefaultAzureCredential(),
 )
 connections = client.connections.list()

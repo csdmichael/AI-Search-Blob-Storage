@@ -1,14 +1,20 @@
 """
-Create a Foundry Agent named 'Eng-Docs-Search-Agent' that uses
-Azure AI Search as its only tool/knowledge source.
+Create a Foundry Agent that uses Azure AI Search as its only tool/knowledge source.
 
 The agent is configured to:
 - Only answer from the AI Search index
 - Not make up any answers
 - Not use web search
+
+Set USE_CASE env var to select: engineering_docs (default) or filter_design
 """
 
 import os
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import config
+
 from azure.identity import DefaultAzureCredential
 from azure.ai.projects import AIProjectClient
 from azure.ai.agents.models import (
@@ -19,38 +25,18 @@ from azure.ai.agents.models import (
     ToolResources,
 )
 
-PROJECT_ENDPOINT = "https://001-ai-poc.services.ai.azure.com/api/projects/001-ai-proj"
-AGENT_NAME = "Eng-Docs-Search-Agent"
-AI_SEARCH_INDEX_NAME = "engineering-docs-index"
+_uc_agent = config.uc_agent_config()["agent"]
+
+PROJECT_ENDPOINT = config.project_endpoint()
+AGENT_NAME = _uc_agent["name"]
+AI_SEARCH_INDEX_NAME = _uc_agent["search_index"]
 
 # The connection name for AI Search in your Foundry project
-# Update this to match your actual connection name in the Foundry project
 AI_SEARCH_CONNECTION_NAME = os.environ.get("AZURE_AI_SEARCH_CONNECTION_NAME", "aisearchmymmcjmu")
 
-MODEL_DEPLOYMENT_NAME = os.environ.get("MODEL_DEPLOYMENT_NAME", "gpt-4.1")
+MODEL_DEPLOYMENT_NAME = os.environ.get("MODEL_DEPLOYMENT_NAME", _uc_agent["model_deployment"])
 
-AGENT_INSTRUCTIONS = """You are the Engineering Documents Search Agent for KLA manufacturing test cases.
-
-STRICT RULES:
-1. You MUST ONLY use the Azure AI Search index as your knowledge source.
-2. You MUST NOT make up, fabricate, or hallucinate any information.
-3. You MUST NOT use web search or any external sources.
-4. If the information is not found in the search index, respond with:
-   "I could not find relevant information in the engineering documents index. Please refine your query or check if the document exists in the system."
-5. Always cite your sources using inline references in the format [doc_name†source] after every claim.
-   Example: "The capture rate was 97.2% [KLA-MFG-TC-0042.txt†engineering-docs-index]."
-6. Provide accurate, concise answers based solely on the indexed engineering documents.
-7. When multiple documents are relevant, summarize findings and cite each document inline.
-8. At the end of your response, list all referenced documents under a "Sources" heading.
-
-You help engineers find information about:
-- Manufacturing test cases and procedures
-- Defect detection and classification results
-- Inspection system configurations and recipes
-- Quality assurance acceptance criteria
-- Test results and corrective actions
-- KLA inspection and metrology equipment specifications
-"""
+AGENT_INSTRUCTIONS = _uc_agent["instructions"]
 
 
 def main():

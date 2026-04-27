@@ -1,0 +1,15 @@
+{
+  "subscription_id": "86b37969-9445-49cf-b03f-d8866235171c",
+  "resource_group": "ai-myaacoub",
+  "storage": {
+    "account_name": "aistoragemyaacoub",
+    "resource_id": "/subscriptions/86b37969-9445-49cf-b03f-d8866235171c/resourceGroups/ai-myaacoub/providers/Microsoft.Storage/storageAccounts/aistoragemyaacoub"
+  },
+  "search": {
+    "service_name": "ai-search-my",
+    "endpoint": "https://ai-search-my.search.windows.net"
+  },
+  "foundry": {
+    "project_endpoint": "https://001-ai-poc.services.ai.azure.com/api/projects/001-ai-proj"
+  }
+}

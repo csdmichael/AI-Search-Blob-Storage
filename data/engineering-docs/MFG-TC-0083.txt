@@ -1,0 +1,147 @@
+================================================================================
+ENGINEERING TEST CASE DOCUMENT
+================================================================================
+
+Document Number: MFG-TC-0083
+Revision: Rev A.4
+Classification: CONFIDENTIAL - Internal Use Only
+
+Title: Bare Wafer Inspection - Extra Pattern Detection on Teron SL650
+Subtitle: Post-Anneal Quality Validation for 65nm Node Manufacturing
+
+────────────────────────────────────────────────────────────────────────────────
+DOCUMENT INFORMATION
+────────────────────────────────────────────────────────────────────────────────
+
+Author:           Emily Nakamura
+Reviewer:         Maria Gonzalez
+Fab Location:     Milpitas Fab A
+Created Date:     2025-02-25
+Last Modified:    2025-03-29
+Status:           PASS
+Priority:         P1 - Critical
+Severity Level:   Informational
+
+────────────────────────────────────────────────────────────────────────────────
+1. OBJECTIVE
+────────────────────────────────────────────────────────────────────────────────
+
+This test case validates the capability of the Teron SL650 system to detect
+and classify Extra Pattern defects during post-anneal inspection
+at the 65nm technology node. The test is conducted at Milpitas Fab A to ensure
+manufacturing quality standards are met for 450mm wafer production.
+
+The primary objective is to verify that the inspection system meets the required
+detection sensitivity and classification accuracy for Extra Pattern defects
+that are critical to yield at the 65nm node. This test case is part of
+the ongoing qualification program for the Teron SL650 platform.
+
+────────────────────────────────────────────────────────────────────────────────
+2. SCOPE
+────────────────────────────────────────────────────────────────────────────────
+
+- Product Line: Teron SL650
+- Inspection Type: Bare Wafer Inspection
+- Target Defect: Extra Pattern
+- Process Step: Post-Anneal
+- Wafer Size: 450mm
+- Technology Node: 65nm
+- Fab Location: Milpitas Fab A
+
+This test case applies to all Teron SL650 systems deployed at Milpitas Fab A
+for post-anneal monitoring in the 65nm manufacturing line.
+Results from this test are used to establish baseline performance metrics
+and to qualify new recipe configurations.
+
+────────────────────────────────────────────────────────────────────────────────
+3. TEST CONFIGURATION
+────────────────────────────────────────────────────────────────────────────────
+
+System:                Teron SL650
+Software Version:      v15.6.111
+Recipe:                BARE_WAFER_INSPECTION_65nm_POST_ANNEAL
+Illumination Mode:     Darkfield
+Scan Speed:            Low (187 mm/s)
+Pixel Size:            0.25μm
+Edge Exclusion:        4mm
+Sampling Plan:         21-point sampling
+
+────────────────────────────────────────────────────────────────────────────────
+4. TEST PROCEDURE
+────────────────────────────────────────────────────────────────────────────────
+
+1. Power on the Teron SL650 system and allow 30-minute warm-up period.
+2. Load the calibration wafer and run the standard calibration routine.
+3. Verify calibration results are within specification (±2% tolerance).
+4. Load the test wafer onto the stage using the automated handler.
+5. Select the 'Bare Wafer Inspection' recipe from the recipe library.
+6. Configure detection sensitivity to target Extra Pattern defects.
+7. Set scan parameters: full wafer scan with edge exclusion of 3mm.
+8. Initiate the inspection run and monitor real-time defect map.
+9. Upon completion, review the defect density map and classification results.
+10. Export results to the factory automation system (SECS/GEM interface).
+11. Compare results against the golden reference baseline.
+12. Document any anomalies and generate the summary report.
+
+────────────────────────────────────────────────────────────────────────────────
+5. ACCEPTANCE CRITERIA
+────────────────────────────────────────────────────────────────────────────────
+
+- Defect detection sensitivity must meet 65nm node requirements
+- False positive rate shall not exceed 5% of total detected events
+- Scan throughput must be ≥ 89 wafers per hour
+- Classification accuracy shall be ≥ 94% for known defect types
+- Repeatability (3-sigma) shall be within ±2.7% for Bare Wafer Inspection
+- System uptime during test shall be ≥ 98%
+- All results must be traceable through the MES integration
+- Measurement correlation with reference tool shall be ≥ 0.96 R²
+
+────────────────────────────────────────────────────────────────────────────────
+6. TEST RESULTS
+────────────────────────────────────────────────────────────────────────────────
+
+Test Execution Date:   2025-03-29
+Wafers Tested:         49
+Total Defects Found:   2035
+Defect Density:        647.76 defects/cm²
+Nuisance Rate:         5.2%
+Capture Rate:          88.8%
+Test Duration:         418 minutes
+System Uptime:         97.6%
+
+Result Classification: PASS
+
+────────────────────────────────────────────────────────────────────────────────
+7. OBSERVATIONS AND FINDINGS
+────────────────────────────────────────────────────────────────────────────────
+
+During the execution of this test case, the following observations were noted:
+
+a) The Teron SL650 demonstrated excellent performance
+   in detecting Extra Pattern at the 65nm node.
+
+b) The capture rate requires optimization of the detection algorithm.
+
+c) Nuisance rate exceeds the target threshold; recipe tuning is recommended.
+
+d) Cross-correlation with the reference SEM confirmed classification accuracy.
+
+e) The defect review station correlation was within specification.
+
+────────────────────────────────────────────────────────────────────────────────
+8. CORRECTIVE ACTIONS (if applicable)
+────────────────────────────────────────────────────────────────────────────────
+
+No corrective actions required. Test passed all acceptance criteria.
+
+────────────────────────────────────────────────────────────────────────────────
+9. SIGN-OFF
+────────────────────────────────────────────────────────────────────────────────
+
+Author:     Emily Nakamura                 Date: 2025-03-29
+Reviewer:   Maria Gonzalez                 Date: 2025-04-02
+Approver:   Dr. Hans Schmidt               Date: 2025-04-03
+
+================================================================================
+END OF DOCUMENT - MFG-TC-0083
+================================================================================

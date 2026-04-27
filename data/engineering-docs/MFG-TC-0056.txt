@@ -1,0 +1,147 @@
+================================================================================
+ENGINEERING TEST CASE DOCUMENT
+================================================================================
+
+Document Number: MFG-TC-0056
+Revision: Rev C.4
+Classification: CONFIDENTIAL - Internal Use Only
+
+Title: E-Beam Inspection - Delamination Detection on 5D Analyzer
+Subtitle: Post-Deposition Quality Validation for 28nm Node Manufacturing
+
+────────────────────────────────────────────────────────────────────────────────
+DOCUMENT INFORMATION
+────────────────────────────────────────────────────────────────────────────────
+
+Author:           Emily Nakamura
+Reviewer:         Dr. Sarah Chen
+Fab Location:     Dresden Fab 3
+Created Date:     2025-01-25
+Last Modified:    2025-01-29
+Status:           PASS
+Priority:         P4 - Low
+Severity Level:   Major
+
+────────────────────────────────────────────────────────────────────────────────
+1. OBJECTIVE
+────────────────────────────────────────────────────────────────────────────────
+
+This test case validates the capability of the 5D Analyzer system to detect
+and classify Delamination defects during post-deposition inspection
+at the 28nm technology node. The test is conducted at Dresden Fab 3 to ensure
+manufacturing quality standards are met for 300mm wafer production.
+
+The primary objective is to verify that the inspection system meets the required
+detection sensitivity and classification accuracy for Delamination defects
+that are critical to yield at the 28nm node. This test case is part of
+the ongoing qualification program for the 5D Analyzer platform.
+
+────────────────────────────────────────────────────────────────────────────────
+2. SCOPE
+────────────────────────────────────────────────────────────────────────────────
+
+- Product Line: 5D Analyzer
+- Inspection Type: E-Beam Inspection
+- Target Defect: Delamination
+- Process Step: Post-Deposition
+- Wafer Size: 300mm
+- Technology Node: 28nm
+- Fab Location: Dresden Fab 3
+
+This test case applies to all 5D Analyzer systems deployed at Dresden Fab 3
+for post-deposition monitoring in the 28nm manufacturing line.
+Results from this test are used to establish baseline performance metrics
+and to qualify new recipe configurations.
+
+────────────────────────────────────────────────────────────────────────────────
+3. TEST CONFIGURATION
+────────────────────────────────────────────────────────────────────────────────
+
+System:                5D Analyzer
+Software Version:      v8.4.424
+Recipe:                E-BEAM_INSPECTION_28nm_POST_DEPOSITION
+Illumination Mode:     Brightfield
+Scan Speed:            High (51 mm/s)
+Pixel Size:            1.0μm
+Edge Exclusion:        2mm
+Sampling Plan:         21-point sampling
+
+────────────────────────────────────────────────────────────────────────────────
+4. TEST PROCEDURE
+────────────────────────────────────────────────────────────────────────────────
+
+1. Power on the 5D Analyzer system and allow 30-minute warm-up period.
+2. Load the calibration wafer and run the standard calibration routine.
+3. Verify calibration results are within specification (±2% tolerance).
+4. Load the test wafer onto the stage using the automated handler.
+5. Select the 'E-Beam Inspection' recipe from the recipe library.
+6. Configure detection sensitivity to target Delamination defects.
+7. Set scan parameters: full wafer scan with edge exclusion of 3mm.
+8. Initiate the inspection run and monitor real-time defect map.
+9. Upon completion, review the defect density map and classification results.
+10. Export results to the factory automation system (SECS/GEM interface).
+11. Compare results against the golden reference baseline.
+12. Document any anomalies and generate the summary report.
+
+────────────────────────────────────────────────────────────────────────────────
+5. ACCEPTANCE CRITERIA
+────────────────────────────────────────────────────────────────────────────────
+
+- Defect detection sensitivity must meet 28nm node requirements
+- False positive rate shall not exceed 5% of total detected events
+- Scan throughput must be ≥ 55 wafers per hour
+- Classification accuracy shall be ≥ 96% for known defect types
+- Repeatability (3-sigma) shall be within ±2.2% for E-Beam Inspection
+- System uptime during test shall be ≥ 98%
+- All results must be traceable through the MES integration
+- Measurement correlation with reference tool shall be ≥ 0.95 R²
+
+────────────────────────────────────────────────────────────────────────────────
+6. TEST RESULTS
+────────────────────────────────────────────────────────────────────────────────
+
+Test Execution Date:   2025-01-29
+Wafers Tested:         23
+Total Defects Found:   3444
+Defect Density:        487.23 defects/cm²
+Nuisance Rate:         7.2%
+Capture Rate:          95.7%
+Test Duration:         197 minutes
+System Uptime:         97.9%
+
+Result Classification: PASS
+
+────────────────────────────────────────────────────────────────────────────────
+7. OBSERVATIONS AND FINDINGS
+────────────────────────────────────────────────────────────────────────────────
+
+During the execution of this test case, the following observations were noted:
+
+a) The 5D Analyzer demonstrated excellent performance
+   in detecting Delamination at the 28nm node.
+
+b) The capture rate exceeded the minimum threshold, confirming system readiness.
+
+c) Nuisance rate exceeds the target threshold; recipe tuning is recommended.
+
+d) Minor calibration drift was detected after extended run; re-calibration resolved the issue.
+
+e) Recipe portability between systems at this fab was confirmed.
+
+────────────────────────────────────────────────────────────────────────────────
+8. CORRECTIVE ACTIONS (if applicable)
+────────────────────────────────────────────────────────────────────────────────
+
+No corrective actions required. Test passed all acceptance criteria.
+
+────────────────────────────────────────────────────────────────────────────────
+9. SIGN-OFF
+────────────────────────────────────────────────────────────────────────────────
+
+Author:     Emily Nakamura                 Date: 2025-01-29
+Reviewer:   Dr. Sarah Chen                 Date: 2025-02-01
+Approver:   Dr. Richard Lee                Date: 2025-02-03
+
+================================================================================
+END OF DOCUMENT - MFG-TC-0056
+================================================================================
