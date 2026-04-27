@@ -352,7 +352,7 @@ USE_CASE=engineering_docs python scripts/ranking_feedback.py
 USE_CASE=filter_design python scripts/ranking_feedback.py
 ```
 
-See [docs/ranking_report.md](docs/ranking_report.md) for the latest evaluation report.
+See [use-cases/filter-design/ranking_report.md](use-cases/filter-design/ranking_report.md) for the latest evaluation report.
 
 ---
 
@@ -367,7 +367,7 @@ USE_CASE=engineering_docs python scripts/fine_tune_and_evaluate.py
 USE_CASE=filter_design python scripts/fine_tune_and_evaluate.py
 ```
 
-See [docs/evaluation_results.md](docs/evaluation_results.md) for the latest evaluation report.
+See [use-cases/engineering-docs/evaluation_results.md](use-cases/engineering-docs/evaluation_results.md) for the latest evaluation report.
 
 ---
 
@@ -379,10 +379,13 @@ AI-Search-Blob-Storage/
 │   ├── engineering-docs/                 # ★ Clone this for manufacturing inspection
 │   │   ├── README.md                     # Self-contained setup guide
 │   │   ├── DEMO_SCRIPT.md               # 30-min demo: fine-tuning + AI Search
+│   │   ├── evaluation_results.md        # Fine-tuning evaluation report
 │   │   └── architecture.png             # Standalone architecture diagram
 │   └── filter-design/                    # ★ Clone this for RF filter design
 │       ├── README.md                     # Self-contained setup guide
 │       ├── DEMO_SCRIPT.md               # 30-min demo: ranking + feedback loop
+│       ├── evaluation_results.md        # Fine-tuning evaluation report
+│       ├── ranking_report.md            # Ranking & feedback report
 │       └── architecture.png             # Standalone architecture diagram
 ├── .github/
 │   └── workflows/
@@ -403,8 +406,6 @@ AI-Search-Blob-Storage/
 │       └── manifest.json
 ├── docs/
 │   ├── architecture.png                  # Combined architecture diagram
-│   ├── evaluation_results.md             # Fine-tuning evaluation report
-│   ├── ranking_report.md                 # Ranking & feedback evaluation report
 │   └── Prompt.txt                        # Original project requirements
 ├── scripts/
 │   ├── generate_docs.py                  # Generate manufacturing test case docs

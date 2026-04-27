@@ -85,4 +85,4 @@ python scripts/test_search.py
 | `data/engineering-docs/fine_tuning_train.jsonl` | Training data (~539 Q&A pairs) |
 | `data/engineering-docs/fine_tuning_validation.jsonl` | Validation data (~135 Q&A pairs) |
 | `data/engineering-docs/evaluation_metrics.json` | Raw evaluation metrics |
-| `docs/evaluation_results.md` | Human-readable evaluation report |
+| [`evaluation_results.md`](evaluation_results.md) | Human-readable evaluation report |

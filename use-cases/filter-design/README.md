@@ -84,4 +84,5 @@ python scripts/test_search.py
 | `data/filter-design-docs/FD-TC-*.pdf` | 100 generated filter design PDFs |
 | `data/filter-design-docs/manifest.json` | Document index |
 | `data/filter-design-docs/feedback_log.json` | Accumulated feedback entries |
-| `docs/ranking_report.md` | Ranking & feedback evaluation report |
+| [`evaluation_results.md`](evaluation_results.md) | Fine-tuning evaluation report |
+| [`ranking_report.md`](ranking_report.md) | Ranking & feedback evaluation report |
