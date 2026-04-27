@@ -1,0 +1,722 @@
+[
+  {
+    "timestamp": "2026-04-27T23:18:04.326634",
+    "query": "Q factor BAW filter",
+    "document_id": "FD-TC-0012.pdf",
+    "relevant": false,
+    "search_score": 4.1864,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:04.338924",
+    "query": "Q factor BAW filter",
+    "document_id": "FD-TC-0027.pdf",
+    "relevant": false,
+    "search_score": 3.7388,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:04.349533",
+    "query": "Q factor BAW filter",
+    "document_id": "FD-TC-0056.pdf",
+    "relevant": false,
+    "search_score": 3.5651,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:04.392589",
+    "query": "SAW filter WiFi",
+    "document_id": "FD-TC-0030.pdf",
+    "relevant": true,
+    "search_score": 7.0017,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:04.406023",
+    "query": "SAW filter WiFi",
+    "document_id": "FD-TC-0037.pdf",
+    "relevant": true,
+    "search_score": 5.6101,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:04.416268",
+    "query": "SAW filter WiFi",
+    "document_id": "FD-TC-0071.pdf",
+    "relevant": true,
+    "search_score": 5.2418,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:04.455765",
+    "query": "rejection insertion loss",
+    "document_id": "FD-TC-0031.pdf",
+    "relevant": false,
+    "search_score": 0.6041,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:04.466723",
+    "query": "rejection insertion loss",
+    "document_id": "FD-TC-0004.pdf",
+    "relevant": false,
+    "search_score": 0.6,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:04.478516",
+    "query": "rejection insertion loss",
+    "document_id": "FD-TC-0051.pdf",
+    "relevant": false,
+    "search_score": 0.6,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:04.512100",
+    "query": "insertion loss FBAR",
+    "document_id": "FD-TC-0028.pdf",
+    "relevant": false,
+    "search_score": 4.2069,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:04.524159",
+    "query": "insertion loss FBAR",
+    "document_id": "FD-TC-0078.pdf",
+    "relevant": false,
+    "search_score": 3.7606,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:04.535738",
+    "query": "insertion loss FBAR",
+    "document_id": "FD-TC-0024.pdf",
+    "relevant": false,
+    "search_score": 3.752,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:04.570148",
+    "query": "WiFi BAW filter",
+    "document_id": "FD-TC-0056.pdf",
+    "relevant": true,
+    "search_score": 5.1366,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:04.581664",
+    "query": "WiFi BAW filter",
+    "document_id": "FD-TC-0012.pdf",
+    "relevant": false,
+    "search_score": 4.1294,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:04.593702",
+    "query": "WiFi BAW filter",
+    "document_id": "FD-TC-0027.pdf",
+    "relevant": false,
+    "search_score": 3.6643,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:04.627357",
+    "query": "Q factor WiFi",
+    "document_id": "FD-TC-0014.pdf",
+    "relevant": false,
+    "search_score": 3.5363,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:05.643221",
+    "query": "Q factor WiFi",
+    "document_id": "FD-TC-0026.pdf",
+    "relevant": false,
+    "search_score": 3.5311,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:05.689051",
+    "query": "Q factor WiFi",
+    "document_id": "FD-TC-0030.pdf",
+    "relevant": false,
+    "search_score": 3.3447,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:05.781290",
+    "query": "LiNbO3 temperature",
+    "document_id": "FD-TC-0094.pdf",
+    "relevant": false,
+    "search_score": 3.4041,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:05.837771",
+    "query": "LiNbO3 temperature",
+    "document_id": "FD-TC-0037.pdf",
+    "relevant": false,
+    "search_score": 3.2543,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:05.853698",
+    "query": "LiNbO3 temperature",
+    "document_id": "FD-TC-0074.pdf",
+    "relevant": false,
+    "search_score": 3.227,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:05.886988",
+    "query": "BAW filter substrate",
+    "document_id": "FD-TC-0012.pdf",
+    "relevant": false,
+    "search_score": 4.1937,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:05.899690",
+    "query": "BAW filter substrate",
+    "document_id": "FD-TC-0027.pdf",
+    "relevant": false,
+    "search_score": 3.7483,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:05.912396",
+    "query": "BAW filter substrate",
+    "document_id": "FD-TC-0056.pdf",
+    "relevant": false,
+    "search_score": 3.5757,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:05.942710",
+    "query": "Band 7 SAW filter",
+    "document_id": "FD-TC-0019.pdf",
+    "relevant": false,
+    "search_score": 4.4859,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:05.957009",
+    "query": "Band 7 SAW filter",
+    "document_id": "FD-TC-0047.pdf",
+    "relevant": false,
+    "search_score": 4.2888,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:05.971547",
+    "query": "Band 7 SAW filter",
+    "document_id": "FD-TC-0037.pdf",
+    "relevant": false,
+    "search_score": 4.0927,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.004611",
+    "query": "SAW filter BAW filter",
+    "document_id": "FD-TC-0019.pdf",
+    "relevant": false,
+    "search_score": 4.3866,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.015911",
+    "query": "SAW filter BAW filter",
+    "document_id": "FD-TC-0012.pdf",
+    "relevant": false,
+    "search_score": 4.201,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.028935",
+    "query": "SAW filter BAW filter",
+    "document_id": "FD-TC-0047.pdf",
+    "relevant": false,
+    "search_score": 4.1894,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.066736",
+    "query": "insertion loss insertion loss",
+    "document_id": "FD-TC-0031.pdf",
+    "relevant": false,
+    "search_score": 0.8122,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.078855",
+    "query": "insertion loss insertion loss",
+    "document_id": "FD-TC-0004.pdf",
+    "relevant": false,
+    "search_score": 0.7957,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.092138",
+    "query": "insertion loss insertion loss",
+    "document_id": "FD-TC-0046.pdf",
+    "relevant": false,
+    "search_score": 0.7957,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.131254",
+    "query": "temperature substrate",
+    "document_id": "FD-TC-0004.pdf",
+    "relevant": false,
+    "search_score": 0.3652,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.144378",
+    "query": "temperature substrate",
+    "document_id": "FD-TC-0051.pdf",
+    "relevant": false,
+    "search_score": 0.3652,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.157717",
+    "query": "temperature substrate",
+    "document_id": "FD-TC-0031.pdf",
+    "relevant": false,
+    "search_score": 0.3573,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.196813",
+    "query": "SAW filter temperature",
+    "document_id": "FD-TC-0019.pdf",
+    "relevant": false,
+    "search_score": 4.3884,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.210092",
+    "query": "SAW filter temperature",
+    "document_id": "FD-TC-0047.pdf",
+    "relevant": false,
+    "search_score": 4.199,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.222908",
+    "query": "SAW filter temperature",
+    "document_id": "FD-TC-0037.pdf",
+    "relevant": false,
+    "search_score": 4.0002,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.254132",
+    "query": "insertion loss WiFi",
+    "document_id": "FD-TC-0014.pdf",
+    "relevant": false,
+    "search_score": 3.6593,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.266538",
+    "query": "insertion loss WiFi",
+    "document_id": "FD-TC-0026.pdf",
+    "relevant": false,
+    "search_score": 3.6542,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.279695",
+    "query": "insertion loss WiFi",
+    "document_id": "FD-TC-0030.pdf",
+    "relevant": false,
+    "search_score": 3.4819,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.315820",
+    "query": "Q factor WiFi",
+    "document_id": "FD-TC-0014.pdf",
+    "relevant": false,
+    "search_score": 3.5363,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.331932",
+    "query": "Q factor WiFi",
+    "document_id": "FD-TC-0026.pdf",
+    "relevant": false,
+    "search_score": 3.5311,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.347911",
+    "query": "Q factor WiFi",
+    "document_id": "FD-TC-0030.pdf",
+    "relevant": false,
+    "search_score": 3.3447,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.381680",
+    "query": "temperature Band 7",
+    "document_id": "FD-TC-0051.pdf",
+    "relevant": false,
+    "search_score": 0.6024,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.395478",
+    "query": "temperature Band 7",
+    "document_id": "FD-TC-0004.pdf",
+    "relevant": false,
+    "search_score": 0.5889,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.411263",
+    "query": "temperature Band 7",
+    "document_id": "FD-TC-0031.pdf",
+    "relevant": false,
+    "search_score": 0.5869,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.476843",
+    "query": "insertion loss duplexer",
+    "document_id": "FD-TC-0031.pdf",
+    "relevant": false,
+    "search_score": 0.5206,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.492014",
+    "query": "insertion loss duplexer",
+    "document_id": "FD-TC-0004.pdf",
+    "relevant": false,
+    "search_score": 0.5123,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.505157",
+    "query": "insertion loss duplexer",
+    "document_id": "FD-TC-0046.pdf",
+    "relevant": false,
+    "search_score": 0.5123,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.535962",
+    "query": "substrate rejection",
+    "document_id": "FD-TC-0004.pdf",
+    "relevant": false,
+    "search_score": 0.375,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.547613",
+    "query": "substrate rejection",
+    "document_id": "FD-TC-0051.pdf",
+    "relevant": false,
+    "search_score": 0.375,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.560418",
+    "query": "substrate rejection",
+    "document_id": "FD-TC-0031.pdf",
+    "relevant": false,
+    "search_score": 0.3708,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.592104",
+    "query": "resonator passband",
+    "document_id": "FD-TC-0051.pdf",
+    "relevant": false,
+    "search_score": 0.3614,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.604821",
+    "query": "resonator passband",
+    "document_id": "FD-TC-0031.pdf",
+    "relevant": false,
+    "search_score": 0.3378,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.616621",
+    "query": "resonator passband",
+    "document_id": "FD-TC-0046.pdf",
+    "relevant": false,
+    "search_score": 0.3378,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.653936",
+    "query": "SAW filter resonator",
+    "document_id": "FD-TC-0019.pdf",
+    "relevant": false,
+    "search_score": 4.371,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.673424",
+    "query": "SAW filter resonator",
+    "document_id": "FD-TC-0047.pdf",
+    "relevant": false,
+    "search_score": 4.1798,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.685099",
+    "query": "SAW filter resonator",
+    "document_id": "FD-TC-0037.pdf",
+    "relevant": false,
+    "search_score": 3.9853,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.715877",
+    "query": "resonator FBAR",
+    "document_id": "FD-TC-0028.pdf",
+    "relevant": false,
+    "search_score": 4.1362,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.728432",
+    "query": "resonator FBAR",
+    "document_id": "FD-TC-0078.pdf",
+    "relevant": false,
+    "search_score": 3.6654,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.742402",
+    "query": "resonator FBAR",
+    "document_id": "FD-TC-0024.pdf",
+    "relevant": false,
+    "search_score": 3.6599,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.775509",
+    "query": "WiFi Band 7",
+    "document_id": "FD-TC-0014.pdf",
+    "relevant": false,
+    "search_score": 3.6517,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.788985",
+    "query": "WiFi Band 7",
+    "document_id": "FD-TC-0026.pdf",
+    "relevant": false,
+    "search_score": 3.6399,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.800774",
+    "query": "WiFi Band 7",
+    "document_id": "FD-TC-0030.pdf",
+    "relevant": false,
+    "search_score": 3.4659,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.832744",
+    "query": "5G NR rejection",
+    "document_id": "FD-TC-0078.pdf",
+    "relevant": true,
+    "search_score": 7.1972,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.845885",
+    "query": "5G NR rejection",
+    "document_id": "FD-TC-0068.pdf",
+    "relevant": true,
+    "search_score": 6.2393,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.859857",
+    "query": "5G NR rejection",
+    "document_id": "FD-TC-0087.pdf",
+    "relevant": true,
+    "search_score": 5.2734,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.891263",
+    "query": "FBAR insertion loss",
+    "document_id": "FD-TC-0028.pdf",
+    "relevant": false,
+    "search_score": 4.2069,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.904026",
+    "query": "FBAR insertion loss",
+    "document_id": "FD-TC-0078.pdf",
+    "relevant": false,
+    "search_score": 3.7606,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.917200",
+    "query": "FBAR insertion loss",
+    "document_id": "FD-TC-0024.pdf",
+    "relevant": false,
+    "search_score": 3.752,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.950149",
+    "query": "resonator 5G NR",
+    "document_id": "FD-TC-0078.pdf",
+    "relevant": true,
+    "search_score": 7.2032,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.963435",
+    "query": "resonator 5G NR",
+    "document_id": "FD-TC-0068.pdf",
+    "relevant": true,
+    "search_score": 6.2311,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:06.976295",
+    "query": "resonator 5G NR",
+    "document_id": "FD-TC-0087.pdf",
+    "relevant": true,
+    "search_score": 5.2604,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:07.012270",
+    "query": "BAW filter BAW filter",
+    "document_id": "FD-TC-0012.pdf",
+    "relevant": true,
+    "search_score": 8.2588,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:07.025726",
+    "query": "BAW filter BAW filter",
+    "document_id": "FD-TC-0027.pdf",
+    "relevant": true,
+    "search_score": 7.3286,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:07.039160",
+    "query": "BAW filter BAW filter",
+    "document_id": "FD-TC-0056.pdf",
+    "relevant": true,
+    "search_score": 6.9638,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:07.070957",
+    "query": "Band 7 BAW filter",
+    "document_id": "FD-TC-0012.pdf",
+    "relevant": false,
+    "search_score": 4.2718,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:07.084168",
+    "query": "Band 7 BAW filter",
+    "document_id": "FD-TC-0027.pdf",
+    "relevant": false,
+    "search_score": 3.8592,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:07.098275",
+    "query": "Band 7 BAW filter",
+    "document_id": "FD-TC-0056.pdf",
+    "relevant": false,
+    "search_score": 3.7044,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:07.129404",
+    "query": "5G NR passband",
+    "document_id": "FD-TC-0078.pdf",
+    "relevant": true,
+    "search_score": 7.1754,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:07.142393",
+    "query": "5G NR passband",
+    "document_id": "FD-TC-0068.pdf",
+    "relevant": true,
+    "search_score": 6.212,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:07.156752",
+    "query": "5G NR passband",
+    "document_id": "FD-TC-0087.pdf",
+    "relevant": true,
+    "search_score": 5.2517,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:07.189058",
+    "query": "5G NR substrate",
+    "document_id": "FD-TC-0078.pdf",
+    "relevant": true,
+    "search_score": 7.1849,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:07.202637",
+    "query": "5G NR substrate",
+    "document_id": "FD-TC-0068.pdf",
+    "relevant": true,
+    "search_score": 6.224,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:07.215081",
+    "query": "5G NR substrate",
+    "document_id": "FD-TC-0087.pdf",
+    "relevant": true,
+    "search_score": 5.2604,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:07.251662",
+    "query": "rejection resonator",
+    "document_id": "FD-TC-0051.pdf",
+    "relevant": false,
+    "search_score": 0.4103,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:07.266554",
+    "query": "rejection resonator",
+    "document_id": "FD-TC-0031.pdf",
+    "relevant": false,
+    "search_score": 0.3825,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-04-27T23:18:07.287800",
+    "query": "rejection resonator",
+    "document_id": "FD-TC-0046.pdf",
+    "relevant": false,
+    "search_score": 0.3825,
+    "notes": ""
+  }
+]

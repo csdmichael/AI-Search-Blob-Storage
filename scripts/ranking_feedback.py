@@ -37,7 +37,7 @@ PROJECT_ENDPOINT = config.project_endpoint()
 AGENT_NAME = _uc_agent["name"]
 DOC_PREFIX = _doc_cfg["document_prefix"]
 DATA_DIR = config.uc_data_dir()
-DOCS_DIR = config.DOCS_DIR
+DOCS_DIR = config.uc_docs_dir()
 
 FEEDBACK_FILE = os.path.join(DATA_DIR, "feedback_log.json")
 RANKING_REPORT = os.path.join(DOCS_DIR, "ranking_report.md")

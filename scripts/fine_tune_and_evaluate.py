@@ -35,11 +35,12 @@ _doc_cfg = config.uc_document_config()
 PROJECT_ENDPOINT = config.project_endpoint()
 BASE_MODEL = os.environ.get("FINE_TUNE_BASE_MODEL", _ft_cfg["base_model"])
 DATA_DIR = config.uc_data_dir()
-DOCS_DIR = config.DOCS_DIR
+DOCS_DIR = config.uc_docs_dir()
 TRAINING_FILE = os.path.join(DATA_DIR, "fine_tuning_train.jsonl")
 VALIDATION_FILE = os.path.join(DATA_DIR, "fine_tuning_validation.jsonl")
 DOC_PREFIX = _doc_cfg["document_prefix"]
 TOTAL_DOCUMENTS = _doc_cfg["total_documents"]
+FILE_FORMAT = _doc_cfg["file_format"]
 
 SYSTEM_PROMPT = _ft_cfg["system_prompt"]
 FINE_TUNE_SUFFIX = _ft_cfg["suffix"]
@@ -170,16 +171,30 @@ def extract_qa_pairs(content: str, doc_number: str) -> list[dict]:
     return pairs
 
 
+def _read_file_text(filepath: str) -> str:
+    """Read text from .txt or .pdf files."""
+    if filepath.lower().endswith(".pdf"):
+        try:
+            from pypdf import PdfReader
+            reader = PdfReader(filepath)
+            return "\n".join(page.extract_text() or "" for page in reader.pages)
+        except ImportError:
+            return ""
+    else:
+        with open(filepath, "r", encoding="utf-8") as f:
+            return f.read()
+
+
 def generate_training_data():
-    """Generate JSONL training and validation files from engineering docs."""
-    files = sorted(f for f in os.listdir(DATA_DIR) if f.startswith(DOC_PREFIX) and f.endswith(".txt"))
+    """Generate JSONL training and validation files from documents."""
+    file_ext = f".{FILE_FORMAT}"
+    files = sorted(f for f in os.listdir(DATA_DIR) if f.startswith(DOC_PREFIX) and f.endswith(file_ext))
     all_pairs = []
 
     for filename in files:
         filepath = os.path.join(DATA_DIR, filename)
-        with open(filepath, "r", encoding="utf-8") as f:
-            content = f.read()
-        doc_number = filename.replace(".txt", "")
+        content = _read_file_text(filepath)
+        doc_number = filename.replace(file_ext, "")
         pairs = extract_qa_pairs(content, doc_number)
         all_pairs.extend(pairs)
 
@@ -207,8 +222,8 @@ def generate_training_data():
     write_jsonl(train_pairs, TRAINING_FILE)
     write_jsonl(val_pairs, VALIDATION_FILE)
 
-    print(f"Generated {len(train_pairs)} training examples → {TRAINING_FILE}")
-    print(f"Generated {len(val_pairs)} validation examples → {VALIDATION_FILE}")
+    print(f"Generated {len(train_pairs)} training examples -> {TRAINING_FILE}")
+    print(f"Generated {len(val_pairs)} validation examples -> {VALIDATION_FILE}")
 
     return train_pairs, val_pairs
 

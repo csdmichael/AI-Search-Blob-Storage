@@ -1,0 +1,170 @@
+{
+  "model": "gpt-4.1",
+  "base_model": "gpt-4.1",
+  "timestamp": "2026-04-27T23:22:37.220083",
+  "total_evaluated": 20,
+  "citation_accuracy_pct": 100.0,
+  "avg_tokens_per_query": 237.9,
+  "results": [
+    {
+      "question": "What were the results of test case FD-TC-0065?",
+      "expected_answer": "Test case FD-TC-0065 result: NEEDS REVIEW. Total defects found: N/A, capture rate: N/A%, nuisance rate: N/A%.",
+      "predicted_answer": "Test case FD-TC-0065 evaluated the bandpass filter\u2019s insertion loss and return loss across the 2.4\u20132.5 GHz frequency range. According to the engineering documentation:\n\n- The measured insertion loss was 1.2 dB maximum within the passband, meeting the specification of \u22641.5 dB.\n- The return loss was b",
+      "citation_match": true,
+      "prompt_tokens": 77,
+      "completion_tokens": 154
+    },
+    {
+      "question": "What were the results of test case FD-TC-0030?",
+      "expected_answer": "Test case FD-TC-0030 result: FAIL. Total defects found: N/A, capture rate: N/A%, nuisance rate: N/A%.",
+      "predicted_answer": "Test case FD-TC-0030 evaluated the bandpass filter\u2019s insertion loss and return loss across the 2.4\u20132.5 GHz frequency range. According to the documentation, the results were as follows:\n\n- Insertion loss: Measured at 1.2 dB maximum within the passband, meeting the design specification of \u22641.5 dB.\n- R",
+      "citation_match": true,
+      "prompt_tokens": 77,
+      "completion_tokens": 163
+    },
+    {
+      "question": "What were the results of test case FD-TC-0028?",
+      "expected_answer": "Test case FD-TC-0028 result: PASS. Total defects found: N/A, capture rate: N/A%, nuisance rate: N/A%.",
+      "predicted_answer": "Test case FD-TC-0028 evaluated the bandpass filter\u2019s insertion loss and return loss across the 2.4\u20132.5 GHz frequency range. According to the documentation, the results were as follows:\n\n- **Insertion Loss:** Measured at 1.2 dB maximum within the passband, meeting the design specification of \u22641.5 dB.",
+      "citation_match": true,
+      "prompt_tokens": 77,
+      "completion_tokens": 169
+    },
+    {
+      "question": "What were the results of test case FD-TC-0089?",
+      "expected_answer": "Test case FD-TC-0089 result: FAIL. Total defects found: N/A, capture rate: N/A%, nuisance rate: N/A%.",
+      "predicted_answer": "Test case FD-TC-0089 evaluated the bandpass filter\u2019s insertion loss and return loss across the 2.4\u20132.5 GHz frequency range. According to the documentation, the results were as follows:\n\n- **Insertion Loss:** Measured at 1.2 dB maximum within the passband, meeting the design specification of \u22641.5 dB.",
+      "citation_match": true,
+      "prompt_tokens": 77,
+      "completion_tokens": 169
+    },
+    {
+      "question": "What were the results of test case FD-TC-0098?",
+      "expected_answer": "Test case FD-TC-0098 result: CONDITIONAL PASS. Total defects found: N/A, capture rate: N/A%, nuisance rate: N/A%.",
+      "predicted_answer": "Test case FD-TC-0098 evaluated the bandpass filter\u2019s insertion loss and return loss across the 2.4\u20132.5 GHz frequency range. According to the documentation, the results were as follows:\n\n- Insertion loss: Measured at 1.2 dB maximum within the passband, meeting the design specification of \u22641.5 dB.\n- R",
+      "citation_match": true,
+      "prompt_tokens": 77,
+      "completion_tokens": 165
+    },
+    {
+      "question": "What were the results of test case FD-TC-0005?",
+      "expected_answer": "Test case FD-TC-0005 result: FAIL. Total defects found: N/A, capture rate: N/A%, nuisance rate: N/A%.",
+      "predicted_answer": "According to the engineering documentation for test case FD-TC-0005, the results were as follows:\n\n- The filter met the specified insertion loss requirement of less than 1.2 dB across the passband (2.4\u20132.5 GHz).\n- Return loss was measured to be better than 18 dB throughout the passband.\n- Out-of-ban",
+      "citation_match": true,
+      "prompt_tokens": 77,
+      "completion_tokens": 148
+    },
+    {
+      "question": "What were the results of test case FD-TC-0055?",
+      "expected_answer": "Test case FD-TC-0055 result: NEEDS REVIEW. Total defects found: N/A, capture rate: N/A%, nuisance rate: N/A%.",
+      "predicted_answer": "Test case FD-TC-0055 evaluated the bandpass filter\u2019s insertion loss and return loss across the 2.4\u20132.5 GHz frequency range. According to the engineering documentation:\n\n- The measured insertion loss was 1.2 dB maximum within the passband, meeting the specification of \u22641.5 dB.\n- The return loss was b",
+      "citation_match": true,
+      "prompt_tokens": 77,
+      "completion_tokens": 142
+    },
+    {
+      "question": "What were the results of test case FD-TC-0076?",
+      "expected_answer": "Test case FD-TC-0076 result: NEEDS REVIEW. Total defects found: N/A, capture rate: N/A%, nuisance rate: N/A%.",
+      "predicted_answer": "Test case FD-TC-0076 evaluated the out-of-band rejection performance of the 2.4 GHz bandpass filter. According to the engineering documentation, the results were as follows:\n\n- The filter achieved an out-of-band rejection of greater than 50 dB at 2.1 GHz and 2.7 GHz.\n- The insertion loss within the ",
+      "citation_match": true,
+      "prompt_tokens": 77,
+      "completion_tokens": 143
+    },
+    {
+      "question": "What were the results of test case FD-TC-0012?",
+      "expected_answer": "Test case FD-TC-0012 result: NEEDS REVIEW. Total defects found: N/A, capture rate: N/A%, nuisance rate: N/A%.",
+      "predicted_answer": "Test case FD-TC-0012 evaluated the insertion loss and return loss of the 2.4 GHz bandpass filter prototype. According to the engineering documentation:\n\n- The measured insertion loss at the center frequency (2.4 GHz) was 1.15 dB, which meets the design specification of \u22641.2 dB.\n- The return loss acr",
+      "citation_match": true,
+      "prompt_tokens": 77,
+      "completion_tokens": 171
+    },
+    {
+      "question": "What were the results of test case FD-TC-0070?",
+      "expected_answer": "Test case FD-TC-0070 result: NEEDS REVIEW. Total defects found: N/A, capture rate: N/A%, nuisance rate: N/A%.",
+      "predicted_answer": "Test case FD-TC-0070 evaluated the bandpass filter\u2019s insertion loss and return loss across the 2.4\u20132.5 GHz frequency range. According to the documentation, the results were as follows:\n\n- Insertion loss: Measured at 1.2 dB maximum within the passband, meeting the design specification of \u22641.5 dB.\n- R",
+      "citation_match": true,
+      "prompt_tokens": 77,
+      "completion_tokens": 160
+    },
+    {
+      "question": "What were the results of test case FD-TC-0087?",
+      "expected_answer": "Test case FD-TC-0087 result: CONDITIONAL PASS. Total defects found: N/A, capture rate: N/A%, nuisance rate: N/A%.",
+      "predicted_answer": "Test case FD-TC-0087 evaluated the out-of-band rejection performance of the 2.4 GHz bandpass filter design. According to the engineering documentation, the results were as follows:\n\n- The filter achieved an out-of-band rejection of greater than 45 dB at 2.1 GHz and 2.7 GHz.\n- The measured S21 parame",
+      "citation_match": true,
+      "prompt_tokens": 77,
+      "completion_tokens": 147
+    },
+    {
+      "question": "What were the results of test case FD-TC-0014?",
+      "expected_answer": "Test case FD-TC-0014 result: FAIL. Total defects found: N/A, capture rate: N/A%, nuisance rate: N/A%.",
+      "predicted_answer": "Test case FD-TC-0014 evaluated the bandpass filter\u2019s insertion loss and return loss across the 2.4\u20132.5 GHz frequency range. According to the documentation, the results were as follows:\n\n- Insertion loss: Measured at 1.2 dB maximum within the passband, meeting the design specification.\n- Return loss:",
+      "citation_match": true,
+      "prompt_tokens": 77,
+      "completion_tokens": 158
+    },
+    {
+      "question": "What were the results of test case FD-TC-0018?",
+      "expected_answer": "Test case FD-TC-0018 result: FAIL. Total defects found: N/A, capture rate: N/A%, nuisance rate: N/A%.",
+      "predicted_answer": "Test case FD-TC-0018 evaluated the out-of-band rejection performance of the 2.4 GHz bandpass filter prototype. According to the engineering documentation, the results were as follows:\n\n- The filter achieved an out-of-band rejection of greater than 45 dB at 2.1 GHz and 2.7 GHz.\n- The insertion loss w",
+      "citation_match": true,
+      "prompt_tokens": 77,
+      "completion_tokens": 160
+    },
+    {
+      "question": "What were the results of test case FD-TC-0029?",
+      "expected_answer": "Test case FD-TC-0029 result: FAIL. Total defects found: N/A, capture rate: N/A%, nuisance rate: N/A%.",
+      "predicted_answer": "Test case FD-TC-0029 evaluated the bandpass filter\u2019s insertion loss and return loss across the 2.4\u20132.5 GHz frequency range. According to the documentation, the results were as follows:\n\n- **Insertion Loss:** Measured at 1.2 dB maximum within the passband, meeting the design specification of \u22641.5 dB.",
+      "citation_match": true,
+      "prompt_tokens": 77,
+      "completion_tokens": 167
+    },
+    {
+      "question": "What were the results of test case FD-TC-0032?",
+      "expected_answer": "Test case FD-TC-0032 result: FAIL. Total defects found: N/A, capture rate: N/A%, nuisance rate: N/A%.",
+      "predicted_answer": "Test case FD-TC-0032 evaluated the bandpass filter\u2019s insertion loss and return loss across the 2.4\u20132.5 GHz frequency range. According to the documentation, the results were as follows:\n\n- **Insertion Loss:** Measured at 1.2 dB maximum within the passband, meeting the design specification of \u22641.5 dB.",
+      "citation_match": true,
+      "prompt_tokens": 77,
+      "completion_tokens": 169
+    },
+    {
+      "question": "What were the results of test case FD-TC-0036?",
+      "expected_answer": "Test case FD-TC-0036 result: NEEDS REVIEW. Total defects found: N/A, capture rate: N/A%, nuisance rate: N/A%.",
+      "predicted_answer": "Test case FD-TC-0036 evaluated the bandpass filter\u2019s insertion loss and return loss across the 2.4\u20132.5 GHz frequency range. According to the documentation, the results were as follows:\n\n- **Insertion Loss:** Measured at 1.2 dB maximum within the passband, meeting the design specification of \u22641.5 dB.",
+      "citation_match": true,
+      "prompt_tokens": 77,
+      "completion_tokens": 169
+    },
+    {
+      "question": "What were the results of test case FD-TC-0095?",
+      "expected_answer": "Test case FD-TC-0095 result: PASS. Total defects found: N/A, capture rate: N/A%, nuisance rate: N/A%.",
+      "predicted_answer": "Test case FD-TC-0095 evaluated the bandpass filter\u2019s insertion loss and return loss across the 2.4\u20132.5 GHz frequency range. According to the documentation, the results were as follows:\n\n- Insertion loss: Measured at 1.2 dB maximum within the passband, meeting the design specification of \u22641.5 dB.\n- R",
+      "citation_match": true,
+      "prompt_tokens": 77,
+      "completion_tokens": 162
+    },
+    {
+      "question": "What were the results of test case FD-TC-0004?",
+      "expected_answer": "Test case FD-TC-0004 result: NEEDS REVIEW. Total defects found: N/A, capture rate: N/A%, nuisance rate: N/A%.",
+      "predicted_answer": "Test case FD-TC-0004 evaluated the bandpass filter\u2019s insertion loss and return loss across the 2.4\u20132.5 GHz frequency range. According to the documentation, the results were as follows:\n\n- Insertion loss: Measured at 1.2 dB maximum within the passband, meeting the design specification of \u22641.5 dB.\n- R",
+      "citation_match": true,
+      "prompt_tokens": 77,
+      "completion_tokens": 165
+    },
+    {
+      "question": "What were the results of test case FD-TC-0015?",
+      "expected_answer": "Test case FD-TC-0015 result: NEEDS REVIEW. Total defects found: N/A, capture rate: N/A%, nuisance rate: N/A%.",
+      "predicted_answer": "Test case FD-TC-0015 evaluated the bandpass filter\u2019s insertion loss and return loss across the 2.4\u20132.5 GHz frequency range. According to the documentation, the results were as follows:\n\n- **Insertion Loss:** Measured at 1.2 dB maximum within the passband, meeting the design specification of \u22641.5 dB.",
+      "citation_match": true,
+      "prompt_tokens": 77,
+      "completion_tokens": 169
+    },
+    {
+      "question": "What were the results of test case FD-TC-0082?",
+      "expected_answer": "Test case FD-TC-0082 result: NEEDS REVIEW. Total defects found: N/A, capture rate: N/A%, nuisance rate: N/A%.",
+      "predicted_answer": "Test case FD-TC-0082 evaluated the bandpass filter\u2019s insertion loss and return loss across the 2.4\u20132.5 GHz frequency range. According to the documentation, the results were as follows:\n\n- **Insertion Loss:** Measured at 1.2 dB maximum within the passband, meeting the design specification of \u22641.5 dB.",
+      "citation_match": true,
+      "prompt_tokens": 77,
+      "completion_tokens": 168
+    }
+  ]
+}

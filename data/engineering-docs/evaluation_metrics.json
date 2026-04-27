@@ -1,0 +1,410 @@
+{
+  "model": "gpt-4.1",
+  "base_model": "gpt-4.1",
+  "timestamp": "2026-04-27T23:21:38.280461",
+  "total_evaluated": 50,
+  "citation_accuracy_pct": 74.0,
+  "avg_tokens_per_query": 205.1,
+  "results": [
+    {
+      "question": "What test cases involve the Zeta-388 system?",
+      "expected_answer": "Test case MFG-TC-0076 involves the Zeta-388 system for Contamination detection at the 45nm node (Final Inspection). Refer to the full index for other test cases using this system.",
+      "predicted_answer": "The Zeta-388 system is referenced in the following test cases:\n\n- **MFG-TC-1023:** \"Zeta-388 Automated Surface Defect Inspection\" \u2013 This test case details the use of the Zeta-388 system for detecting surface scratches, pits, and contamination on 200mm wafers.\n- **MFG-TC-1041:** \"Zeta-388 Sub-Micron ",
+      "citation_match": false,
+      "prompt_tokens": 68,
+      "completion_tokens": 173
+    },
+    {
+      "question": "What corrective actions are recommended in MFG-TC-0085?",
+      "expected_answer": "Corrective actions for MFG-TC-0085:\nThe following corrective actions are recommended:\n\n1. Review edge-zone detection parameters for optimization.\n2. Schedule follow-up test after recipe optimization.\n3. Monitor performance over next 30 production days.",
+      "predicted_answer": "According to MFG-TC-0085, the recommended corrective actions include:\n\n1. **Immediate Equipment Calibration:** Recalibrate the inspection equipment to ensure measurement accuracy.\n2. **Process Parameter Adjustment:** Review and adjust process parameters (e.g., temperature, pressure) to within specif",
+      "citation_match": true,
+      "prompt_tokens": 71,
+      "completion_tokens": 145
+    },
+    {
+      "question": "What are the acceptance criteria for MFG-TC-0001?",
+      "expected_answer": "Acceptance criteria for MFG-TC-0001:\n- Defect detection sensitivity must meet 22nm node requirements\n- False positive rate shall not exceed 5% of total detected events\n- Scan throughput must be \u2265 120 wafers per hour\n- Classification accuracy shall be \u2265 99% for known defect types\n- Repeatability (3-s",
+      "predicted_answer": "The acceptance criteria for MFG-TC-0001 are as follows:\n\n1. No critical defects (Class 1) are permitted on any inspected semiconductor wafer.\n2. The total number of major defects (Class 2) must not exceed 0.5% of the total inspected sites per wafer.\n3. Minor defects (Class 3) are allowed up to 2% of",
+      "citation_match": true,
+      "prompt_tokens": 71,
+      "completion_tokens": 147
+    },
+    {
+      "question": "Which inspection system is used in MFG-TC-0091 and what defects does it target?",
+      "expected_answer": "Test case MFG-TC-0091 uses the Teron 640 system to detect Micro-cracks defects during the Post-Deposition step at the 28nm technology node, located at Dresden Fab 3.",
+      "predicted_answer": "According to document MFG-TC-0091, the inspection system used is the KLA-Tencor 2365 optical inspection system. This system targets surface particle contamination, pattern misalignment, and photoresist residue defects.",
+      "citation_match": true,
+      "prompt_tokens": 77,
+      "completion_tokens": 48
+    },
+    {
+      "question": "What test cases involve the Puma 9xxx system?",
+      "expected_answer": "Test case MFG-TC-0024 involves the Puma 9xxx system for Pits detection at the 28nm node (Post-Planarization). Refer to the full index for other test cases using this system.",
+      "predicted_answer": "The Puma 9xxx system is referenced in the following test cases:\n\n- **MFG-TC-1023:** \"Puma 9xxx Automated Optical Inspection (AOI) \u2013 Baseline Defect Detection\"  \n  *Covers initial setup and validation of the Puma 9xxx AOI system for standard wafer defect types.*\n\n- **MFG-TC-1047:** \"Puma 9xxx System ",
+      "citation_match": false,
+      "prompt_tokens": 68,
+      "completion_tokens": 178
+    },
+    {
+      "question": "What test cases involve the Zeta-388 system?",
+      "expected_answer": "Test case MFG-TC-0066 involves the Zeta-388 system for Contamination detection at the 65nm node (Final Inspection). Refer to the full index for other test cases using this system.",
+      "predicted_answer": "The Zeta-388 system is referenced in the following test cases:\n\n- **MFG-TC-1023**: \"Zeta-388 Automated Surface Defect Inspection\" \u2013 This test case details the use of the Zeta-388 system for detecting surface scratches, pits, and contamination on 200mm wafers.\n- **MFG-TC-1047**: \"Zeta-388 Sub-Micron ",
+      "citation_match": false,
+      "prompt_tokens": 68,
+      "completion_tokens": 131
+    },
+    {
+      "question": "What were the results of test case MFG-TC-0093?",
+      "expected_answer": "Test case MFG-TC-0093 result: PASS. Total defects found: 4266, capture rate: 87.6%, nuisance rate: 2.3%.",
+      "predicted_answer": "Test case MFG-TC-0093 evaluated the automated optical inspection (AOI) system\u2019s ability to detect sub-micron surface defects on 300mm wafers. According to the engineering documentation, the results were as follows:\n\n- **Detection Rate:** The AOI system successfully identified 98.7% of artificially i",
+      "citation_match": true,
+      "prompt_tokens": 72,
+      "completion_tokens": 183
+    },
+    {
+      "question": "What corrective actions are recommended in MFG-TC-0100?",
+      "expected_answer": "Corrective actions for MFG-TC-0100:\nThe following corrective actions are recommended:\n\n1. Review edge-zone detection parameters for optimization.\n2. Schedule follow-up test after recipe optimization.\n3. Monitor performance over next 30 production days.",
+      "predicted_answer": "According to MFG-TC-0100, the recommended corrective actions for identified defects during semiconductor inspection include:\n\n1. **Immediate Quarantine:** Isolate all affected wafers or components to prevent further processing (Section 4.2).\n2. **Root Cause Analysis:** Initiate a root cause investig",
+      "citation_match": true,
+      "prompt_tokens": 71,
+      "completion_tokens": 201
+    },
+    {
+      "question": "What were the results of test case MFG-TC-0096?",
+      "expected_answer": "Test case MFG-TC-0096 result: PASS. Total defects found: 2675, capture rate: 97.6%, nuisance rate: 5.4%.",
+      "predicted_answer": "Test case MFG-TC-0096 evaluated the automated optical inspection (AOI) system\u2019s ability to detect sub-micron surface defects on 300mm wafers. According to the engineering documentation, the results were as follows:\n\n- **Detection Rate:** The AOI system successfully identified 98.7% of artificially i",
+      "citation_match": true,
+      "prompt_tokens": 72,
+      "completion_tokens": 180
+    },
+    {
+      "question": "Which inspection system is used in MFG-TC-0099 and what defects does it target?",
+      "expected_answer": "Test case MFG-TC-0099 uses the Puma 9xxx system to detect Delamination defects during the Post-Oxidation step at the 7nm technology node, located at Hsinchu Fab 15.",
+      "predicted_answer": "According to document **MFG-TC-0099**, the inspection system used is the **KLA-Tencor 2365 optical wafer inspection system**. This system targets the detection of **particulate contamination, pattern defects, and surface scratches** on semiconductor wafers.",
+      "citation_match": true,
+      "prompt_tokens": 77,
+      "completion_tokens": 58
+    },
+    {
+      "question": "What does test case MFG-TC-0094 cover?",
+      "expected_answer": "Test case MFG-TC-0094 covers: 3D NAND Inspection - Delamination Detection on 2920 Series. This test case validates the capability of the 2920 Series system to detect\nand classify Delamination defects during post-anneal inspection\nat the 3nm technology node. The test is conducted at Chandler Fab 42 t",
+      "predicted_answer": "Test case **MFG-TC-0094** covers the **automated optical inspection (AOI) of wafer surface defects**, specifically targeting the detection of micro-scratches, contamination spots, and pattern misalignments after the photolithography process. The test case defines inspection parameters, defect classi",
+      "citation_match": true,
+      "prompt_tokens": 70,
+      "completion_tokens": 79
+    },
+    {
+      "question": "What are the acceptance criteria for MFG-TC-0018?",
+      "expected_answer": "Acceptance criteria for MFG-TC-0018:\n- Defect detection sensitivity must meet 65nm node requirements\n- False positive rate shall not exceed 5% of total detected events\n- Scan throughput must be \u2265 72 wafers per hour\n- Classification accuracy shall be \u2265 91% for known defect types\n- Repeatability (3-si",
+      "predicted_answer": "The acceptance criteria for MFG-TC-0018 are as follows:\n\n- No critical defects (Class 1) are permitted on any inspected semiconductor units.\n- The total number of major defects (Class 2) must not exceed 0.65% of the inspected lot.\n- The total number of minor defects (Class 3) must not exceed 2.5% of",
+      "citation_match": true,
+      "prompt_tokens": 71,
+      "completion_tokens": 152
+    },
+    {
+      "question": "What observations were noted in MFG-TC-0002?",
+      "expected_answer": "Key observations from MFG-TC-0002:\nDuring the execution of this test case, the following observations were noted:\n\na) The Zeta-388 demonstrated excellent performance\n   in detecting Micro-cracks at the 22nm node.\n\nb) The capture rate requires optimization of the detection algorithm.\n\nc) Nuisance rat",
+      "predicted_answer": "In MFG-TC-0002, the following observations were noted:\n\n- Several wafer samples exhibited micro-scratches on the surface, primarily near the wafer edges.\n- A small percentage (<2%) of die showed evidence of particulate contamination, as identified by optical inspection.\n- No significant pattern defe",
+      "citation_match": true,
+      "prompt_tokens": 70,
+      "completion_tokens": 109
+    },
+    {
+      "question": "What were the results of test case MFG-TC-0039?",
+      "expected_answer": "Test case MFG-TC-0039 result: PASS. Total defects found: 1356, capture rate: 95.2%, nuisance rate: 4.6%.",
+      "predicted_answer": "According to the engineering documentation, test case **MFG-TC-0039** evaluated the automated optical inspection (AOI) system\u2019s ability to detect sub-micron surface defects on 300mm wafers. The results showed:\n\n- **Detection Rate:** 98.7% of artificially introduced defects were correctly identified.",
+      "citation_match": true,
+      "prompt_tokens": 72,
+      "completion_tokens": 190
+    },
+    {
+      "question": "What were the results of test case MFG-TC-0081?",
+      "expected_answer": "Test case MFG-TC-0081 result: FAIL. Total defects found: 2080, capture rate: 85.7%, nuisance rate: 4.2%.",
+      "predicted_answer": "Test case MFG-TC-0081 evaluated the automated optical inspection (AOI) system\u2019s ability to detect sub-micron surface defects on 300mm wafers. According to the engineering documentation, the results were as follows:\n\n- **Detection Rate:** The AOI system successfully identified 98.7% of artificially i",
+      "citation_match": true,
+      "prompt_tokens": 72,
+      "completion_tokens": 182
+    },
+    {
+      "question": "What does test case MFG-TC-0072 cover?",
+      "expected_answer": "Test case MFG-TC-0072 covers: IC Substrate Inspection - Extra Pattern Detection on Zeta-20. This test case validates the capability of the Zeta-20 system to detect\nand classify Extra Pattern defects during pre-bonding inspection\nat the 5nm technology node. The test is conducted at Milpitas Fab B to ",
+      "predicted_answer": "Test case **MFG-TC-0072** covers the **automated optical inspection (AOI) of wafer surfaces for particle contamination and pattern defects**. It specifies the inspection parameters, defect classification criteria, and pass/fail thresholds for identifying surface particles, scratches, and pattern mis",
+      "citation_match": true,
+      "prompt_tokens": 70,
+      "completion_tokens": 86
+    },
+    {
+      "question": "What test cases involve the Surfscan SP7 system?",
+      "expected_answer": "Test case MFG-TC-0058 involves the Surfscan SP7 system for Residue detection at the 14nm node (Pre-Diffusion). Refer to the full index for other test cases using this system.",
+      "predicted_answer": "The following test cases involve the Surfscan SP7 system:\n\n- **MFG-TC-1023:** \"Wafer Surface Particle Inspection using Surfscan SP7\" \u2013 This test case specifies procedures for detecting and quantifying surface particles on bare silicon wafers using the Surfscan SP7 system.\n- **MFG-TC-1041:** \"Post-CM",
+      "citation_match": false,
+      "prompt_tokens": 68,
+      "completion_tokens": 178
+    },
+    {
+      "question": "What are the acceptance criteria for MFG-TC-0059?",
+      "expected_answer": "Acceptance criteria for MFG-TC-0059:\n- Defect detection sensitivity must meet 22nm node requirements\n- False positive rate shall not exceed 5% of total detected events\n- Scan throughput must be \u2265 70 wafers per hour\n- Classification accuracy shall be \u2265 91% for known defect types\n- Repeatability (3-si",
+      "predicted_answer": "The acceptance criteria for MFG-TC-0059 are as follows:\n\n- No critical defects (Class 1) are permitted on any inspected semiconductor units.\n- The total number of major defects (Class 2) must not exceed 0.65% of the inspected lot.\n- The total number of minor defects (Class 3) must not exceed 2.5% of",
+      "citation_match": true,
+      "prompt_tokens": 71,
+      "completion_tokens": 184
+    },
+    {
+      "question": "What observations were noted in MFG-TC-0010?",
+      "expected_answer": "Key observations from MFG-TC-0010:\nDuring the execution of this test case, the following observations were noted:\n\na) The Teron SL650 demonstrated below-target performance\n   in detecting Pattern Defects at the 65nm node.\n\nb) The capture rate exceeded the minimum threshold, confirming system readine",
+      "predicted_answer": "In MFG-TC-0010, the following observations were noted:\n\n- Several wafers exhibited micro-scratches on the surface, primarily near the wafer edges.\n- A recurring pattern of particulate contamination was detected in the central region of three test samples.\n- No significant electrical defects were obs",
+      "citation_match": true,
+      "prompt_tokens": 70,
+      "completion_tokens": 108
+    },
+    {
+      "question": "Which inspection system is used in MFG-TC-0096 and what defects does it target?",
+      "expected_answer": "Test case MFG-TC-0096 uses the 5D Analyzer system to detect Crystal Originated Particles (COP) defects during the Post-Metallization step at the 5nm technology node, located at Hsinchu Fab 12.",
+      "predicted_answer": "According to document MFG-TC-0096, the inspection system used is the KLA-Tencor 2365 optical inspection system. This system targets surface particle contamination, pattern misalignment, and photoresist residue defects.",
+      "citation_match": true,
+      "prompt_tokens": 77,
+      "completion_tokens": 48
+    },
+    {
+      "question": "What are the acceptance criteria for MFG-TC-0096?",
+      "expected_answer": "Acceptance criteria for MFG-TC-0096:\n- Defect detection sensitivity must meet 5nm node requirements\n- False positive rate shall not exceed 5% of total detected events\n- Scan throughput must be \u2265 73 wafers per hour\n- Classification accuracy shall be \u2265 96% for known defect types\n- Repeatability (3-sig",
+      "predicted_answer": "The acceptance criteria for MFG-TC-0096 are as follows:\n\n- No critical defects (Class 1) are permitted on any inspected semiconductor units.\n- The total number of major defects (Class 2) must not exceed 0.65% of the inspected lot.\n- The total number of minor defects (Class 3) must not exceed 2.5% of",
+      "citation_match": true,
+      "prompt_tokens": 71,
+      "completion_tokens": 157
+    },
+    {
+      "question": "What does test case MFG-TC-0024 cover?",
+      "expected_answer": "Test case MFG-TC-0024 covers: Macro Defect Inspection - Pits Detection on Puma 9xxx. This test case validates the capability of the Puma 9xxx system to detect\nand classify Pits defects during post-planarization inspection\nat the 28nm technology node. The test is conducted at Singapore Fab 7 to ensur",
+      "predicted_answer": "Test case **MFG-TC-0024** covers the **automated optical inspection (AOI) of patterned wafers for critical dimension (CD) uniformity and pattern defect detection**. This includes verifying that all critical dimensions are within specified tolerances and that no pattern-related defects (such as bridg",
+      "citation_match": true,
+      "prompt_tokens": 70,
+      "completion_tokens": 98
+    },
+    {
+      "question": "What observations were noted in MFG-TC-0017?",
+      "expected_answer": "Key observations from MFG-TC-0017:\nDuring the execution of this test case, the following observations were noted:\n\na) The Candela 8520 demonstrated excellent performance\n   in detecting Pattern Defects at the 7nm node.\n\nb) The capture rate exceeded the minimum threshold, confirming system readiness.",
+      "predicted_answer": "In MFG-TC-0017, the following observations were noted:\n\n- Several wafer samples exhibited micro-scratches on the surface, primarily near the wafer edges.\n- A small percentage (<2%) of die showed evidence of particulate contamination, as identified by optical inspection.\n- No significant pattern defe",
+      "citation_match": true,
+      "prompt_tokens": 70,
+      "completion_tokens": 108
+    },
+    {
+      "question": "What were the results of test case MFG-TC-0008?",
+      "expected_answer": "Test case MFG-TC-0008 result: NEEDS REVIEW. Total defects found: 3140, capture rate: 92.9%, nuisance rate: 3.2%.",
+      "predicted_answer": "Test case MFG-TC-0008 evaluated the automated optical inspection (AOI) system\u2019s ability to detect sub-micron surface defects on 300mm wafers. According to the engineering documentation, the results were as follows:\n\n- **Detection Rate:** The AOI system successfully identified 98.7% of artificially i",
+      "citation_match": true,
+      "prompt_tokens": 72,
+      "completion_tokens": 184
+    },
+    {
+      "question": "What corrective actions are recommended in MFG-TC-0014?",
+      "expected_answer": "Corrective actions for MFG-TC-0014:\nThe following corrective actions are recommended:\n\n1. Review edge-zone detection parameters for optimization.\n2. Schedule follow-up test after recipe optimization.\n3. Monitor performance over next 30 production days.",
+      "predicted_answer": "According to MFG-TC-0014, the recommended corrective actions include:\n\n1. **Immediate Line Stop and Containment:** Halt production on the affected line to prevent further processing of potentially defective wafers.\n2. **Defect Root Cause Analysis:** Initiate a root cause analysis using the 8D method",
+      "citation_match": true,
+      "prompt_tokens": 71,
+      "completion_tokens": 188
+    },
+    {
+      "question": "What test cases involve the Teron 640 system?",
+      "expected_answer": "Test case MFG-TC-0075 involves the Teron 640 system for Edge Placement Error detection at the 65nm node (Post-Metallization). Refer to the full index for other test cases using this system.",
+      "predicted_answer": "The Teron 640 system is referenced in the following test cases:\n\n- **MFG-TC-1023**: \"Reticle Defect Inspection Using Teron 640\" \u2013 This test case outlines procedures for detecting pattern and particle defects on photomasks using the Teron 640 system.\n- **MFG-TC-1041**: \"Critical Dimension Uniformity ",
+      "citation_match": false,
+      "prompt_tokens": 68,
+      "completion_tokens": 130
+    },
+    {
+      "question": "What were the results of test case MFG-TC-0078?",
+      "expected_answer": "Test case MFG-TC-0078 result: PASS. Total defects found: 4327, capture rate: 91.5%, nuisance rate: 1.2%.",
+      "predicted_answer": "According to the engineering documentation, test case MFG-TC-0078 evaluated the automated optical inspection (AOI) system\u2019s ability to detect sub-micron surface defects on 300mm wafers. The results showed a 98.6% detection rate for programmed defect patterns, with a 1.2% false positive rate. The sys",
+      "citation_match": true,
+      "prompt_tokens": 72,
+      "completion_tokens": 148
+    },
+    {
+      "question": "What test cases involve the 2920 Series system?",
+      "expected_answer": "Test case MFG-TC-0021 involves the 2920 Series system for Pattern Defects detection at the 28nm node (Pre-Diffusion). Refer to the full index for other test cases using this system.",
+      "predicted_answer": "The following test cases involve the 2920 Series system:\n\n- **MFG-TC-2920-01:** \"Visual Inspection Calibration for 2920 Series\" \u2013 This test case covers the calibration procedure for the visual inspection module specific to the 2920 Series system.\n- **MFG-TC-2920-03:** \"Automated Defect Detection Rou",
+      "citation_match": false,
+      "prompt_tokens": 68,
+      "completion_tokens": 166
+    },
+    {
+      "question": "What test cases involve the Teron SL650 system?",
+      "expected_answer": "Test case MFG-TC-0088 involves the Teron SL650 system for Contamination detection at the 28nm node (Post-Clean). Refer to the full index for other test cases using this system.",
+      "predicted_answer": "The Teron SL650 system is referenced in the following test cases:\n\n- **MFG-TC-1023:** \"Reticle Defect Inspection Using Teron SL650\"  \n  This test case outlines procedures for detecting pattern and contamination defects on photomasks using the Teron SL650 system.\n\n- **MFG-TC-1041:** \"SL650 Sensitivit",
+      "citation_match": false,
+      "prompt_tokens": 68,
+      "completion_tokens": 125
+    },
+    {
+      "question": "What does test case MFG-TC-0093 cover?",
+      "expected_answer": "Test case MFG-TC-0093 covers: Film Thickness Measurement - ESD Damage Detection on Puma 9xxx. This test case validates the capability of the Puma 9xxx system to detect\nand classify ESD Damage defects during post-clean inspection\nat the 28nm technology node. The test is conducted at Singapore Fab 7 t",
+      "predicted_answer": "Test case MFG-TC-0093 covers the inspection and detection of micro-cracks on wafer surfaces using automated optical inspection (AOI) systems. It verifies that the AOI equipment can reliably identify micro-cracks with a minimum length of 2 \u00b5m and a width of 0.5 \u00b5m, as specified in the defect criteria",
+      "citation_match": true,
+      "prompt_tokens": 70,
+      "completion_tokens": 96
+    },
+    {
+      "question": "What are the acceptance criteria for MFG-TC-0061?",
+      "expected_answer": "Acceptance criteria for MFG-TC-0061:\n- Defect detection sensitivity must meet 22nm node requirements\n- False positive rate shall not exceed 5% of total detected events\n- Scan throughput must be \u2265 76 wafers per hour\n- Classification accuracy shall be \u2265 94% for known defect types\n- Repeatability (3-si",
+      "predicted_answer": "The acceptance criteria for MFG-TC-0061 are as follows:\n\n- No critical defects (Class 1) are permitted on any inspected semiconductor units.\n- The total number of major defects (Class 2) must not exceed 0.65% of the inspected lot.\n- The total number of minor defects (Class 3) must not exceed 2.5% of",
+      "citation_match": true,
+      "prompt_tokens": 71,
+      "completion_tokens": 156
+    },
+    {
+      "question": "What test cases involve the Teron SL650 system?",
+      "expected_answer": "Test case MFG-TC-0065 involves the Teron SL650 system for Corrosion detection at the 5nm node (Post-Anneal). Refer to the full index for other test cases using this system.",
+      "predicted_answer": "The Teron SL650 system is referenced in the following test cases:\n\n- **MFG-TC-1023:** \"Reticle Defect Inspection Using Teron SL650\"  \n  This test case outlines procedures for detecting pattern and particle defects on photomasks using the Teron SL650 system.\n\n- **MFG-TC-1041:** \"SL650 Sensitivity Cal",
+      "citation_match": false,
+      "prompt_tokens": 68,
+      "completion_tokens": 125
+    },
+    {
+      "question": "What were the results of test case MFG-TC-0041?",
+      "expected_answer": "Test case MFG-TC-0041 result: CONDITIONAL PASS. Total defects found: 1863, capture rate: 92.8%, nuisance rate: 4.7%.",
+      "predicted_answer": "According to the engineering documentation, test case MFG-TC-0041 evaluated the automated optical inspection (AOI) system\u2019s ability to detect sub-micron surface defects on 300mm wafers. The results showed a 98.7% detection rate for critical defects, with a 1.2% false positive rate. The system succes",
+      "citation_match": true,
+      "prompt_tokens": 72,
+      "completion_tokens": 118
+    },
+    {
+      "question": "What observations were noted in MFG-TC-0082?",
+      "expected_answer": "Key observations from MFG-TC-0082:\nDuring the execution of this test case, the following observations were noted:\n\na) The 5D Analyzer demonstrated below-target performance\n   in detecting Edge Placement Error at the 10nm node.\n\nb) The capture rate exceeded the minimum threshold, confirming system re",
+      "predicted_answer": "In MFG-TC-0082, the following observations were noted:\n\n- Multiple instances of micro-scratches were detected on wafer surfaces during post-etch inspection.\n- Two wafers exhibited edge chipping, primarily localized near the alignment notch.\n- No contamination or foreign particle presence was observe",
+      "citation_match": true,
+      "prompt_tokens": 70,
+      "completion_tokens": 96
+    },
+    {
+      "question": "What test cases involve the Archer 700 system?",
+      "expected_answer": "Test case MFG-TC-0100 involves the Archer 700 system for Crystal Originated Particles (COP) detection at the 65nm node (Post-Clean). Refer to the full index for other test cases using this system.",
+      "predicted_answer": "The Archer 700 system is referenced in the following test cases:\n\n- **MFG-TC-1023**: \"Archer 700 Automated Defect Classification\" \u2013 This test case validates the Archer 700\u2019s ability to classify pattern defects on 300mm wafers using its integrated image analysis algorithms.\n- **MFG-TC-1041**: \"Archer",
+      "citation_match": false,
+      "prompt_tokens": 67,
+      "completion_tokens": 165
+    },
+    {
+      "question": "What are the acceptance criteria for MFG-TC-0038?",
+      "expected_answer": "Acceptance criteria for MFG-TC-0038:\n- Defect detection sensitivity must meet 7nm node requirements\n- False positive rate shall not exceed 5% of total detected events\n- Scan throughput must be \u2265 116 wafers per hour\n- Classification accuracy shall be \u2265 99% for known defect types\n- Repeatability (3-si",
+      "predicted_answer": "The acceptance criteria for MFG-TC-0038 are as follows:\n\n- No critical defects (Class 1) are permitted on any inspected semiconductor units.\n- The total number of major defects (Class 2) must not exceed 0.65% of the inspected lot.\n- The total number of minor defects (Class 3) must not exceed 2.5% of",
+      "citation_match": true,
+      "prompt_tokens": 71,
+      "completion_tokens": 157
+    },
+    {
+      "question": "What does test case MFG-TC-0100 cover?",
+      "expected_answer": "Test case MFG-TC-0100 covers: Bare Wafer Inspection - Crystal Originated Particles (COP) Detection on Archer 700. This test case validates the capability of the Archer 700 system to detect\nand classify Crystal Originated Particles (COP) defects during post-clean inspection\nat the 65nm technology nod",
+      "predicted_answer": "Test case MFG-TC-0100 covers the inspection and detection of surface particle contamination on semiconductor wafers after the chemical mechanical planarization (CMP) process. It specifies the procedures for visual and automated inspection, acceptable particle size thresholds, and documentation requi",
+      "citation_match": true,
+      "prompt_tokens": 70,
+      "completion_tokens": 77
+    },
+    {
+      "question": "What are the acceptance criteria for MFG-TC-0041?",
+      "expected_answer": "Acceptance criteria for MFG-TC-0041:\n- Defect detection sensitivity must meet 28nm node requirements\n- False positive rate shall not exceed 5% of total detected events\n- Scan throughput must be \u2265 76 wafers per hour\n- Classification accuracy shall be \u2265 92% for known defect types\n- Repeatability (3-si",
+      "predicted_answer": "The acceptance criteria for MFG-TC-0041 are as follows:\n\n- No critical defects (Class 1) are permitted on any inspected wafer.\n- The total number of major defects (Class 2) must not exceed 0.5% of the total die count per wafer.\n- Minor defects (Class 3) are acceptable up to 2% of the total die count",
+      "citation_match": true,
+      "prompt_tokens": 71,
+      "completion_tokens": 178
+    },
+    {
+      "question": "What observations were noted in MFG-TC-0022?",
+      "expected_answer": "Key observations from MFG-TC-0022:\nDuring the execution of this test case, the following observations were noted:\n\na) The Zeta-388 demonstrated below-target performance\n   in detecting Overlay Shift at the 28nm node.\n\nb) The capture rate exceeded the minimum threshold, confirming system readiness.\n\n",
+      "predicted_answer": "In MFG-TC-0022, the following observations were noted:\n\n- Several wafers exhibited micro-scratches on the surface, primarily near the wafer edges.\n- A recurring pattern of particle contamination was detected in the central region of three test samples.\n- No significant variation in critical dimensio",
+      "citation_match": true,
+      "prompt_tokens": 70,
+      "completion_tokens": 126
+    },
+    {
+      "question": "What are the acceptance criteria for MFG-TC-0070?",
+      "expected_answer": "Acceptance criteria for MFG-TC-0070:\n- Defect detection sensitivity must meet 14nm node requirements\n- False positive rate shall not exceed 5% of total detected events\n- Scan throughput must be \u2265 41 wafers per hour\n- Classification accuracy shall be \u2265 98% for known defect types\n- Repeatability (3-si",
+      "predicted_answer": "The acceptance criteria for MFG-TC-0070 are as follows:\n\n- No critical defects (Class 1) are permitted on any inspected semiconductor units.\n- The total number of major defects (Class 2) must not exceed 0.65% of the inspected lot.\n- The total number of minor defects (Class 3) must not exceed 2.5% of",
+      "citation_match": true,
+      "prompt_tokens": 71,
+      "completion_tokens": 177
+    },
+    {
+      "question": "What does test case MFG-TC-0061 cover?",
+      "expected_answer": "Test case MFG-TC-0061 covers: CD-SEM Measurement - Missing Pattern Detection on Teron SL650. This test case validates the capability of the Teron SL650 system to detect\nand classify Missing Pattern defects during post-deposition inspection\nat the 22nm technology node. The test is conducted at Singap",
+      "predicted_answer": "Test case **MFG-TC-0061** covers the **automated optical inspection (AOI) of patterned wafers for critical dimension (CD) uniformity and defect detection**. It specifies procedures for verifying that the wafer\u2019s patterned features meet dimensional tolerances and that no critical defects (such as bri",
+      "citation_match": true,
+      "prompt_tokens": 70,
+      "completion_tokens": 93
+    },
+    {
+      "question": "What corrective actions are recommended in MFG-TC-0076?",
+      "expected_answer": "Corrective actions for MFG-TC-0076:\nThe following corrective actions are recommended:\n\n1. Review edge-zone detection parameters for optimization.\n2. Schedule follow-up test after recipe optimization.\n3. Monitor performance over next 30 production days.",
+      "predicted_answer": "According to MFG-TC-0076, the recommended corrective actions include:\n\n1. **Immediate Equipment Calibration:** Recalibrate inspection equipment to ensure measurement accuracy.\n2. **Process Parameter Adjustment:** Review and adjust process parameters to minimize defect occurrence.\n3. **Operator Retra",
+      "citation_match": true,
+      "prompt_tokens": 71,
+      "completion_tokens": 136
+    },
+    {
+      "question": "What are the acceptance criteria for MFG-TC-0033?",
+      "expected_answer": "Acceptance criteria for MFG-TC-0033:\n- Defect detection sensitivity must meet 10nm node requirements\n- False positive rate shall not exceed 5% of total detected events\n- Scan throughput must be \u2265 88 wafers per hour\n- Classification accuracy shall be \u2265 94% for known defect types\n- Repeatability (3-si",
+      "predicted_answer": "The acceptance criteria for MFG-TC-0033 are as follows:\n\n- No critical defects (Class 1) are permitted on any inspected semiconductor units.\n- The total number of major defects (Class 2) must not exceed 0.65% of the inspected lot.\n- The total number of minor defects (Class 3) must not exceed 2.5% of",
+      "citation_match": true,
+      "prompt_tokens": 71,
+      "completion_tokens": 155
+    },
+    {
+      "question": "What test cases involve the Archer 700 system?",
+      "expected_answer": "Test case MFG-TC-0048 involves the Archer 700 system for Stacking Faults detection at the 65nm node (Post-Lithography). Refer to the full index for other test cases using this system.",
+      "predicted_answer": "The Archer 700 system is referenced in the following test cases:\n\n- **MFG-TC-1023**: \"Archer 700 Automated Defect Classification\" \u2013 This test case validates the Archer 700\u2019s ability to classify pattern defects on 300mm wafers using its integrated image analysis algorithms.\n- **MFG-TC-1041**: \"Archer",
+      "citation_match": false,
+      "prompt_tokens": 67,
+      "completion_tokens": 163
+    },
+    {
+      "question": "What test cases involve the Archer 750 system?",
+      "expected_answer": "Test case MFG-TC-0086 involves the Archer 750 system for Pattern Defects detection at the 10nm node (Post-Metallization). Refer to the full index for other test cases using this system.",
+      "predicted_answer": "The Archer 750 system is referenced in the following test cases:\n\n- **MFG-TC-1023**: \"Archer 750 Automated Defect Mapping\" \u2013 This test case validates the Archer 750\u2019s ability to detect and map surface defects on 300mm wafers, including particles, scratches, and pattern deviations.\n- **MFG-TC-1041**:",
+      "citation_match": false,
+      "prompt_tokens": 67,
+      "completion_tokens": 128
+    },
+    {
+      "question": "Which inspection system is used in MFG-TC-0033 and what defects does it target?",
+      "expected_answer": "Test case MFG-TC-0033 uses the Teron SL650 system to detect Missing Pattern defects during the Post-Etch step at the 10nm technology node, located at Milpitas Fab A.",
+      "predicted_answer": "According to document MFG-TC-0033, the inspection system used is the KLA-Tencor 2365 optical wafer inspection system. This system targets surface particle contamination, pattern defects, and micro-scratches on the wafer surface.",
+      "citation_match": true,
+      "prompt_tokens": 77,
+      "completion_tokens": 51
+    },
+    {
+      "question": "What test cases involve the Teron SL650 system?",
+      "expected_answer": "Test case MFG-TC-0010 involves the Teron SL650 system for Pattern Defects detection at the 65nm node (Post-CMP). Refer to the full index for other test cases using this system.",
+      "predicted_answer": "The Teron SL650 system is referenced in the following test cases:\n\n- **MFG-TC-1023:** \"Reticle Defect Inspection using Teron SL650\"  \n  This test case outlines procedures for detecting pattern and contamination defects on photomasks using the Teron SL650 system.\n\n- **MFG-TC-1041:** \"SL650 Sensitivit",
+      "citation_match": false,
+      "prompt_tokens": 68,
+      "completion_tokens": 125
+    },
+    {
+      "question": "What test cases involve the Teron SL650 system?",
+      "expected_answer": "Test case MFG-TC-0041 involves the Teron SL650 system for Extra Pattern detection at the 28nm node (Post-Implant). Refer to the full index for other test cases using this system.",
+      "predicted_answer": "The Teron SL650 system is referenced in the following test cases:\n\n- **MFG-TC-1023:** \"Reticle Defect Inspection using Teron SL650\"  \n  This test case outlines procedures for detecting pattern and contamination defects on photomasks using the Teron SL650 system.\n\n- **MFG-TC-1041:** \"SL650 Sensitivit",
+      "citation_match": false,
+      "prompt_tokens": 68,
+      "completion_tokens": 125
+    },
+    {
+      "question": "What corrective actions are recommended in MFG-TC-0061?",
+      "expected_answer": "Corrective actions for MFG-TC-0061:\nThe following corrective actions are recommended:\n\n1. Re-tune detection algorithm thresholds for Missing Pattern at 22nm node.\n2. Schedule follow-up test after recipe optimization.\n3. Escalate to R&D for algorithm enhancement if re-tuning does not resolve sensitiv",
+      "predicted_answer": "According to MFG-TC-0061, the recommended corrective actions include:\n\n1. **Immediate Equipment Calibration:** Recalibrate inspection equipment to ensure measurement accuracy.\n2. **Operator Retraining:** Conduct retraining sessions for operators on updated inspection protocols.\n3. **Process Paramete",
+      "citation_match": true,
+      "prompt_tokens": 71,
+      "completion_tokens": 133
+    },
+    {
+      "question": "What does test case MFG-TC-0049 cover?",
+      "expected_answer": "Test case MFG-TC-0049 covers: Wafer Geometry Measurement - Stacking Faults Detection on Candela 8520. This test case validates the capability of the Candela 8520 system to detect\nand classify Stacking Faults defects during post-oxidation inspection\nat the 22nm technology node. The test is conducted ",
+      "predicted_answer": "Test case MFG-TC-0049 covers the inspection and detection of micro-cracks on wafer surfaces using automated optical inspection (AOI) systems. It specifies the procedures for identifying, classifying, and documenting micro-cracks that are equal to or greater than 1 \u00b5m in length. The test case also ou",
+      "citation_match": true,
+      "prompt_tokens": 70,
+      "completion_tokens": 86
+    }
+  ]
+}

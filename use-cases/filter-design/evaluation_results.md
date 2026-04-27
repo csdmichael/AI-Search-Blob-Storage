@@ -11,7 +11,7 @@
 | **Validation Examples** | 20 |
 | **Evaluated Samples** | 20 |
 | **Citation Accuracy** | 100.0% |
-| **Avg Tokens/Query** | 237.4 |
+| **Avg Tokens/Query** | 237.9 |
 
 ## Methodology
 
@@ -36,26 +36,26 @@
 
 | # | Question | Citation Match | Prompt Tokens | Completion Tokens |
 |---|----------|:--------------:|:-------------:|:-----------------:|
-| 1 | What were the results of test case FD-TC-0065? | ✅ | 77 | 170 |
-| 2 | What were the results of test case FD-TC-0030? | ✅ | 77 | 158 |
+| 1 | What were the results of test case FD-TC-0065? | ✅ | 77 | 154 |
+| 2 | What were the results of test case FD-TC-0030? | ✅ | 77 | 163 |
 | 3 | What were the results of test case FD-TC-0028? | ✅ | 77 | 169 |
-| 4 | What were the results of test case FD-TC-0089? | ✅ | 77 | 142 |
-| 5 | What were the results of test case FD-TC-0098? | ✅ | 77 | 158 |
-| 6 | What were the results of test case FD-TC-0005? | ✅ | 77 | 125 |
-| 7 | What were the results of test case FD-TC-0055? | ✅ | 77 | 170 |
-| 8 | What were the results of test case FD-TC-0076? | ✅ | 77 | 158 |
-| 9 | What were the results of test case FD-TC-0012? | ✅ | 77 | 179 |
-| 10 | What were the results of test case FD-TC-0070? | ✅ | 77 | 165 |
-| 11 | What were the results of test case FD-TC-0087? | ✅ | 77 | 167 |
-| 12 | What were the results of test case FD-TC-0014? | ✅ | 77 | 169 |
-| 13 | What were the results of test case FD-TC-0018? | ✅ | 77 | 170 |
-| 14 | What were the results of test case FD-TC-0029? | ✅ | 77 | 169 |
-| 15 | What were the results of test case FD-TC-0032? | ✅ | 77 | 170 |
-| 16 | What were the results of test case FD-TC-0036? | ✅ | 77 | 142 |
-| 17 | What were the results of test case FD-TC-0095? | ✅ | 77 | 142 |
-| 18 | What were the results of test case FD-TC-0004? | ✅ | 77 | 170 |
+| 4 | What were the results of test case FD-TC-0089? | ✅ | 77 | 169 |
+| 5 | What were the results of test case FD-TC-0098? | ✅ | 77 | 165 |
+| 6 | What were the results of test case FD-TC-0005? | ✅ | 77 | 148 |
+| 7 | What were the results of test case FD-TC-0055? | ✅ | 77 | 142 |
+| 8 | What were the results of test case FD-TC-0076? | ✅ | 77 | 143 |
+| 9 | What were the results of test case FD-TC-0012? | ✅ | 77 | 171 |
+| 10 | What were the results of test case FD-TC-0070? | ✅ | 77 | 160 |
+| 11 | What were the results of test case FD-TC-0087? | ✅ | 77 | 147 |
+| 12 | What were the results of test case FD-TC-0014? | ✅ | 77 | 158 |
+| 13 | What were the results of test case FD-TC-0018? | ✅ | 77 | 160 |
+| 14 | What were the results of test case FD-TC-0029? | ✅ | 77 | 167 |
+| 15 | What were the results of test case FD-TC-0032? | ✅ | 77 | 169 |
+| 16 | What were the results of test case FD-TC-0036? | ✅ | 77 | 169 |
+| 17 | What were the results of test case FD-TC-0095? | ✅ | 77 | 162 |
+| 18 | What were the results of test case FD-TC-0004? | ✅ | 77 | 165 |
 | 19 | What were the results of test case FD-TC-0015? | ✅ | 77 | 169 |
-| 20 | What were the results of test case FD-TC-0082? | ✅ | 77 | 147 |
+| 20 | What were the results of test case FD-TC-0082? | ✅ | 77 | 168 |
 
 ## Sample Predictions
 
@@ -65,9 +65,9 @@
 
 **Expected:** Test case FD-TC-0065 result: NEEDS REVIEW. Total defects found: N/A, capture rate: N/A%, nuisance rate: N/A%....
 
-**Predicted:** Test case FD-TC-0065 evaluated the bandpass filter’s insertion loss and return loss across the 2.4–2.5 GHz frequency range. According to the engineering documentation, the results were as follows:
+**Predicted:** Test case FD-TC-0065 evaluated the bandpass filter’s insertion loss and return loss across the 2.4–2.5 GHz frequency range. According to the engineering documentation:
 
-- ...
+- The measured insertion loss w...
 
 **Citation Match:** ✅ Yes
 
@@ -107,9 +107,9 @@
 
 **Expected:** Test case FD-TC-0089 result: FAIL. Total defects found: N/A, capture rate: N/A%, nuisance rate: N/A%....
 
-**Predicted:** Test case FD-TC-0089 evaluated the out-of-band rejection performance of the 2.4 GHz bandpass filter design. According to the engineering documentation, the results were as follows:
+**Predicted:** Test case FD-TC-0089 evaluated the bandpass filter’s insertion loss and return loss across the 2.4–2.5 GHz frequency range. According to the documentation, the results were as follows:
 
-- The filter achie...
+- **Insertion ...
 
 **Citation Match:** ✅ Yes
 

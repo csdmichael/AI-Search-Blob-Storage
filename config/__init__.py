@@ -93,6 +93,15 @@ def uc_data_dir(use_case: str | None = None) -> str:
     return os.path.join(DATA_DIR, doc_cfg["data_subfolder"])
 
 
+_UC_FOLDER_MAP = {"engineering_docs": "engineering-docs", "filter_design": "filter-design"}
+
+
+def uc_docs_dir(use_case: str | None = None) -> str:
+    """Return the use-case-specific docs folder (use-cases/<uc>/)."""
+    uc = use_case or get_use_case()
+    return os.path.join(PROJECT_ROOT, "use-cases", _UC_FOLDER_MAP[uc])
+
+
 # ── Convenience helpers ────────────────────────────────────────────
 
 def storage_account_name() -> str:
