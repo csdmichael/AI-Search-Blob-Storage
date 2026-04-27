@@ -207,8 +207,24 @@ python scripts/create_agent.py
 python scripts/test_search.py
 ```
 
-Example agent response:
-> *"The Band 7 SAW filter (FD-TC-0023) achieved an insertion loss of 1.38 dB against a target of ≤1.5 dB, with a return loss of 19.2 dB. The design uses 128° YX LiNbO3 substrate with a Q factor of 8,200. Temperature drift was within specification across -40°C to +85°C [FD-TC-0023.pdf†filter-design-index]."*
+### 5.3 — 10 Example Prompts with Expected Results
+
+Use these during live demos. Each prompt is designed to test a different aspect of grounding accuracy.
+
+| # | Prompt | Expected Result | What It Tests |
+|---|--------|----------------|---------------|
+| 1 | *"What is the measured insertion loss and return loss for FD-TC-0001?"* | Exact IL and RL values from Section 6 of FD-TC-0001 (e.g., IL 1.32 dB, RL 18.3 dB) with citation `[FD-TC-0001.pdf†...]` | Specific document lookup |
+| 2 | *"Which TC-SAW filters target Band 7 and what were their results?"* | Lists FD-TC docs with filter_type=TC-SAW and frequency_band=Band 7, citing measured parameters | Faceted metadata query |
+| 3 | *"What corrective actions are recommended in FD-TC-0005?"* | Quoted actions from Section 8 of FD-TC-0005 (e.g., optimize resonator geometry, re-run EM simulation) | Section-level grounding |
+| 4 | *"What substrates are used for FBAR filter designs?"* | Lists substrate materials (AlN on Si, ScAlN, etc.) from FBAR documents with citations | Cross-document aggregation |
+| 5 | *"Compare insertion loss across all filter designs that use LiNbO3 substrate."* | Table or list of IL values from LiNbO3-based designs, each cited by FD-TC number | Comparative analysis |
+| 6 | *"What is the Q factor for FD-TC-0010?"* | Exact Q factor value from Design Parameters section of FD-TC-0010 | Single-field extraction |
+| 7 | *"Which filter designs have FAIL status and why?"* | Lists failed designs with failure reasons from Observations/Corrective Actions sections | Status-filtered reasoning |
+| 8 | *"What design tools were used for 5G NR n78 band filters?"* | Lists tools (e.g., Keysight ADS, COMSOL, Sonnet) from n78 band documents | Metadata + tool extraction |
+| 9 | *"Show the acceptance criteria for duplexer isolation."* | Specific isolation thresholds (e.g., ≥ 45 dB) from duplexer test cases | Criteria extraction |
+| 10 | *"What package types are used for BAW filters and what are their die sizes?"* | Lists package types (WLP, CSP, QFN) and die dimensions from BAW documents | Multi-field extraction |
+
+**Demo tip**: For prompts 1, 3, and 6, open the actual PDF side-by-side to show the audience the agent's numbers match the source document exactly. This is the strongest proof of grounding.
 
 ---
 

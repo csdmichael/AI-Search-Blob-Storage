@@ -171,8 +171,24 @@ Run the test script and show agent responses:
 python scripts/test_search.py
 ```
 
-Example agent response:
-> *"The Surfscan SP7 system is used for unpatterned wafer inspection to detect Crystal Originated Particles (COP) at the 5nm node. The capture rate was 97.2% with a nuisance rate of 2.1% [MFG-TC-0042.txt†engineering-docs-index]."*
+### 5.3 — 10 Example Prompts with Expected Results
+
+Use these during live demos. Each prompt is designed to test a different aspect of grounding accuracy.
+
+| # | Prompt | Expected Result | What It Tests |
+|---|--------|----------------|---------------|
+| 1 | *"What is the capture rate and nuisance rate for MFG-TC-0001?"* | Exact numbers from the Test Results section of MFG-TC-0001 (e.g., capture rate 87.5%, nuisance rate 3.7%) with citation `[MFG-TC-0001.txt†...]` | Specific document lookup |
+| 2 | *"Which test cases failed for 3nm technology node?"* | Lists MFG-TC documents with `FAIL` status at 3nm, citing each by number | Filtered semantic search |
+| 3 | *"What corrective actions are recommended in MFG-TC-0005?"* | Quoted corrective actions from Section 8 of MFG-TC-0005, not fabricated | Section-level grounding |
+| 4 | *"What inspection systems are used for FinFET manufacturing?"* | Lists product lines (e.g., Surfscan, Archer, Puma) from FinFET test cases with citations | Cross-document aggregation |
+| 5 | *"What is the acceptance criteria for 5nm node patterned wafer inspection?"* | Specific thresholds (capture rate ≥ X%, throughput ≥ Y wafers/hr) from 5nm documents | Criteria extraction |
+| 6 | *"Compare defect density across all test cases at Milpitas Fab A."* | Table or list of defect densities from Milpitas Fab A documents, each cited | Faceted metadata query |
+| 7 | *"What is the scan speed and pixel size configured in MFG-TC-0010?"* | Exact values from the Test Configuration section of MFG-TC-0010 | Configuration data retrieval |
+| 8 | *"Which test cases have nuisance rate above 5% and what was recommended?"* | Documents where nuisance rate > 5% with corrective actions, each cited | Conditional reasoning |
+| 9 | *"What defect types does the Surfscan SP7 detect?"* | Lists defect types (COP, scratches, particles, etc.) from Surfscan SP7 test cases | Product-specific knowledge |
+| 10 | *"Show me test results for post-CMP contamination inspection."* | Test results (defect count, capture rate, status) from post-CMP + contamination documents | Multi-field semantic match |
+
+**Demo tip**: For prompts 1, 3, and 7, open the actual document side-by-side to show the audience the agent's numbers match exactly.
 
 ---
 
