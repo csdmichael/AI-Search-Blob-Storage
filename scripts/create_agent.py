@@ -20,7 +20,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import config
 
 from azure.identity import DefaultAzureCredential
-from azure.ai.projects import AIProjectClient
+from azure.ai.agents import AgentsClient
 from azure.ai.agents.models import (
     AzureAISearchToolDefinition,
     ToolResources,
@@ -64,7 +64,7 @@ else:
 _AGENT_ID_CACHE: str | None = None
 
 
-def _resolve_search_connection_id(project_client: AIProjectClient) -> str:
+def _resolve_search_connection_id(project_client: AgentsClient) -> str:
     """Resolve Foundry AI Search connection ID from env var ID or connection name."""
     explicit_id = os.environ.get("AZURE_AI_SEARCH_CONNECTION_ID", "").strip()
     if explicit_id:
@@ -95,11 +95,11 @@ def _resolve_search_connection_id(project_client: AIProjectClient) -> str:
     return candidate_id
 
 
-def _get_agent_by_name(project_client: AIProjectClient, agent_name: str):
+def _get_agent_by_name(project_client: AgentsClient, agent_name: str):
     """Get an agent by name with basic retry handling for transient service issues."""
     for _ in range(3):
         try:
-            for agent in project_client.agents.list_agents():
+            for agent in project_client.list_agents():
                 if agent.name == agent_name:
                     return agent
             return None
@@ -114,7 +114,7 @@ def query_agent(prompt: str, credential=None):
 
     if credential is None:
         credential = DefaultAzureCredential()
-    project_client = AIProjectClient(endpoint=PROJECT_ENDPOINT, credential=credential)
+    project_client = AgentsClient(endpoint=PROJECT_ENDPOINT, credential=credential)
 
     agent_id = _AGENT_ID_CACHE
     if not agent_id:
@@ -136,10 +136,10 @@ def query_agent(prompt: str, credential=None):
             f"\n\nUser question: {prompt}"
         )
 
-    thread = project_client.agents.threads.create()
-    project_client.agents.messages.create(thread_id=thread.id, role="user", content=wrapped_prompt)
+    thread = project_client.threads.create()
+    project_client.messages.create(thread_id=thread.id, role="user", content=wrapped_prompt)
 
-    run = project_client.agents.runs.create(thread_id=thread.id, agent_id=agent_id)
+    run = project_client.runs.create(thread_id=thread.id, agent_id=agent_id)
 
     start_time = time.time()
     while True:
@@ -147,7 +147,7 @@ def query_agent(prompt: str, credential=None):
             return "Run timed out while waiting for agent completion."
 
         try:
-            run = project_client.agents.runs.get(thread_id=thread.id, run_id=run.id)
+            run = project_client.runs.get(thread_id=thread.id, run_id=run.id)
         except Exception:
             time.sleep(1.0)
             continue
@@ -163,7 +163,7 @@ def query_agent(prompt: str, credential=None):
         time.sleep(0.6)
 
     response_text = ""
-    for msg in project_client.agents.messages.list(thread_id=thread.id, order=ListSortOrder.ASCENDING):
+    for msg in project_client.messages.list(thread_id=thread.id, order=ListSortOrder.ASCENDING):
         if msg.role == "assistant" and msg.text_messages:
             response_text = msg.text_messages[-1].text.value
             break
@@ -174,7 +174,7 @@ def query_agent(prompt: str, credential=None):
 def main():
     print(f"Connecting to Foundry project: {PROJECT_ENDPOINT}")
     credential = DefaultAzureCredential()
-    project_client = AIProjectClient(endpoint=PROJECT_ENDPOINT, credential=credential)
+    project_client = AgentsClient(endpoint=PROJECT_ENDPOINT, credential=credential)
 
     connection_id = _resolve_search_connection_id(project_client)
 
@@ -191,13 +191,13 @@ def main():
         )
     )
 
-    for agent in project_client.agents.list_agents():
+    for agent in project_client.list_agents():
         if agent.name == AGENT_NAME:
-            project_client.agents.delete_agent(agent.id)
+            project_client.delete_agent(agent.id)
             print(f"Deleted existing agent: {agent.id}")
 
     print(f"\nCreating agent: {AGENT_NAME}")
-    created = project_client.agents.create_agent(
+    created = project_client.create_agent(
         model=MODEL_DEPLOYMENT_NAME,
         name=AGENT_NAME,
         instructions=AGENT_INSTRUCTIONS,
