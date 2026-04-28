@@ -8,16 +8,16 @@ Each use case has its own **README, architecture diagram, and demo script** read
 
 | Use Case | Folder | Demo Focus | Agent | Docs |
 |----------|--------|-----------|-------|------|
-| **Manufacturing Inspection** | [`use-cases/engineering-docs/`](use-cases/engineering-docs/) | AI Search best practices + **Fine-tuning & evaluation** | `Eng-Docs-Search-Agent` | 100 `.txt` + 100 `.json` (MFG-TC-XXXX) |
-| **RF Filter Design** | [`use-cases/filter-design/`](use-cases/filter-design/) | AI Search best practices + **Ranking & feedback loop** (90%→95%) | `Filter-Design-Agent` | 100 `.pdf` + 100 `.json` (FD-TC-XXXX) |
+| **Manufacturing Inspection** | [`docs/use-cases/engineering-docs/`](docs/use-cases/engineering-docs/) | AI Search best practices + **Fine-tuning & evaluation** | `Eng-Docs-Search-Agent` | 100 `.txt` + 100 `.json` (MFG-TC-XXXX) |
+| **RF Filter Design** | [`docs/use-cases/filter-design/`](docs/use-cases/filter-design/) | AI Search best practices + **Ranking & feedback loop** (90%→95%) | `Filter-Design-Agent` | 100 `.pdf` + 100 `.json` (FD-TC-XXXX) |
 
-> **Solution Engineers**: Go directly to the use case folder for a self-contained README and [DEMO_SCRIPT.md](use-cases/engineering-docs/DEMO_SCRIPT.md) tailored for customer presentations.
+> **Solution Engineers**: Go directly to the use case folder for a self-contained README and [DEMO_SCRIPT.md](docs/use-cases/engineering-docs/DEMO_SCRIPT.md) tailored for customer presentations.
 
 ## Architecture
 
 | Manufacturing Inspection | RF Filter Design |
 |:---:|:---:|
-| ![Eng Docs](use-cases/engineering-docs/architecture.png) | ![Filter Design](use-cases/filter-design/architecture.png) |
+| ![Eng Docs](docs/use-cases/engineering-docs/architecture.png) | ![Filter Design](docs/use-cases/filter-design/architecture.png) |
 
 ### Components
 
@@ -316,9 +316,9 @@ Each sidecar contains:
 > Previous accuracy before JSON sidecars + semantic query type: ~50–70% (PDF/TXT extraction with keyword search).
 
 See full reports:
-- [Engineering Docs Evaluation](use-cases/engineering-docs/evaluation_results.md)
-- [Filter Design Evaluation](use-cases/filter-design/evaluation_results.md)
-- [Filter Design Ranking Report](use-cases/filter-design/ranking_report.md)
+- [Engineering Docs Evaluation](docs/use-cases/engineering-docs/evaluation_results.md)
+- [Filter Design Evaluation](docs/use-cases/filter-design/evaluation_results.md)
+- [Filter Design Ranking Report](docs/use-cases/filter-design/ranking_report.md)
 
 ---
 
@@ -397,7 +397,7 @@ USE_CASE=engineering_docs python scripts/ranking_feedback.py
 USE_CASE=filter_design python scripts/ranking_feedback.py
 ```
 
-See [use-cases/filter-design/ranking_report.md](use-cases/filter-design/ranking_report.md) for the latest evaluation report.
+See [docs/use-cases/filter-design/ranking_report.md](docs/use-cases/filter-design/ranking_report.md) for the latest evaluation report.
 
 ---
 
@@ -412,7 +412,7 @@ USE_CASE=engineering_docs python scripts/fine_tune_and_evaluate.py
 USE_CASE=filter_design python scripts/fine_tune_and_evaluate.py
 ```
 
-See [use-cases/engineering-docs/evaluation_results.md](use-cases/engineering-docs/evaluation_results.md) for the latest evaluation report.
+See [docs/use-cases/engineering-docs/evaluation_results.md](docs/use-cases/engineering-docs/evaluation_results.md) for the latest evaluation report.
 
 ---
 
@@ -420,18 +420,20 @@ See [use-cases/engineering-docs/evaluation_results.md](use-cases/engineering-doc
 
 ```
 AI-Search-Blob-Storage/
-├── use-cases/
-│   ├── engineering-docs/                 # ★ Clone this for manufacturing inspection
-│   │   ├── README.md                     # Self-contained setup guide
-│   │   ├── DEMO_SCRIPT.md               # 30-min demo: fine-tuning + AI Search
-│   │   ├── evaluation_results.md        # Fine-tuning evaluation report
-│   │   └── architecture.png             # Standalone architecture diagram
-│   └── filter-design/                    # ★ Clone this for RF filter design
-│       ├── README.md                     # Self-contained setup guide
-│       ├── DEMO_SCRIPT.md               # 30-min demo: ranking + feedback loop
-│       ├── evaluation_results.md        # Fine-tuning evaluation report
-│       ├── ranking_report.md            # Ranking & feedback report
-│       └── architecture.png             # Standalone architecture diagram
+├── docs/
+│   ├── Prompt.txt                        # Original project requirements
+│   └── use-cases/
+│       ├── engineering-docs/             # ★ Clone this for manufacturing inspection
+│       │   ├── README.md                 # Self-contained setup guide
+│       │   ├── DEMO_SCRIPT.md           # 30-min demo: fine-tuning + AI Search
+│       │   ├── evaluation_results.md    # Fine-tuning evaluation report
+│       │   └── architecture.png         # Standalone architecture diagram
+│       └── filter-design/                # ★ Clone this for RF filter design
+│           ├── README.md                 # Self-contained setup guide
+│           ├── DEMO_SCRIPT.md           # 30-min demo: ranking + feedback loop
+│           ├── evaluation_results.md    # Fine-tuning evaluation report
+│           ├── ranking_report.md        # Ranking & feedback report
+│           └── architecture.png         # Standalone architecture diagram
 ├── .github/
 │   └── workflows/
 │       └── deploy.yml                    # GitHub Actions CI/CD (multi use-case)
@@ -451,9 +453,6 @@ AI-Search-Blob-Storage/
 │       ├── FD-TC-0001.pdf ... FD-TC-0100.pdf
 │       ├── FD-TC-0001.json ... FD-TC-0100.json    (JSON sidecars)
 │       └── manifest.json
-├── docs/
-│   ├── architecture.png                  # Combined architecture diagram
-│   └── Prompt.txt                        # Original project requirements
 ├── scripts/
 │   ├── generate_docs.py                  # Generate manufacturing test case docs
 │   ├── generate_filter_docs.py           # Generate filter design PDFs
