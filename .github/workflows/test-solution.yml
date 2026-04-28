@@ -1,0 +1,52 @@
+name: Test Solution
+
+on:
+  workflow_dispatch:
+    inputs:
+      use_case:
+        description: "Use case to test (engineering_docs, filter_design, or all)"
+        required: false
+        default: "all"
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AZURE_SUBSCRIPTION_ID: "86b37969-9445-49cf-b03f-d8866235171c"
+  AZURE_RESOURCE_GROUP: "ai-myaacoub"
+  PYTHON_VERSION: "3.11"
+
+jobs:
+  test:
+    name: Test ${{ matrix.use_case }}
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.use_case == 'all' || github.event.inputs.use_case == matrix.use_case }}
+    strategy:
+      matrix:
+        use_case: [engineering_docs, filter_design]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Azure Login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ env.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Run Search Tests (${{ matrix.use_case }})
+        run: python scripts/test_search.py
+        env:
+          USE_CASE: ${{ matrix.use_case }}
+          AZURE_AI_SEARCH_CONNECTION_NAME: ${{ secrets.AZURE_AI_SEARCH_CONNECTION_NAME }}

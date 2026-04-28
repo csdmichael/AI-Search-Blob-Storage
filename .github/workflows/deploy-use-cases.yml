@@ -1,0 +1,127 @@
+name: Deploy Use Cases (AI Search + Foundry)
+
+on:
+  workflow_dispatch:
+    inputs:
+      use_case:
+        description: "Use case to deploy (engineering_docs, filter_design, or all)"
+        required: false
+        default: "all"
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AZURE_SUBSCRIPTION_ID: "86b37969-9445-49cf-b03f-d8866235171c"
+  AZURE_RESOURCE_GROUP: "ai-myaacoub"
+  PYTHON_VERSION: "3.11"
+
+jobs:
+  deploy-engineering-docs:
+    name: Deploy Engineering Docs Use Case
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.use_case == 'all' || github.event.inputs.use_case == 'engineering_docs' }}
+    env:
+      USE_CASE: engineering_docs
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Azure Login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ env.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Generate Engineering Documents
+        run: python scripts/generate_docs.py
+
+      - name: Upload Documents and JSON Sidecars to Blob Storage
+        run: python scripts/upload_to_blob.py
+
+      - name: Create AI Search Index and Indexer
+        run: python scripts/create_search_index.py
+
+      - name: Chunk Documents and Create Enhanced Index
+        run: python scripts/chunk_and_index.py
+
+      - name: Wait for Indexer to Complete
+        run: |
+          echo "Waiting 60 seconds for indexer to process documents..."
+          sleep 60
+
+      - name: Create Foundry Agent
+        run: python scripts/create_agent.py
+        env:
+          AZURE_AI_SEARCH_CONNECTION_NAME: ${{ secrets.AZURE_AI_SEARCH_CONNECTION_NAME }}
+
+      - name: Fine-Tune and Evaluate Model
+        run: python scripts/fine_tune_and_evaluate.py
+
+      - name: Run Ranking & Feedback Evaluation
+        run: python scripts/ranking_feedback.py
+
+  deploy-filter-design:
+    name: Deploy Filter Design Use Case
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.use_case == 'all' || github.event.inputs.use_case == 'filter_design' }}
+    env:
+      USE_CASE: filter_design
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Azure Login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ env.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Generate Filter Design Documents (PDF)
+        run: python scripts/generate_filter_docs.py
+
+      - name: Upload Documents and JSON Sidecars to Blob Storage
+        run: python scripts/upload_to_blob.py
+
+      - name: Create AI Search Index and Indexer
+        run: python scripts/create_search_index.py
+
+      - name: Chunk Documents and Create Enhanced Index
+        run: python scripts/chunk_and_index.py
+
+      - name: Wait for Indexer to Complete
+        run: |
+          echo "Waiting 60 seconds for indexer to process documents..."
+          sleep 60
+
+      - name: Create Filter Design Agent
+        run: python scripts/create_agent.py
+        env:
+          AZURE_AI_SEARCH_CONNECTION_NAME: ${{ secrets.AZURE_AI_SEARCH_CONNECTION_NAME }}
+
+      - name: Fine-Tune and Evaluate Model
+        run: python scripts/fine_tune_and_evaluate.py
+
+      - name: Run Ranking & Feedback Evaluation
+        run: python scripts/ranking_feedback.py

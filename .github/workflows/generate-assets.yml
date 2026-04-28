@@ -1,0 +1,39 @@
+name: Generate Shared Assets
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  PYTHON_VERSION: "3.11"
+
+jobs:
+  generate-assets:
+    name: Generate Architecture Diagrams
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Generate Architecture Diagrams
+        run: python scripts/generate_architecture_diagram.py
+
+      - name: Upload diagrams as artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: architecture-diagrams
+          path: |
+            docs/architecture.png
+            use-cases/engineering-docs/architecture.png
+            use-cases/filter-design/architecture.png

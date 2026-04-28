@@ -1,0 +1,88 @@
+name: Deploy App Service (API + UI)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AZURE_SUBSCRIPTION_ID: "86b37969-9445-49cf-b03f-d8866235171c"
+  AZURE_RESOURCE_GROUP: "ai-myaacoub"
+
+jobs:
+  deploy-api:
+    name: Deploy API to App Service
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Azure Login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ env.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Create API deployment package
+        run: |
+          zip -r api-deploy.zip . \
+            -x 'ui/*' '.venv/*' 'node_modules/*' \
+            'api-logs*' 'ui-logs*' \
+            '__pycache__/*' '.git/*' '*.zip'
+          echo "API zip size: $(du -h api-deploy.zip | cut -f1)"
+
+      - name: Deploy API to App Service
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ai-search-agent-api
+          package: api-deploy.zip
+
+  deploy-ui:
+    name: Deploy UI to App Service
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: ui/package-lock.json
+
+      - name: Install UI dependencies
+        working-directory: ui
+        run: npm ci
+
+      - name: Build UI (production)
+        working-directory: ui
+        run: npx ng build --configuration production
+        env:
+          CI: true
+
+      - name: Create UI deployment package
+        run: |
+          mkdir -p /tmp/ui-pkg
+          cp -r ui/www /tmp/ui-pkg/www
+          cp ui/server.js /tmp/ui-pkg/
+          cp ui/deploy-package.json /tmp/ui-pkg/package.json
+          cd /tmp/ui-pkg
+          zip -r $GITHUB_WORKSPACE/ui-deploy.zip .
+          echo "UI zip size: $(du -h $GITHUB_WORKSPACE/ui-deploy.zip | cut -f1)"
+
+      - name: Azure Login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ env.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Deploy UI to App Service
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ai-search-agent-ui
+          package: ui-deploy.zip
