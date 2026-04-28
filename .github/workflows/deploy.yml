@@ -201,8 +201,6 @@ jobs:
 
   deploy-api:
     name: Deploy API to App Service
-    needs: [test]
-    if: always() && !cancelled()
     runs-on: ubuntu-latest
 
     steps:
@@ -226,8 +224,6 @@ jobs:
 
   deploy-ui:
     name: Deploy UI to App Service
-    needs: [test]
-    if: always() && !cancelled()
     runs-on: ubuntu-latest
 
     steps:
