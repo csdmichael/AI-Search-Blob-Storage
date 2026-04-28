@@ -39,15 +39,22 @@ AGENT_NAME = _uc_agent["name"]
 MODEL_DEPLOYMENT_NAME = os.environ.get("MODEL_DEPLOYMENT_NAME", _uc_agent["model_deployment"])
 AGENT_INSTRUCTIONS = _uc_agent["instructions"]
 CHUNKED_INDEX = _uc_search["chunked_index"]["name"]
-SEARCH_TOP_K = int(os.environ.get("SEARCH_TOP_K", "12" if _use_case == "filter_design" else "8"))
+SEARCH_TOP_K = int(os.environ.get("SEARCH_TOP_K", "16" if _use_case == "filter_design" else "8"))
 
 if _use_case == "filter_design":
     DEFAULT_QUERY_TYPE = AzureAISearchQueryType.SIMPLE
     QUERY_TYPE_LABEL = "simple"
     AGENT_INSTRUCTIONS += (
-        "\n\nFOR SPECIFIC DOCUMENT QUERIES: If the user includes an FD-TC-XXXX identifier, "
-        "use the azure_ai_search tool result for that document and answer from the returned chunks. "
-        "Do not return a not-found response when any chunk for that FD-TC document is present."
+        "\n\nGROUNDING POLICY: "
+        "Always answer strictly from azure_ai_search retrieved chunks for filter-design documents. "
+        "For document-specific queries (FD-TC-XXXX), prioritize chunks from that same document ID. "
+        "If chunks for the requested FD-TC document are present, do not return a generic not-found response. "
+        "For numeric fields, copy exact values from the retrieved text and keep units unchanged. "
+        "When multiple similarly named numeric fields exist (for example measured values vs targets/specs), prefer the field that directly matches the user term. "
+        "Prefer section-consistent extraction: design values from DESIGN PARAMETERS, measured values from TEST RESULTS, "
+        "and actions from CORRECTIVE ACTIONS. "
+        "Resolve common telecom terminology variants when matching intent, including n78 = Band 78 = Band 7 context where applicable in the corpus. "
+        "If relevant chunks are present, provide the best grounded answer instead of generic fallback text."
     )
 else:
     DEFAULT_QUERY_TYPE = AzureAISearchQueryType.SEMANTIC
@@ -118,8 +125,19 @@ def query_agent(prompt: str, credential=None):
         agent_id = agent.id
         _AGENT_ID_CACHE = agent_id
 
+    wrapped_prompt = prompt
+    if _use_case == "filter_design":
+        wrapped_prompt = (
+            "Use azure_ai_search results as the only source of truth. "
+            "For FD-TC-specific questions, prioritize chunks from that document. "
+            "If chunks for the requested document exist, do not answer with a generic not-found response. "
+            "Copy exact numeric values and units from retrieved text, and keep section semantics consistent. "
+            "Treat notation variants as equivalent when searching intent (e.g., n78, Band 78, and Band 7 context). "
+            f"\n\nUser question: {prompt}"
+        )
+
     thread = project_client.agents.threads.create()
-    project_client.agents.messages.create(thread_id=thread.id, role="user", content=prompt)
+    project_client.agents.messages.create(thread_id=thread.id, role="user", content=wrapped_prompt)
 
     run = project_client.agents.runs.create(thread_id=thread.id, agent_id=agent_id)
 
@@ -144,10 +162,13 @@ def query_agent(prompt: str, credential=None):
         # Native Azure AI Search tool is executed server-side, so no tool-output loop is needed.
         time.sleep(0.6)
 
+    response_text = ""
     for msg in project_client.agents.messages.list(thread_id=thread.id, order=ListSortOrder.ASCENDING):
         if msg.role == "assistant" and msg.text_messages:
-            return msg.text_messages[-1].text.value
-    return ""
+            response_text = msg.text_messages[-1].text.value
+            break
+
+    return response_text
 
 
 def main():
