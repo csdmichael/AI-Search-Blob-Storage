@@ -7,6 +7,7 @@ interface ChatMessage {
   text: string;
   sources?: string[];
   duration_ms?: number;
+  attempts?: number;
   timestamp: Date;
   feedbackGiven?: 'up' | 'down' | null;
   query?: string;
@@ -38,6 +39,7 @@ export class ChatPage implements OnInit {
   constructor(private api: ApiService, private route: ActivatedRoute) {}
 
   ngOnInit() {
+    this.loadHistory();
     this.route.queryParams.subscribe((params) => {
       if (params['use_case'] && this.conversations[params['use_case']]) {
         this.activeUseCase = params['use_case'];
@@ -72,11 +74,13 @@ export class ChatPage implements OnInit {
           text: res.response,
           sources: res.sources,
           duration_ms: res.duration_ms,
+          attempts: res.attempts,
           timestamp: new Date(),
           feedbackGiven: null,
           query: text,
         });
         this.isLoading = false;
+        this.saveHistory();
         this.scrollToBottom();
       },
       error: (err) => {
@@ -115,6 +119,30 @@ export class ChatPage implements OnInit {
 
   clearChat() {
     this.conversations[this.activeUseCase] = [];
+    this.saveHistory();
+  }
+
+  private saveHistory() {
+    try {
+      localStorage.setItem('chat_history', JSON.stringify(this.conversations));
+    } catch { /* quota exceeded — ignore */ }
+  }
+
+  private loadHistory() {
+    try {
+      const saved = localStorage.getItem('chat_history');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        for (const key of Object.keys(parsed)) {
+          if (this.conversations[key]) {
+            this.conversations[key] = parsed[key].map((m: any) => ({
+              ...m,
+              timestamp: new Date(m.timestamp),
+            }));
+          }
+        }
+      }
+    } catch { /* corrupted — ignore */ }
   }
 
   private scrollToBottom() {

@@ -91,7 +91,17 @@
   ion-chip {
     height: 24px;
     font-size: 0.75rem;
+    cursor: pointer;
   }
+}
+
+.retry-badge {
+  background: var(--ion-color-warning-tint);
+  color: var(--ion-color-warning-shade);
+  padding: 1px 6px;
+  border-radius: 8px;
+  font-size: 0.7rem;
+  font-weight: 600;
 }
 
 .message-meta {
@@ -155,13 +165,14 @@ ion-footer ion-toolbar {
 .chat-input {
   flex: 1;
   border: 1px solid var(--ion-color-light-shade, #d7d8da);
-  border-radius: 20px;
+  border-radius: 16px;
   padding: 0.65rem 1rem;
   font-size: 0.95rem;
-  resize: none;
+  resize: vertical;
   outline: none;
   font-family: inherit;
-  max-height: 120px;
+  min-height: 56px;
+  max-height: 160px;
   background: var(--ion-color-light, #f4f5f8);
 
   &:focus {

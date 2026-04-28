@@ -9,6 +9,7 @@ export interface ChatResponse {
   use_case: string;
   duration_ms: number;
   sources: string[];
+  attempts: number;
 }
 
 export interface BatchResultItem {
@@ -49,6 +50,28 @@ export interface FeedbackRequest {
   use_case: string;
 }
 
+export interface DocumentEntry {
+  filename: string;
+  doc_id: string;
+  type: string;
+  size_kb: number;
+  title?: string;
+  status?: string;
+  document_number?: string;
+}
+
+export interface DocumentListResponse {
+  use_case: string;
+  total: number;
+  documents: DocumentEntry[];
+}
+
+export interface DocumentDetail {
+  format: string;
+  doc_id: string;
+  content: any;
+}
+
 @Injectable({ providedIn: 'root' })
 export class ApiService {
   private base = environment.apiUrl;
@@ -73,5 +96,13 @@ export class ApiService {
 
   getFeedback(useCase: string): Observable<any[]> {
     return this.http.get<any[]>(`${this.base}/feedback`, { params: { use_case: useCase } });
+  }
+
+  listDocuments(useCase: string): Observable<DocumentListResponse> {
+    return this.http.get<DocumentListResponse>(`${this.base}/documents`, { params: { use_case: useCase } });
+  }
+
+  getDocument(docId: string, useCase: string): Observable<DocumentDetail> {
+    return this.http.get<DocumentDetail>(`${this.base}/documents/${docId}`, { params: { use_case: useCase } });
   }
 }

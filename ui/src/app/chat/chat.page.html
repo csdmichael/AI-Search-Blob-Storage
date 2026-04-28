@@ -2,13 +2,17 @@
   <ion-toolbar color="primary">
     <ion-title>AI Search Agent</ion-title>
     <ion-buttons slot="end">
-      <ion-button routerLink="/prompts" fill="clear">
-        <ion-icon name="list-outline" slot="start"></ion-icon>
-        Prompts
+      <ion-button routerLink="/prompts" fill="clear" title="Sample Prompts">
+        <ion-icon name="list-outline" slot="icon-only"></ion-icon>
       </ion-button>
-      <ion-button (click)="clearChat()" fill="clear">
-        <ion-icon name="trash-outline" slot="start"></ion-icon>
-        Clear
+      <ion-button routerLink="/documents" fill="clear" title="Documents">
+        <ion-icon name="folder-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+      <ion-button routerLink="/history" fill="clear" title="History">
+        <ion-icon name="time-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+      <ion-button (click)="clearChat()" fill="clear" title="Clear Chat">
+        <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -41,9 +45,12 @@
         </div>
         <div class="message-body">
           <div class="message-text" [innerHTML]="msg.text | formatResponse"></div>
-          <!-- Sources -->
+          <!-- Sources — clickable to open doc viewer -->
           <div class="sources" *ngIf="msg.sources && msg.sources.length">
-            <ion-chip *ngFor="let src of msg.sources" color="tertiary" size="small" outline>
+            <ion-chip *ngFor="let src of msg.sources" color="tertiary" size="small" outline
+                      [routerLink]="['/documents', src]"
+                      [queryParams]="{use_case: activeUseCase}"
+                      class="clickable-chip">
               <ion-icon name="document-outline"></ion-icon>
               <ion-label>{{ src }}</ion-label>
             </ion-chip>
@@ -51,6 +58,7 @@
           <!-- Metadata + feedback -->
           <div class="message-meta" *ngIf="msg.role === 'assistant'">
             <span class="duration" *ngIf="msg.duration_ms">{{ msg.duration_ms }}ms</span>
+            <span class="retry-badge" *ngIf="msg.attempts && msg.attempts > 1">retry ×{{ msg.attempts }}</span>
             <span class="feedback-btns">
               <ion-button fill="clear" size="small"
                           [color]="msg.feedbackGiven === 'up' ? 'success' : 'medium'"
@@ -93,7 +101,7 @@
         [(ngModel)]="inputText"
         (keydown)="onKeyDown($event)"
         placeholder="Ask a question..."
-        rows="1"
+        rows="3"
       ></textarea>
       <ion-button
         class="send-btn"

@@ -94,6 +94,7 @@ class ChatResponse(BaseModel):
     use_case: str
     duration_ms: int
     sources: list[str] = []
+    attempts: int = 1
 
 class BatchRequest(BaseModel):
     prompts: list[str]
@@ -149,6 +150,16 @@ def _query_agent(prompt: str, use_case: str) -> str:
     result = query_agent(prompt, credential=DefaultAzureCredential())
     return result or ""
 
+def _query_agent_with_retry(prompt: str, use_case: str, max_retries: int = 3) -> tuple[str, int]:
+    """Query agent with retry circuit breaker — retries on fallback/empty responses."""
+    for attempt in range(1, max_retries + 1):
+        result = _query_agent(prompt, use_case)
+        if result.strip() and not _is_fallback(result):
+            return result, attempt
+        if attempt < max_retries:
+            time.sleep(0.5)
+    return result, max_retries
+
 def _feedback_file(use_case: str) -> str:
     return os.path.join(config.uc_data_dir(use_case), "feedback_log.json")
 
@@ -178,11 +189,12 @@ def chat(req: ChatRequest):
     if req.use_case not in ("engineering_docs", "filter_design"):
         raise HTTPException(status_code=400, detail=f"Invalid use_case: {req.use_case}")
     start = time.time()
-    response_text = _query_agent(req.prompt, req.use_case)
+    response_text, attempts = _query_agent_with_retry(req.prompt, req.use_case)
     duration = int((time.time() - start) * 1000)
     return ChatResponse(
         prompt=req.prompt, response=response_text, use_case=req.use_case,
         duration_ms=duration, sources=_extract_sources(response_text),
+        attempts=attempts,
     )
 
 @app.post("/api/batch", response_model=BatchResponse)
@@ -230,3 +242,53 @@ def submit_feedback(req: FeedbackRequest):
 @app.get("/api/feedback")
 def get_feedback(use_case: str = "engineering_docs"):
     return _load_feedback(use_case)
+
+
+# ── Document browser endpoints ──────────────────────────────────────
+
+@app.get("/api/documents")
+def list_documents(use_case: str = "engineering_docs"):
+    """List all documents for a use case with metadata."""
+    if use_case not in ("engineering_docs", "filter_design"):
+        raise HTTPException(status_code=400, detail=f"Invalid use_case: {use_case}")
+    data_dir = config.uc_data_dir(use_case)
+    doc_cfg = config.uc_document_config(use_case)
+    prefix = doc_cfg["document_prefix"]
+    docs = []
+    for f in sorted(os.listdir(data_dir)):
+        if not f.startswith(prefix):
+            continue
+        path = os.path.join(data_dir, f)
+        ext = os.path.splitext(f)[1].lower()
+        doc_id = os.path.splitext(f)[0]
+        entry = {"filename": f, "doc_id": doc_id, "type": ext.lstrip("."), "size_kb": round(os.path.getsize(path) / 1024, 1)}
+        # For JSON files, extract key metadata
+        if ext == ".json":
+            try:
+                with open(path, "r", encoding="utf-8") as fh:
+                    meta = json.load(fh)
+                entry["title"] = meta.get("title", "")
+                entry["status"] = meta.get("status", "")
+                entry["document_number"] = meta.get("document_number", doc_id)
+            except Exception:
+                pass
+        docs.append(entry)
+    return {"use_case": use_case, "total": len(docs), "documents": docs}
+
+
+@app.get("/api/documents/{doc_id}")
+def get_document(doc_id: str, use_case: str = "engineering_docs"):
+    """Get document content by ID (returns JSON structured data or text)."""
+    if use_case not in ("engineering_docs", "filter_design"):
+        raise HTTPException(status_code=400, detail=f"Invalid use_case: {use_case}")
+    data_dir = config.uc_data_dir(use_case)
+    # Try JSON first (structured), then txt/pdf
+    json_path = os.path.join(data_dir, f"{doc_id}.json")
+    if os.path.exists(json_path):
+        with open(json_path, "r", encoding="utf-8") as f:
+            return {"format": "json", "doc_id": doc_id, "content": json.load(f)}
+    txt_path = os.path.join(data_dir, f"{doc_id}.txt")
+    if os.path.exists(txt_path):
+        with open(txt_path, "r", encoding="utf-8") as f:
+            return {"format": "text", "doc_id": doc_id, "content": f.read()}
+    raise HTTPException(status_code=404, detail=f"Document {doc_id} not found")

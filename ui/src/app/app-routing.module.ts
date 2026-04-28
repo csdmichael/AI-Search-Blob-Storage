@@ -11,6 +11,14 @@ const routes: Routes = [
     loadChildren: () => import('./prompts/prompts.module').then(m => m.PromptsPageModule),
   },
   {
+    path: 'documents',
+    loadChildren: () => import('./documents/documents.module').then(m => m.DocumentsPageModule),
+  },
+  {
+    path: 'history',
+    loadChildren: () => import('./history/history.module').then(m => m.HistoryPageModule),
+  },
+  {
     path: 'home',
     loadChildren: () => import('./home/home.module').then(m => m.HomePageModule),
   },
