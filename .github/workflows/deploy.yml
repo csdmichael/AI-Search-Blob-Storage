@@ -209,10 +209,10 @@ jobs:
 
       - name: Create API deployment package
         run: |
-          tar -cf api-deploy.zip --format=zip \
-            --exclude=ui --exclude=.venv --exclude=node_modules \
-            --exclude="api-logs*" --exclude="ui-logs*" \
-            --exclude=__pycache__ --exclude=.git --exclude="*.zip" .
+          zip -r api-deploy.zip . \
+            -x 'ui/*' '.venv/*' 'node_modules/*' \
+            'api-logs*' 'ui-logs*' \
+            '__pycache__/*' '.git/*' '*.zip'
           echo "API zip size: $(du -h api-deploy.zip | cut -f1)"
 
       - name: Deploy API to App Service
@@ -254,7 +254,7 @@ jobs:
           cp ui/server.js /tmp/ui-pkg/
           cp ui/deploy-package.json /tmp/ui-pkg/package.json
           cd /tmp/ui-pkg
-          tar -cf $GITHUB_WORKSPACE/ui-deploy.zip --format=zip .
+          zip -r $GITHUB_WORKSPACE/ui-deploy.zip .
           echo "UI zip size: $(du -h $GITHUB_WORKSPACE/ui-deploy.zip | cut -f1)"
 
       - name: Deploy UI to App Service
