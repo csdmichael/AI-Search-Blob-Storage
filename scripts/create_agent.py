@@ -39,7 +39,7 @@ AGENT_NAME = _uc_agent["name"]
 MODEL_DEPLOYMENT_NAME = os.environ.get("MODEL_DEPLOYMENT_NAME", _uc_agent["model_deployment"])
 AGENT_INSTRUCTIONS = _uc_agent["instructions"]
 CHUNKED_INDEX = _uc_search["chunked_index"]["name"]
-SEARCH_TOP_K = int(os.environ.get("SEARCH_TOP_K", "16" if _use_case == "filter_design" else "8"))
+SEARCH_TOP_K = int(os.environ.get("SEARCH_TOP_K", "5" if _use_case == "filter_design" else "8"))
 
 if _use_case == "filter_design":
     DEFAULT_QUERY_TYPE = AzureAISearchQueryType.SEMANTIC
