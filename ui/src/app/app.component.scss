@@ -16,6 +16,14 @@ ion-menu {
   font-weight: 600;
 }
 
+.uc-select {
+  --color: #fff;
+  --placeholder-color: #fff;
+  font-size: 0.85rem;
+  margin-right: 8px;
+  max-width: 200px;
+}
+
 .menu-footer {
   position: absolute;
   bottom: 0;

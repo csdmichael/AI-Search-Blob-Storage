@@ -1,14 +1,5 @@
 <ion-content>
   <div class="prompts-container">
-    <!-- Run bar -->
-    <div class="run-bar">
-      <span class="run-bar-title">Sample Prompts</span>
-      <ion-button (click)="runSelected()" [disabled]="selectedCount === 0 || isRunning" fill="solid" color="success" size="small">
-        <ion-icon name="play" slot="start"></ion-icon>
-        Run {{ selectedCount > 0 ? '(' + selectedCount + ')' : '' }}
-      </ion-button>
-    </div>
-
     <!-- Select All -->
     <ion-item lines="none" class="select-all-bar">
       <ion-checkbox slot="start" [checked]="allSelected" (ionChange)="toggleAll($any($event).detail.checked)"></ion-checkbox>
@@ -79,5 +70,15 @@
         </ion-button>
       </ion-item>
     </div>
+  </div>
+
+  <!-- Floating Run button -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button color="success" (click)="runSelected()" [disabled]="selectedCount === 0 || isRunning">
+      <ion-icon name="play"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <div class="fab-label" *ngIf="selectedCount > 0 && !isRunning">
+    Run {{ selectedCount }}
   </div>
 </ion-content>
