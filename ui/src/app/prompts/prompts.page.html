@@ -1,17 +1,14 @@
-<ion-header>
-  <ion-toolbar class="run-bar">
-    <ion-title size="small">Sample Prompts</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="runSelected()" [disabled]="selectedCount === 0 || isRunning" fill="solid" color="success">
+<ion-content>
+  <div class="prompts-container">
+    <!-- Run bar -->
+    <div class="run-bar">
+      <span class="run-bar-title">Sample Prompts</span>
+      <ion-button (click)="runSelected()" [disabled]="selectedCount === 0 || isRunning" fill="solid" color="success" size="small">
         <ion-icon name="play" slot="start"></ion-icon>
         Run {{ selectedCount > 0 ? '(' + selectedCount + ')' : '' }}
       </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+    </div>
 
-<ion-content>
-  <div class="prompts-container">
     <!-- Select All -->
     <ion-item lines="none" class="select-all-bar">
       <ion-checkbox slot="start" [checked]="allSelected" (ionChange)="toggleAll($any($event).detail.checked)"></ion-checkbox>

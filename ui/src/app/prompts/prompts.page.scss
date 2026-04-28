@@ -4,6 +4,24 @@
   padding: 0.5rem;
 }
 
+.run-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+  background: var(--ion-color-light);
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+
+  .run-bar-title {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+}
+
 .select-all-bar {
   --background: var(--ion-color-light);
   border-radius: 8px;
