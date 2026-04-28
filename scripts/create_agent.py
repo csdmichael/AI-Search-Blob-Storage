@@ -73,7 +73,7 @@ def main():
                         index_connection_id=search_connection.id,
                         index_name=AI_SEARCH_INDEX_NAME,
                         query_type=AzureAISearchQueryType.SEMANTIC,
-                        top_k=5,
+                        top_k=3,
                     )
                 ]
             )
