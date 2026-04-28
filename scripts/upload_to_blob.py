@@ -22,6 +22,7 @@ STORAGE_URL = config.storage_url()
 DATA_DIR = config.uc_data_dir()
 _doc_cfg = config.uc_document_config()
 FILE_FORMAT = _doc_cfg["file_format"]
+DOC_PREFIX = _doc_cfg["document_prefix"]
 
 
 def main():
@@ -64,6 +65,26 @@ def main():
         print(f"  [{i}/{len(files)}] Uploaded: {filename}")
 
     print(f"\nSuccessfully uploaded {len(files)} documents to {STORAGE_URL}/{CONTAINER_NAME}")
+
+    # Also upload JSON sidecar files (structured metadata for AI Search indexing).
+    # Each primary document has a companion JSON file containing all structured fields
+    # (e.g. filter type, frequency band, substrate material, S-parameters) that the
+    # AI Search chunked index uses directly.  Uploading JSON alongside the primary
+    # document ensures the blob container is the single source of truth and allows
+    # future indexers or downstream consumers to read the structured data from storage.
+    json_files = sorted([
+        f for f in os.listdir(DATA_DIR)
+        if f.endswith(".json") and f.startswith(DOC_PREFIX)
+    ])
+    if json_files:
+        print(f"\nUploading {len(json_files)} JSON sidecar files to container '{CONTAINER_NAME}'...")
+        for i, filename in enumerate(json_files, 1):
+            filepath = os.path.join(DATA_DIR, filename)
+            blob_client = container_client.get_blob_client(filename)
+            with open(filepath, "rb") as data:
+                blob_client.upload_blob(data, overwrite=True)
+            print(f"  [{i}/{len(json_files)}] Uploaded: {filename}")
+        print(f"Successfully uploaded {len(json_files)} JSON sidecar files to {STORAGE_URL}/{CONTAINER_NAME}")
 
 
 if __name__ == "__main__":

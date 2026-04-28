@@ -8,8 +8,8 @@ Each use case has its own **README, architecture diagram, and demo script** read
 
 | Use Case | Folder | Demo Focus | Agent | Docs |
 |----------|--------|-----------|-------|------|
-| **Manufacturing Inspection** | [`use-cases/engineering-docs/`](use-cases/engineering-docs/) | AI Search best practices + **Fine-tuning & evaluation** | `Eng-Docs-Search-Agent` | 100 `.txt` (MFG-TC-XXXX) |
-| **RF Filter Design** | [`use-cases/filter-design/`](use-cases/filter-design/) | AI Search best practices + **Ranking & feedback loop** (90%→95%) | `Filter-Design-Agent` | 100 `.pdf` (FD-TC-XXXX) |
+| **Manufacturing Inspection** | [`use-cases/engineering-docs/`](use-cases/engineering-docs/) | AI Search best practices + **Fine-tuning & evaluation** | `Eng-Docs-Search-Agent` | 100 `.txt` + 100 `.json` (MFG-TC-XXXX) |
+| **RF Filter Design** | [`use-cases/filter-design/`](use-cases/filter-design/) | AI Search best practices + **Ranking & feedback loop** (90%→95%) | `Filter-Design-Agent` | 100 `.pdf` + 100 `.json` (FD-TC-XXXX) |
 
 > **Solution Engineers**: Go directly to the use case folder for a self-contained README and [DEMO_SCRIPT.md](use-cases/engineering-docs/DEMO_SCRIPT.md) tailored for customer presentations.
 
@@ -23,7 +23,8 @@ Each use case has its own **README, architecture diagram, and demo script** read
 
 | Component | Resource | Description |
 |-----------|----------|-------------|
-| **Azure Blob Storage** | `aistoragemyaacoub` | Stores documents in separate containers per use case |
+| **Azure Blob Storage** | `aistoragemyaacoub` | Stores documents in separate containers per use case; each primary document (PDF/TXT) is accompanied by a structured JSON sidecar file |
+| **JSON Sidecar Files** | `<DOC_ID>.json` beside each PDF/TXT | Machine-readable structured metadata (all fields, measurements, sections) that eliminates lossy PDF/TXT extraction and powers the AI Search chunked index with 100% field accuracy |
 | **Private VNET & Endpoints** | Existing VNET | Blob Storage and AI Search accessed via private endpoints |
 | **Azure AI Search** | `ai-search-my` | Indexes documents with semantic + keyword search; refreshes daily at 8 AM PST |
 | **AI Foundry Agents** | `Eng-Docs-Search-Agent`, `Filter-Design-Agent` | Answer queries using only AI Search — no web search or fabrication |
@@ -271,7 +272,47 @@ Manual trigger supports selecting a specific use case via `workflow_dispatch`.
 
 ---
 
-## AI Search Best Practices
+## JSON Sidecar Files
+
+Each primary document (`.txt` or `.pdf`) is generated alongside a companion **JSON sidecar file** that stores every field as structured data. The JSON file is uploaded to Blob Storage beside the primary document and is used by `chunk_and_index.py` as the authoritative source for the AI Search chunked index.
+
+### Why JSON Sidecars?
+
+| Without JSON (PDF/TXT extraction) | With JSON Sidecars |
+|---|---|
+| PDF text extraction is lossy and layout-dependent | All fields are exact — no parsing errors |
+| Numbers can be mis-read or truncated | Numeric fields stored as typed values |
+| Cross-document queries (e.g. "all FBAR filters with IL < 1.5 dB") often fail | Filterable/facetable metadata fields enable precise cross-document queries |
+| Agent accuracy: ~50–70% (PDF extraction + keyword search) | Agent accuracy: 92% (Eng Docs) / 100% (Filter Design) |
+
+### JSON Sidecar Content
+
+Each sidecar contains:
+- All structured metadata fields (`document_number`, `title`, `status`, `filter_type`, `substrate_material`, etc.)
+- All numeric measurements (`insertion_loss_measured_db`, `q_factor`, `defect_density_per_cm2`, etc.)
+- All document sections as named string fields (`1_OBJECTIVE`, `2_SCOPE`, … `9_SIGN_OFF`)
+
+`chunk_and_index.py` auto-detects JSON sidecars in the data directory and uses them in preference to raw PDF/TXT files.
+
+---
+
+## Agent Accuracy Results
+
+| Use Case | Index Format | Query Type | Demo Accuracy | Fine-Tune Citation Accuracy |
+|----------|-------------|-----------|:---:|:---:|
+| **Manufacturing Inspection** | JSON (structured) | Semantic | **10/10 = 100%** | **92%** (50 samples) |
+| **RF Filter Design** | JSON (structured) | Semantic | **10/10 = 100%** | **100%** (20 samples) |
+
+> Previous accuracy before JSON sidecars + semantic query type: ~50–70% (PDF/TXT extraction with keyword search).
+
+See full reports:
+- [Engineering Docs Evaluation](use-cases/engineering-docs/evaluation_results.md)
+- [Filter Design Evaluation](use-cases/filter-design/evaluation_results.md)
+- [Filter Design Ranking Report](use-cases/filter-design/ranking_report.md)
+
+---
+
+
 
 ### 1. Section-Level Chunking
 
@@ -394,9 +435,11 @@ AI-Search-Blob-Storage/
 ├── data/
 │   ├── engineering-docs/                 # 100 manufacturing test cases (.txt)
 │   │   ├── MFG-TC-0001.txt ... MFG-TC-0100.txt
+│   │   ├── MFG-TC-0001.json ... MFG-TC-0100.json  (JSON sidecars)
 │   │   └── manifest.json
 │   └── filter-design-docs/              # 100 filter design specs (.pdf)
 │       ├── FD-TC-0001.pdf ... FD-TC-0100.pdf
+│       ├── FD-TC-0001.json ... FD-TC-0100.json    (JSON sidecars)
 │       └── manifest.json
 ├── docs/
 │   ├── architecture.png                  # Combined architecture diagram

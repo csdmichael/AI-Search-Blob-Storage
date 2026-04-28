@@ -52,7 +52,7 @@ jobs:
       - name: Generate Engineering Documents
         run: python scripts/generate_docs.py
 
-      - name: Upload Documents to Blob Storage
+      - name: Upload Documents and JSON Sidecars to Blob Storage
         run: python scripts/upload_to_blob.py
 
       - name: Create AI Search Index and Indexer
@@ -107,7 +107,7 @@ jobs:
       - name: Generate Filter Design Documents (PDF)
         run: python scripts/generate_filter_docs.py
 
-      - name: Upload Documents to Blob Storage
+      - name: Upload Documents and JSON Sidecars to Blob Storage
         run: python scripts/upload_to_blob.py
 
       - name: Create AI Search Index and Indexer
