@@ -31,8 +31,8 @@ _ranking_cfg = config.agent_config()["ranking"]
 _doc_cfg = config.uc_document_config()
 
 SEARCH_ENDPOINT = config.search_endpoint()
-INDEX_NAME = _uc_search["standard_index"]["name"]
-SEMANTIC_CONFIG_NAME = _uc_search["standard_index"]["semantic_config_name"]
+INDEX_NAME = _uc_search["chunked_index"]["name"]
+SEMANTIC_CONFIG_NAME = _uc_search["chunked_index"]["semantic_config_name"]
 PROJECT_ENDPOINT = config.project_endpoint()
 AGENT_NAME = _uc_agent["name"]
 DOC_PREFIX = _doc_cfg["document_prefix"]
@@ -113,7 +113,7 @@ def ranked_search(search_client: SearchClient, query: str, top: int = 10) -> lis
 
     scored = []
     for r in results:
-        doc_name = r.get("metadata_storage_name", "")
+        doc_name = r.get("source_file", r.get("document_number", ""))
         base_score = r.get("@search.reranker_score", r.get("@search.score", 0))
         boost = boost_map.get(doc_name, 1.0)
         final_score = base_score * boost
@@ -301,7 +301,7 @@ def generate_synthetic_feedback(search_client: SearchClient, n_queries: int = 30
     for query in queries:
         results = search_client.search(search_text=query, top=3)
         for r in results:
-            doc_name = r.get("metadata_storage_name", "")
+            doc_name = r.get("source_file", r.get("document_number", ""))
             score = r.get("@search.score", 0)
             # Heuristic: if score > 5, likely relevant
             relevant = score > 5.0

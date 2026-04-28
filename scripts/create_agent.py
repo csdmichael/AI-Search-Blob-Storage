@@ -42,8 +42,8 @@ CHUNKED_INDEX = _uc_search["chunked_index"]["name"]
 SEARCH_TOP_K = int(os.environ.get("SEARCH_TOP_K", "16" if _use_case == "filter_design" else "8"))
 
 if _use_case == "filter_design":
-    DEFAULT_QUERY_TYPE = AzureAISearchQueryType.SIMPLE
-    QUERY_TYPE_LABEL = "simple"
+    DEFAULT_QUERY_TYPE = AzureAISearchQueryType.SEMANTIC
+    QUERY_TYPE_LABEL = "semantic"
     AGENT_INSTRUCTIONS += (
         "\n\nGROUNDING POLICY: "
         "Always answer strictly from azure_ai_search retrieved chunks for filter-design documents. "

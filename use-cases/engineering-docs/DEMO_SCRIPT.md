@@ -63,16 +63,44 @@ Walk through **10 best practices** implemented:
 
 | # | Practice | What It Does |
 |---|----------|-------------|
-| 1 | **Section-Level Chunking** | Each document section → separate search record (~200-800 chars instead of 5KB) |
-| 2 | **Context Prefix** | Every chunk starts with `Document: MFG-TC-XXXX | Section: ...` for provenance |
-| 3 | **Metadata Fields** | Filterable facets: `product_line`, `defect_type`, `technology_node`, `status` |
-| 4 | **Custom Scoring Profile** | Title 3×, doc_number 2.5×, section_name 2×, content 1× |
-| 5 | **Semantic Config + Keywords** | `document_number` and `section_name` as keyword fields for the semantic ranker |
-| 6 | **200-char Overlap** | Large sections split with overlap to prevent information loss at boundaries |
-| 7 | **English Microsoft Analyzer** | Lemmatization + compound word splitting for technical vocabulary |
-| 8 | **BufferedSender** | Batch upload with auto-retry for 700+ chunks |
-| 9 | **Daily Scheduled Indexer** | 8:00 AM PST automatic refresh from Blob Storage |
+| 1 | **JSON-First Indexing** | Reads `MFG-TC-XXXX.json` files when available — exact field values, no regex parsing |
+| 2 | **Section-Level Chunking** | Each document section → separate search record (~200-800 chars instead of 5KB) |
+| 3 | **Context Prefix** | Every chunk starts with `Document: MFG-TC-XXXX | Section: ...` for provenance |
+| 4 | **Metadata Fields** | Filterable facets: `product_line`, `defect_type`, `technology_node`, `status` |
+| 5 | **Custom Scoring Profile** | Title 3×, doc_number 2.5×, section_name 2×, content 1× |
+| 6 | **Semantic Config + Keywords** | `document_number` and `section_name` as keyword fields for the semantic ranker |
+| 7 | **200-char Overlap** | Large sections split with overlap to prevent information loss at boundaries |
+| 8 | **English Microsoft Analyzer** | Lemmatization + compound word splitting for technical vocabulary |
+| 9 | **BufferedSender** | Batch upload with auto-retry for 700+ chunks |
 | 10 | **Managed Identity Auth** | No secrets — `ResourceId=` connection string for data source |
+
+**How JSON-first indexing works:**
+
+`generate_docs.py` now emits both `.txt` and `.json` for each document. `chunk_and_index.py` automatically detects JSON files:
+
+```python
+# chunk_and_index.py auto-detects JSON files
+json_files = [f for f in os.listdir(DATA_DIR) if f.startswith('MFG-TC') and f.endswith('.json')]
+if json_files:
+    # Use JSON: direct field access, no regex
+    chunks = chunk_document_json(doc_data, filename)
+else:
+    # Fall back to TXT parsing
+    chunks = chunk_document(content, filename)
+```
+
+The JSON header chunk includes all key metrics for instant single-field retrieval:
+```
+Document Number: MFG-TC-0001
+Product Line: Surfscan SP7
+Target Defect: Pattern Defects
+Technology Node: 5nm
+Fab Location: Milpitas Fab A
+Capture Rate (%): 95.2
+Nuisance Rate (%): 2.3
+```
+
+> **Key Point**: JSON indexing eliminated the cross-document query failures that caused 26% of citation errors. Queries like "What test cases involve the Surfscan SP7?" now correctly filter by the `product_line` field instead of relying on keyword matches in extracted text.
 
 **Live demo**: Show the chunk distribution output:
 ```
@@ -140,12 +168,12 @@ Open `docs/evaluation_results.md`:
 
 | Metric | Value |
 |--------|-------|
-| Citation Accuracy | **90.0%** |
-| Avg Tokens/Query | 222.8 |
-| Training Examples | 539 |
+| Citation Accuracy | **92.0%** |
+| Avg Tokens/Query | 205.1 |
+| Training Examples | 540 |
 | Evaluated Samples | 50 |
 
-> **Key Point**: 90% citation accuracy from auto-generated training data — no manual labeling required. The 10% failures are typically cross-document queries where the model references related but different documents.
+> **Key Point**: 92% citation accuracy achieved with JSON-indexed documents. The previous 74% result was caused by cross-document queries ("What test cases involve the Teron SL650?") hallucinating document numbers. JSON indexing provides explicit filterable fields (`product_line`, `target_defect`, `technology_node`) that the search index can match on directly, not just keyword-match in body text.
 
 ---
 

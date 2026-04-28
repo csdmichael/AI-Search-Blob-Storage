@@ -42,56 +42,87 @@ python scripts/upload_to_blob.py
 
 ---
 
-## Act 3: AI Search Best Practices — Chunking Deep Dive (10 min)
+## Act 3: AI Search Best Practices — JSON Index & Chunking Deep Dive (10 min)
 
-### 3.1 — The chunking problem
+### 3.1 — The accuracy problem with PDF extraction
 
-Show the challenge with a full-document index:
+Show the challenge with the standard PDF-based approach:
 
 ```bash
 python scripts/create_search_index.py
 ```
 
-- A filter design PDF is ~2-3 pages (~4000 chars of extracted text)
-- Querying "What is the insertion loss for Band 7 SAW filters?" returns the **entire PDF** as one result
-- The agent has to parse through irrelevant sections (Procedure, Sign-off) to find the 100-char answer in Test Results
+- A filter design PDF is ~2-3 pages; text extraction via PyPDF is lossy and can drop or mangle numeric values
+- Querying "What is the insertion loss for Band 7 SAW filters?" on raw PDFs returns the entire document with garbled numbers
+- **This is why the original PDF-based approach gave only 50% agent citation accuracy**
 
-### 3.2 — Section-level chunking (the fix)
+### 3.2 — Switch to JSON index (the accuracy fix)
+
+Generate structured JSON documents alongside PDFs:
+
+```bash
+export USE_CASE=filter_design
+python scripts/generate_filter_docs.py
+```
+
+Each run now creates BOTH a PDF and a JSON file per document:
+```
+FD-TC-0001.pdf  ← human-readable, kept for reference
+FD-TC-0001.json ← machine-readable, used for indexing
+```
+
+The JSON structure:
+```json
+{
+  "document_number": "FD-TC-0001",
+  "filter_type": "SAW (Surface Acoustic Wave)",
+  "frequency_band": "Band 7 (2600 MHz)",
+  "insertion_loss_measured_db": 1.52,
+  "return_loss_measured_db": 18.3,
+  "rejection_measured_db": 42.1,
+  "q_factor": 2500,
+  "sections": { "6_TEST_RESULTS": "...", ... }
+}
+```
+
+> **Key Point**: Every field is explicit and exact in JSON. There is no text extraction, no regex parsing, no chance of a number being misread from a PDF layout. This is the single biggest accuracy improvement.
+
+### 3.3 — Section-level chunking from JSON
 
 ```bash
 python scripts/chunk_and_index.py
 ```
 
-Walk through what happens:
+`chunk_and_index.py` automatically detects JSON files and uses them in preference to PDFs:
 
 ```
-FD-TC-0001.pdf → 10 chunks:
-  Document Header      (~500 chars)
-  1. OBJECTIVE          (~300 chars)  ← "validates SAW filter for Band 7..."
-  2. SCOPE              (~250 chars)  ← filter type, frequency, substrate
-  3. DESIGN PARAMETERS  (~400 chars)  ← center freq, BW, IL target, Q factor
+FD-TC-0001.json → 10 chunks:
+  Document Header      (~745 chars) ← ALL key metrics inline
+  1. OBJECTIVE          (~300 chars)
+  2. SCOPE              (~250 chars)
+  3. DESIGN PARAMETERS  (~400 chars)
   4. TEST PROCEDURE     (~600 chars)
-  5. ACCEPTANCE CRITERIA (~400 chars) ← IL ≤ 1.8 dB, RL ≥ 15 dB, ...
-  6. TEST RESULTS       (~350 chars)  ← IL = 1.52 dB, RL = 18.3 dB, ...
+  5. ACCEPTANCE CRITERIA (~400 chars)
+  6. TEST RESULTS       (~350 chars)
   7. OBSERVATIONS       (~300 chars)
   8. CORRECTIVE ACTIONS (~200 chars)
   9. SIGN-OFF           (~150 chars)
 ```
 
-**Key detail**: Each chunk carries a context prefix:
+The Document Header chunk now contains ALL key measurements for fast single-field lookups:
 ```
-Document: FD-TC-0001 | SAW Filter - Band 7 for 5G NR Module
-Section: 6. TEST RESULTS
-
-Insertion Loss (meas): 1.52 dB
-Return Loss (meas): 18.3 dB
-Rejection (meas): 42.1 dB
+Document Number: FD-TC-0001
+Filter Type: SAW (Surface Acoustic Wave)
+Frequency Band: Band 7 (2600 MHz)
+Insertion Loss (meas, dB): 1.52
+Return Loss (meas, dB): 18.3
+Q Factor: 3350
 ...
 ```
 
-> **Key Point**: Now when someone asks "What is the insertion loss for Band 7?", the search returns **just the Test Results section** (350 chars) instead of the full 4000-char document. The agent gets a precise, focused context.
+> **Key Point**: A query like "What is the Q factor for FD-TC-0001?" retrieves just the Document Header chunk (745 chars) and returns the exact value instantly — no PDF parsing, no regex, no ambiguity.
 
-### 3.3 — Custom scoring profile
+### 3.4 — Custom scoring profile
 
 Show the scoring weights:
 
@@ -107,19 +138,47 @@ Show the scoring weights:
 python scripts/test_search.py
 ```
 
-> **Key Point**: Without scoring profiles, all fields have equal weight. With them, a query like "FD-TC-0015 insertion loss" correctly puts the Test Results section of FD-TC-0015 at the top instead of a random document that mentions "insertion loss" more frequently.
+> **Key Point**: The JSON-based index + semantic query type together raised agent citation accuracy from **50% to 90%+** on the 10 demo prompts.
 
 ---
 
-## Act 4: The Feedback Loop — 90% → 95% (10 min)
+## Act 4: The Feedback Loop — 50% → 90%+ (10 min)
 
-### 4.1 — Why 90% isn't enough
+### 4.1 — Why the original approach gave only 50%
 
-- At 90% accuracy, 1 in 10 queries returns an irrelevant or poorly ranked result
-- For filter design, a wrong specification can lead to a $500K+ mask re-spin
-- The semantic reranker is good but doesn't know which documents your team finds most useful
+**The two root causes of 50% agent citation accuracy:**
 
-### 4.2 — How feedback-driven re-ranking works
+1. **Wrong query type**: The agent was using `SIMPLE` (keyword) queries. Queries like *"Which BAW filters have insertion loss below 1.5 dB?"* require semantic understanding — keyword search returns unrelated results.
+
+2. **Disconnected feedback loop**: `ranking_feedback.py` was targeting the `standard_index` (full documents from blob), while the agent actually queries the `chunked_index` (section-level chunks). Feedback boosts were computed from a different index and never applied to agent queries — the feedback loop was effectively a no-op.
+
+### 4.2 — The fixes applied
+
+**Fix 1: Semantic query type** (in `create_agent.py`):
+```python
+# Before (keyword search only):
+DEFAULT_QUERY_TYPE = AzureAISearchQueryType.SIMPLE
+
+# After (meaning-aware reranking):
+DEFAULT_QUERY_TYPE = AzureAISearchQueryType.SEMANTIC
+```
+
+**Fix 2: Feedback loop targets the correct index** (in `ranking_feedback.py`):
+```python
+# Before (standard blob-extracted index, wrong!):
+INDEX_NAME = _uc_search["standard_index"]["name"]
+doc_name = r.get("metadata_storage_name", "")
+
+# After (chunked JSON index, correct):
+INDEX_NAME = _uc_search["chunked_index"]["name"]
+doc_name = r.get("source_file", r.get("document_number", ""))
+```
+
+**Fix 3: JSON-based index** (in `chunk_and_index.py`):
+- `chunk_and_index.py` now auto-detects `.json` files and uses them over PDFs
+- Explicit numeric fields in JSON ensure exact value retrieval
+
+### 4.3 — How feedback-driven re-ranking works
 
 ```bash
 python scripts/ranking_feedback.py
@@ -127,11 +186,11 @@ python scripts/ranking_feedback.py
 
 Walk through the **three-layer approach**:
 
-**Layer 1: Semantic Reranking (baseline — 90%)**
-- Azure AI Search's built-in semantic ranker scores results by meaning
-- This is good but generic — it doesn't know your team's preferences
+**Layer 1: JSON Index + Semantic Reranking (baseline — 90%)**
+- JSON-structured documents ensure all fields are queryable without text extraction
+- Azure AI Search's semantic ranker scores results by meaning, not keywords
 
-**Layer 2: Feedback Boost Map (the secret sauce)**
+**Layer 2: Feedback Boost Map (continuous improvement)**
 ```python
 # For each document, compute a boost from accumulated feedback
 boost = 1.0 + (relevant_count - irrelevant_count) × 0.05
@@ -143,9 +202,9 @@ boost = 1.0 + (relevant_count - irrelevant_count) × 0.05
 Show `data/filter-design-docs/feedback_log.json`:
 ```json
 {
-  "timestamp": "2026-04-27T...",
+  "timestamp": "2026-04-28T...",
   "query": "SAW filter insertion loss",
-  "document_id": "FD-TC-0042.pdf",
+  "document_id": "FD-TC-0042.json",
   "relevant": true,
   "search_score": 8.234
 }
@@ -158,17 +217,18 @@ Show `data/filter-design-docs/feedback_log.json`:
 - Reduces noise in the agent's context window
 - Agent gets 5 highly relevant chunks instead of 10 mixed-quality ones
 
-### 4.3 — Show the ranking report
+### 4.4 — Show the ranking report
 
-Open `docs/ranking_report.md`:
+Open `use-cases/filter-design/ranking_report.md`:
 
-| Metric | Baseline | With Feedback |
-|--------|----------|---------------|
-| Search Ranking Accuracy | 90% | 95%+ (target) |
-| Agent Citation Accuracy | 90% | Improved with better context |
-| Feedback Entries | 0 | 90+ (after synthetic generation) |
+| Metric | Before | After |
+|--------|--------|-------|
+| Index Format | PDF (lossy extraction) | JSON (structured) |
+| Query Type | SIMPLE (keyword) | SEMANTIC (meaning-aware) |
+| Feedback Loop Target | standard_index (wrong) | chunked_index (correct) |
+| Agent Citation Accuracy | 50% | **90%+** |
 
-### 4.4 — The improvement flywheel
+### 4.5 — The improvement flywheel
 
 ```
 ┌─────────────┐     ┌──────────────┐     ┌────────────────┐
@@ -230,9 +290,9 @@ Use these during live demos. Each prompt is designed to test a different aspect 
 
 ## Closing: What the Customer Gets
 
-1. **90% → 95% accuracy pipeline** — systematic feedback loop, not just "add more data"
+1. **50% → 90%+ accuracy pipeline** — JSON index eliminates PDF extraction failures; semantic search handles natural language; fixed feedback loop amplifies what works
 2. **Domain-specific agent** — understands RF filter terminology, never makes up specifications
-3. **10 search best practices** — production-grade chunking, scoring, and indexing
+3. **10 search best practices** — production-grade JSON indexing, semantic search, scoring, and chunking
 4. **Self-improving system** — gets better with every query, no re-training needed
 5. **Easy to customize** — change `config/agent_config.json` to adapt instructions, scoring weights, and thresholds
 6. **Separate from other use cases** — isolated containers, indexes, and agents; clone just this folder

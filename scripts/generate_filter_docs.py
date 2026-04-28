@@ -120,8 +120,8 @@ def _generate_s_params():
     return il, rl, rej, iso
 
 
-def _generate_filter_doc_text(doc_id):
-    """Generate all text content for a filter design document."""
+def _generate_filter_doc_data(doc_id):
+    """Generate all raw data for a filter design document."""
     ftype = random.choice(FILTER_TYPES)
     band = random.choice(FREQUENCY_BANDS)
     substrate = random.choice(SUBSTRATE_MATERIALS)
@@ -147,8 +147,94 @@ def _generate_filter_doc_text(doc_id):
     il, rl, rej, iso = _generate_s_params()
     q_factor = random.randint(500, 15000)
     temp_coeff = round(random.uniform(-30, -5), 1)
-    die_size = f"{random.uniform(0.5, 3.0):.1f} x {random.uniform(0.5, 2.5):.1f} mm"
+    die_w = round(random.uniform(0.5, 3.0), 1)
+    die_h = round(random.uniform(0.5, 2.5), 1)
+    die_size = f"{die_w} x {die_h} mm"
     wafer_size = random.choice(["6-inch", "8-inch"])
+    n_resonators = random.randint(3, 12)
+    electrode_material = random.choice(['Al', 'Mo/Al', 'Mo', 'W', 'Pt/Al'])
+    passivation = random.choice(['SiO2', 'Si3N4', 'SiO2/Si3N4 stack'])
+    group_delay_var = round(random.uniform(1, 8), 1)
+    power_handling = random.randint(26, 36)
+    die_yield = round(random.uniform(80, 99), 1)
+    esd_tolerance = random.choice([500, 1000, 2000])
+    min_yield = random.randint(85, 98)
+    max_group_delay = random.randint(2, 10)
+    temp_drift = round(abs(temp_coeff) * 125 / 1e6 * center_freq, 1)
+    min_power = random.randint(25, 35)
+
+    return {
+        "doc_number": doc_number,
+        "rev": rev,
+        "ftype": ftype,
+        "band": band,
+        "substrate": substrate,
+        "app": app,
+        "tool": tool,
+        "instrument": instrument,
+        "status": status,
+        "priority": priority,
+        "engineer": engineer,
+        "reviewer": reviewer,
+        "center": center,
+        "pkg": pkg,
+        "created": created,
+        "modified": modified,
+        "center_freq": center_freq,
+        "bw": bw,
+        "il": il,
+        "rl": rl,
+        "rej": rej,
+        "iso": iso,
+        "q_factor": q_factor,
+        "temp_coeff": temp_coeff,
+        "die_size": die_size,
+        "die_w": die_w,
+        "die_h": die_h,
+        "wafer_size": wafer_size,
+        "n_resonators": n_resonators,
+        "electrode_material": electrode_material,
+        "passivation": passivation,
+        "group_delay_var": group_delay_var,
+        "power_handling": power_handling,
+        "die_yield": die_yield,
+        "esd_tolerance": esd_tolerance,
+        "min_yield": min_yield,
+        "max_group_delay": max_group_delay,
+        "temp_drift": temp_drift,
+        "min_power": min_power,
+    }
+
+
+def _generate_filter_doc_text(doc_id):
+    """Generate all text content for a filter design document."""
+    d = _generate_filter_doc_data(doc_id)
+    ftype = d["ftype"]
+    band = d["band"]
+    substrate = d["substrate"]
+    app = d["app"]
+    tool = d["tool"]
+    instrument = d["instrument"]
+    status = d["status"]
+    priority = d["priority"]
+    engineer = d["engineer"]
+    reviewer = d["reviewer"]
+    center = d["center"]
+    pkg = d["pkg"]
+    created = d["created"]
+    modified = d["modified"]
+    doc_number = d["doc_number"]
+    rev = d["rev"]
+    center_freq = d["center_freq"]
+    bw = d["bw"]
+    il = d["il"]
+    rl = d["rl"]
+    rej = d["rej"]
+    iso = d["iso"]
+    q_factor = d["q_factor"]
+    temp_coeff = d["temp_coeff"]
+    die_size = d["die_size"]
+    wafer_size = d["wafer_size"]
 
     sections = {}
 
@@ -194,6 +280,18 @@ def _generate_filter_doc_text(doc_id):
         f"mass production release."
     )
 
+    n_resonators = d["n_resonators"]
+    electrode_material = d["electrode_material"]
+    passivation = d["passivation"]
+    group_delay_var = d["group_delay_var"]
+    power_handling = d["power_handling"]
+    die_yield = d["die_yield"]
+    esd_tolerance = d["esd_tolerance"]
+    min_yield = d["min_yield"]
+    max_group_delay = d["max_group_delay"]
+    temp_drift = d["temp_drift"]
+    min_power = d["min_power"]
+
     sections["3_design_parameters"] = (
         f"Center Frequency:       {center_freq} MHz\n"
         f"Bandwidth (3 dB):       {bw} MHz\n"
@@ -205,9 +303,9 @@ def _generate_filter_doc_text(doc_id):
         f"Temperature Coefficient:{temp_coeff} ppm/°C\n"
         f"Die Size:               {die_size}\n"
         f"Wafer Size:             {wafer_size}\n"
-        f"Number of Resonators:   {random.randint(3, 12)}\n"
-        f"Electrode Material:     {random.choice(['Al', 'Mo/Al', 'Mo', 'W', 'Pt/Al'])}\n"
-        f"Passivation:            {random.choice(['SiO2', 'Si3N4', 'SiO2/Si3N4 stack'])}"
+        f"Number of Resonators:   {n_resonators}\n"
+        f"Electrode Material:     {electrode_material}\n"
+        f"Passivation:            {passivation}"
     )
 
     procedure_steps = [
@@ -232,11 +330,11 @@ def _generate_filter_doc_text(doc_id):
         f"- Insertion loss at center frequency shall be <= {round(il + 0.3, 1)} dB\n"
         f"- Return loss in passband shall be >= {round(rl - 2, 0)} dB\n"
         f"- Out-of-band rejection at +/- {round(bw * 1.5)} MHz offset >= {round(rej - 3, 0)} dB\n"
-        f"- Group delay variation across passband shall be <= {random.randint(2, 10)} ns\n"
-        f"- Temperature drift over -40°C to +85°C shall be <= {abs(temp_coeff) * 125 / 1e6 * center_freq:.1f} MHz\n"
-        f"- Power handling shall be >= +{random.randint(25, 35)} dBm at 1 dB compression\n"
-        f"- ESD tolerance >= {random.choice([500, 1000, 2000])} V (HBM)\n"
-        f"- Die yield on qualification lot >= {random.randint(85, 98)}%"
+        f"- Group delay variation across passband shall be <= {max_group_delay} ns\n"
+        f"- Temperature drift over -40°C to +85°C shall be <= {temp_drift} MHz\n"
+        f"- Power handling shall be >= +{min_power} dBm at 1 dB compression\n"
+        f"- ESD tolerance >= {esd_tolerance} V (HBM)\n"
+        f"- Die yield on qualification lot >= {min_yield}%"
     )
 
     sections["6_test_results"] = (
@@ -247,9 +345,9 @@ def _generate_filter_doc_text(doc_id):
         f"Rejection (meas):       {rej} dB\n"
         f"Isolation (meas):       {iso} dB\n"
         f"Q Factor (meas):        {q_factor}\n"
-        f"Group Delay Variation:  {random.uniform(1, 8):.1f} ns\n"
-        f"Power Handling:         +{random.randint(26, 36)} dBm\n"
-        f"Die Yield:              {random.uniform(80, 99):.1f}%\n\n"
+        f"Group Delay Variation:  {group_delay_var} ns\n"
+        f"Power Handling:         +{power_handling} dBm\n"
+        f"Die Yield:              {die_yield}%\n\n"
         f"Result Classification:  {status}"
     )
 
@@ -279,7 +377,69 @@ def _generate_filter_doc_text(doc_id):
         f"Approver:   {'Dr. ' + random.choice(['James Liu', 'Karen Mitchell', 'Hans Weber', 'Yuko Ishida']):<30s} Date: {(modified + timedelta(days=random.randint(3, 14))).strftime('%Y-%m-%d')}"
     )
 
-    return doc_number, sections
+    return doc_number, sections, d
+
+
+def _build_json_doc(d: dict, sections: dict) -> dict:
+    """Build a structured JSON document from raw data and text sections.
+
+    The JSON representation gives the search indexer direct access to every
+    structured field without relying on lossy PDF text extraction.
+    """
+    doc_number = d["doc_number"]
+    return {
+        "document_number": doc_number,
+        "revision": d["rev"],
+        "classification": CLASSIFICATION,
+        "title": f"{d['ftype']} - {d['band']} for {d['app']}",
+        "subtitle": "Design Validation and Performance Characterization",
+        "author": d["engineer"],
+        "reviewer": d["reviewer"],
+        "design_center": d["center"],
+        "created_date": d["created"].strftime("%Y-%m-%d"),
+        "last_modified": d["modified"].strftime("%Y-%m-%d"),
+        "status": d["status"],
+        "priority": d["priority"],
+        "filter_type": d["ftype"],
+        "frequency_band": d["band"],
+        "substrate_material": d["substrate"],
+        "application": d["app"],
+        "design_tool": d["tool"],
+        "measurement_instrument": d["instrument"],
+        "package_type": d["pkg"],
+        "wafer_size": d["wafer_size"],
+        "center_frequency_mhz": d["center_freq"],
+        "bandwidth_3db_mhz": d["bw"],
+        "insertion_loss_target_db": round(d["il"] + 0.3, 1),
+        "return_loss_target_db": round(d["rl"] - 2, 0),
+        "rejection_target_db": round(d["rej"] - 3, 0),
+        "isolation_target_db": round(d["iso"] - 5, 0),
+        "insertion_loss_measured_db": d["il"],
+        "return_loss_measured_db": d["rl"],
+        "rejection_measured_db": d["rej"],
+        "isolation_measured_db": d["iso"],
+        "q_factor": d["q_factor"],
+        "temperature_coefficient_ppm_per_c": d["temp_coeff"],
+        "die_size": d["die_size"],
+        "n_resonators": d["n_resonators"],
+        "electrode_material": d["electrode_material"],
+        "passivation": d["passivation"],
+        "group_delay_variation_ns": d["group_delay_var"],
+        "power_handling_dbm": d["power_handling"],
+        "die_yield_pct": d["die_yield"],
+        "esd_tolerance_v": d["esd_tolerance"],
+        "sections": {
+            "1_OBJECTIVE": sections["1_objective"],
+            "2_SCOPE": sections["2_scope"],
+            "3_DESIGN_PARAMETERS": sections["3_design_parameters"],
+            "4_TEST_PROCEDURE": sections["4_test_procedure"],
+            "5_ACCEPTANCE_CRITERIA": sections["5_acceptance_criteria"],
+            "6_TEST_RESULTS": sections["6_test_results"],
+            "7_OBSERVATIONS": sections["7_observations"],
+            "8_CORRECTIVE_ACTIONS": sections["8_corrective_actions"],
+            "9_SIGN_OFF": sections["9_signoff"],
+        },
+    }
 
 
 class FilterDesignPDF(FPDF):
@@ -320,8 +480,8 @@ class FilterDesignPDF(FPDF):
 
 
 def generate_pdf(doc_id):
-    """Generate a single filter design PDF document."""
-    doc_number, sections = _generate_filter_doc_text(doc_id)
+    """Generate a single filter design PDF document and structured JSON data."""
+    doc_number, sections, raw_data = _generate_filter_doc_text(doc_id)
     hdr = sections["header"]
 
     pdf = FilterDesignPDF()
@@ -369,29 +529,37 @@ def generate_pdf(doc_id):
     pdf.set_text_color(100, 100, 100)
     pdf.cell(0, 5, f"END OF DOCUMENT - {doc_number}", align="C")
 
-    return doc_number, pdf
+    json_doc = _build_json_doc(raw_data, sections)
+    return doc_number, pdf, json_doc
 
 
 def main():
     os.makedirs(DATA_DIR, exist_ok=True)
 
-    print(f"Generating {TOTAL_DOCUMENTS} filter design PDF documents in: {DATA_DIR}")
+    print(f"Generating {TOTAL_DOCUMENTS} filter design PDF + JSON documents in: {DATA_DIR}")
     manifest = []
 
     for i in range(1, TOTAL_DOCUMENTS + 1):
-        doc_number, pdf = generate_pdf(i)
+        doc_number, pdf, json_doc = generate_pdf(i)
         filename = f"{doc_number}.pdf"
         filepath = os.path.join(DATA_DIR, filename)
         pdf.output(filepath)
 
-        manifest.append({"id": i, "document_number": doc_number, "filename": filename})
-        print(f"  Generated: {filename}")
+        # Save structured JSON alongside the PDF — used by chunk_and_index.py
+        # for more reliable, lossy-free section extraction
+        json_filename = f"{doc_number}.json"
+        json_filepath = os.path.join(DATA_DIR, json_filename)
+        with open(json_filepath, "w", encoding="utf-8") as jf:
+            json.dump(json_doc, jf, indent=2, default=str)
+
+        manifest.append({"id": i, "document_number": doc_number, "filename": filename, "json_filename": json_filename})
+        print(f"  Generated: {filename} + {json_filename}")
 
     manifest_path = os.path.join(DATA_DIR, "manifest.json")
     with open(manifest_path, "w", encoding="utf-8") as f:
         json.dump(manifest, f, indent=2)
 
-    print(f"\nSuccessfully generated {TOTAL_DOCUMENTS} PDF documents and manifest.json in {DATA_DIR}")
+    print(f"\nSuccessfully generated {TOTAL_DOCUMENTS} PDF + JSON documents and manifest.json in {DATA_DIR}")
 
 
 if __name__ == "__main__":

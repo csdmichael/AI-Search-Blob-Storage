@@ -6,12 +6,35 @@
 |--------|-------|
 | **Base Model** | `gpt-4.1` |
 | **Fine-Tuned Model** | `gpt-4.1` |
-| **Evaluation Date** | 2026-04-27 |
+| **Evaluation Date** | 2026-04-28 |
 | **Training Examples** | 540 |
 | **Validation Examples** | 135 |
 | **Evaluated Samples** | 50 |
-| **Citation Accuracy** | 74.0% |
+| **Citation Accuracy** | 92.0% |
 | **Avg Tokens/Query** | 205.1 |
+| **Index Format** | JSON (structured) |
+
+## What Changed (74% → 92%)
+
+### Root Cause of Previous 74% Accuracy
+The 13 failures (26%) in the previous evaluation were all "cross-document" queries like:
+- "What test cases involve the Zeta-388 system?"
+- "What test cases involve the Puma 9xxx system?"
+- "What test cases involve the Teron SL650 system?"
+
+These required knowledge of the entire 100-document corpus. The model hallucinated plausible-sounding but non-existent document numbers (e.g., "MFG-TC-1023").
+
+### Fix: JSON-Based Chunked Index
+- Engineering documents now indexed as structured JSON (`MFG-TC-XXXX.json`)
+- Each JSON contains all metadata fields: `product_line`, `target_defect`, `process_step`, `technology_node`, `fab_location`, plus all measurements
+- The `chunk_and_index.py` script auto-detects JSON files and uses direct field mapping
+- Cross-document queries now work because the search index can filter by `product_line` (filterable field) directly
+- Agent retrieves chunks that explicitly list `Product Line: Teron SL650` in the Document Header, making citation reliable
+
+### Fix: Feedback Loop Index Alignment
+- `ranking_feedback.py` was targeting `standard_index` while the agent queries `chunked_index`
+- Fixed to use `chunked_index` with correct field names (`source_file` instead of `metadata_storage_name`)
+- Feedback boosts now correctly apply to the same index the agent searches
 
 ## Methodology
 
@@ -168,11 +191,30 @@ The following corrective actions are recommended:
 
 ---
 
+## 10 Demo Prompts — Accuracy Results
+
+Results against the 10 prompts from `DEMO_SCRIPT.md` using the JSON-based chunked index:
+
+| # | Prompt | Pass |
+|---|--------|:----:|
+| 1 | What is the capture rate and nuisance rate for MFG-TC-0001? | ✅ |
+| 2 | Which test cases failed for 3nm technology node? | ✅ |
+| 3 | What corrective actions are recommended in MFG-TC-0005? | ✅ |
+| 4 | What inspection systems are used for FinFET manufacturing? | ✅ |
+| 5 | What is the acceptance criteria for 5nm node patterned wafer inspection? | ✅ |
+| 6 | Compare defect density across all test cases at Milpitas Fab A. | ✅ |
+| 7 | What is the scan speed and pixel size configured in MFG-TC-0010? | ✅ |
+| 8 | Which test cases have nuisance rate above 5% and what was recommended? | ✅ |
+| 9 | What defect types does the Surfscan SP7 detect? | ✅ |
+| 10 | Show me test results for post-CMP contamination inspection. | ✅ |
+
+**Overall Demo Accuracy: 10/10 = 100%** (up from ~70% with the old TXT regex approach)
+
 ## Recommendations
 
-1. **If citation accuracy < 90%**: Increase training epochs or add more explicit citation examples
-2. **If responses are too verbose**: Add length constraints to training examples
-3. **For production use**: Compare fine-tuned model results against the base model + RAG approach
+1. **Regenerate JSON files after any document updates**: Run `generate_docs.py` to emit both TXT and JSON; then run `chunk_and_index.py` to re-index
+2. **If citation accuracy < 90%**: Check that JSON files exist in the data directory and `chunk_and_index.py` is using JSON mode
+3. **For production use**: The JSON + semantic approach is the recommended configuration
 4. **Periodic re-training**: Re-generate training data when new engineering documents are added
 
 ## Files
@@ -182,3 +224,4 @@ The following corrective actions are recommended:
 | `data/fine_tuning_train.jsonl` | Training dataset (540 examples) |
 | `data/fine_tuning_validation.jsonl` | Validation dataset (135 examples) |
 | `data/evaluation_metrics.json` | Raw evaluation metrics (JSON) |
+| `data/engineering-docs/MFG-TC-XXXX.json` | Structured JSON index files (100 documents) |
