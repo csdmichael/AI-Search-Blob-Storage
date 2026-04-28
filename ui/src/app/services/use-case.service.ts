@@ -9,8 +9,8 @@ export interface UseCaseInfo {
 }
 
 const USE_CASES: UseCaseInfo[] = [
-  { key: 'engineering_docs', label: 'Engineering Docs', docPrefix: 'MFG-TC', fileFormat: 'txt' },
   { key: 'filter_design', label: 'Filter Design', docPrefix: 'FD-TC', fileFormat: 'pdf' },
+  { key: 'engineering_docs', label: 'Engineering Docs', docPrefix: 'MFG-TC', fileFormat: 'txt' },
 ];
 
 @Injectable({ providedIn: 'root' })
