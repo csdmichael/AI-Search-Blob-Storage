@@ -305,6 +305,8 @@ python scripts/test_search.py
 
 ## Sample Search Prompts
 
+> **Tip**: These prompts are loaded from [`config/prompts_config.json`](../../../config/prompts_config.json). Add, remove, or edit prompts there to customize the UI and batch testing — no code changes needed.
+
 ### Semantic Search
 
 | # | Prompt | Expected Results |

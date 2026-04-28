@@ -67,6 +67,10 @@ def document_config() -> dict:
     return _get("document_config.json")
 
 
+def prompts_config() -> dict:
+    return _get("prompts_config.json")
+
+
 # ── Use-case-aware helpers ─────────────────────────────────────────
 
 def uc_document_config(use_case: str | None = None) -> dict:

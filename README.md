@@ -38,6 +38,7 @@ All settings are in the `config/` folder — **nothing is hardcoded** in scripts
 | [`config/search_config.json`](config/search_config.json) | Index names, semantic configs, indexer schedule, chunking params, scoring weights |
 | [`config/storage_config.json`](config/storage_config.json) | Container names per use case, upload settings |
 | [`config/document_config.json`](config/document_config.json) | Document prefix, total count, classification, diagram settings per use case |
+| [`config/prompts_config.json`](config/prompts_config.json) | Sample prompts per use case (keyword, semantic, agent) — shown in the UI and used for batch testing |
 | [`config/__init__.py`](config/__init__.py) | Python config loader with `USE_CASE` env var support |
 
 ### Selecting a Use Case
@@ -84,7 +85,8 @@ AI-Search-Blob-Storage/
 │   ├── agent_config.json                 # Agent instructions, fine-tuning per use case
 │   ├── search_config.json                # Index names, scoring, chunking config
 │   ├── storage_config.json               # Container names, upload settings
-│   └── document_config.json              # Doc prefix, count, classification per use case
+│   ├── document_config.json              # Doc prefix, count, classification per use case
+│   └── prompts_config.json              # Sample prompts per use case (keyword, semantic, agent)
 ├── data/
 │   ├── engineering-docs/                 # 100 manufacturing test cases (.txt)
 │   │   ├── MFG-TC-0001.txt ... MFG-TC-0100.txt
