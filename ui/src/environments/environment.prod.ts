@@ -1,3 +1,4 @@
-export const environment = {
-  production: true
+export const environment: { production: boolean; apiUrl: string } = {
+  production: true,
+  apiUrl: '/api',
 };

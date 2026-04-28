@@ -16,6 +16,7 @@ interface ChatMessage {
   selector: 'app-chat',
   templateUrl: './chat.page.html',
   styleUrls: ['./chat.page.scss'],
+  standalone: false,
 })
 export class ChatPage implements OnInit {
   @ViewChild('chatContent', { read: ElementRef }) chatContent!: ElementRef;

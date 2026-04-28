@@ -11,6 +11,7 @@ interface SelectablePrompt extends SamplePrompt {
   selector: 'app-prompts',
   templateUrl: './prompts.page.html',
   styleUrls: ['./prompts.page.scss'],
+  standalone: false,
 })
 export class PromptsPage implements OnInit {
   useCases = [
@@ -53,11 +54,12 @@ export class PromptsPage implements OnInit {
   }
 
   get selectedCount(): number {
-    return Object.values(this.prompts).flat().filter((p) => p.selected).length;
+    const all: SelectablePrompt[] = ([] as SelectablePrompt[]).concat(...Object.values(this.prompts));
+    return all.filter((p) => p.selected).length;
   }
 
   get allSelected(): boolean {
-    const all = Object.values(this.prompts).flat();
+    const all: SelectablePrompt[] = ([] as SelectablePrompt[]).concat(...Object.values(this.prompts));
     return all.length > 0 && all.every((p) => p.selected);
   }
 
@@ -71,6 +73,11 @@ export class PromptsPage implements OnInit {
     this.prompts[cat].forEach((p) => (p.selected = checked));
   }
 
+  isCategorySelected(cat: string): boolean {
+    const items = this.prompts[cat];
+    return items.length > 0 && items.every((p) => p.selected);
+  }
+
   async copyPrompt(text: string) {
     await navigator.clipboard.writeText(text);
     const t = await this.toast.create({ message: 'Copied!', duration: 1200, position: 'bottom', color: 'success' });
@@ -82,7 +89,7 @@ export class PromptsPage implements OnInit {
   }
 
   runSelected() {
-    const selected = Object.values(this.prompts).flat().filter((p) => p.selected);
+    const selected: SelectablePrompt[] = ([] as SelectablePrompt[]).concat(...Object.values(this.prompts)).filter((p) => p.selected);
     if (selected.length === 0) return;
 
     this.isRunning = true;

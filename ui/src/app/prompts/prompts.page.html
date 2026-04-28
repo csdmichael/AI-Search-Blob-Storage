@@ -72,7 +72,7 @@
     <div *ngFor="let cat of categories" class="category-section">
       <ion-item-divider color="light" sticky>
         <ion-checkbox slot="start"
-                      [checked]="prompts[cat].length > 0 && prompts[cat].every(p => p.selected)"
+                      [checked]="isCategorySelected(cat)"
                       (ionChange)="selectCategory(cat, $any($event).detail.checked)">
         </ion-checkbox>
         <ion-label>
