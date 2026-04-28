@@ -6,7 +6,7 @@ __pycache__/
 # Deployment artifacts
 *.zip
 api-logs*/
-api-logs*.zip
+ui-logs*/
 
 # Node / Ionic
 ui/node_modules/
