@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { ApiService, DocumentEntry, DocumentDetail } from '../services/api.service';
+import { UseCaseService } from '../services/use-case.service';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-documents',
@@ -8,54 +11,56 @@ import { ApiService, DocumentEntry, DocumentDetail } from '../services/api.servi
   styleUrls: ['./documents.page.scss'],
   standalone: false,
 })
-export class DocumentsPage implements OnInit {
-  useCases = [
-    { key: 'engineering_docs', label: 'Engineering Docs' },
-    { key: 'filter_design', label: 'Filter Design' },
-  ];
-  activeUseCase = 'engineering_docs';
+export class DocumentsPage implements OnInit, OnDestroy {
   documents: DocumentEntry[] = [];
   filteredDocs: DocumentEntry[] = [];
   searchText = '';
   filterType = 'all';
+  availableTypes: string[] = [];
   isLoading = false;
 
   // Detail view
   selectedDoc: DocumentDetail | null = null;
   selectedDocId = '';
+  pdfUrl: SafeResourceUrl | null = null;
 
-  constructor(private api: ApiService, private route: ActivatedRoute) {}
+  private ucSub!: Subscription;
+
+  constructor(
+    public uc: UseCaseService,
+    private api: ApiService,
+    private route: ActivatedRoute,
+    private sanitizer: DomSanitizer,
+  ) {}
 
   ngOnInit() {
-    // Use combineLatest-like approach: read both params first, then load
-    this.route.queryParams.subscribe((qp) => {
-      if (qp['use_case'] && qp['use_case'] !== this.activeUseCase) {
-        this.activeUseCase = qp['use_case'];
-      }
-    });
     this.route.params.subscribe((params) => {
       this.selectedDocId = params['docId'] || '';
+    });
+    this.route.queryParams.subscribe((qp) => {
+      if (qp['use_case']) { this.uc.switch(qp['use_case']); }
+    });
+    this.ucSub = this.uc.active$.subscribe(() => {
+      this.selectedDoc = null;
+      this.pdfUrl = null;
+      this.filterType = 'all';
       this.loadDocuments();
     });
   }
 
-  switchUseCase(key: string) {
-    this.activeUseCase = key;
-    this.selectedDoc = null;
-    this.selectedDocId = '';
-    this.loadDocuments();
-  }
+  ngOnDestroy() { if (this.ucSub) this.ucSub.unsubscribe(); }
 
   loadDocuments() {
     this.isLoading = true;
-    this.api.listDocuments(this.activeUseCase).subscribe({
+    this.api.listDocuments(this.uc.activeKey).subscribe({
       next: (res) => {
         this.documents = res.documents;
+        // Compute available types
+        const types = new Set(this.documents.map((d) => d.type));
+        this.availableTypes = Array.from(types).sort();
         this.applyFilter();
         this.isLoading = false;
-        if (this.selectedDocId) {
-          this.openDocument(this.selectedDocId);
-        }
+        if (this.selectedDocId) { this.openDocument(this.selectedDocId); }
       },
       error: () => { this.isLoading = false; },
     });
@@ -79,15 +84,27 @@ export class DocumentsPage implements OnInit {
 
   openDocument(docId: string) {
     this.selectedDocId = docId;
-    this.api.getDocument(docId, this.activeUseCase).subscribe({
+    this.pdfUrl = null;
+    this.selectedDoc = null;
+
+    // Check if this use case has PDFs
+    if (this.uc.active.fileFormat === 'pdf') {
+      // Show the actual PDF via iframe
+      const url = this.api.getPdfUrl(docId, this.uc.activeKey);
+      this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+    }
+
+    // Also load JSON metadata
+    this.api.getDocument(docId, this.uc.activeKey).subscribe({
       next: (doc) => { this.selectedDoc = doc; },
-      error: () => { this.selectedDoc = null; },
+      error: () => { /* PDF-only doc, no JSON — that's OK */ },
     });
   }
 
   closeDocument() {
     this.selectedDoc = null;
     this.selectedDocId = '';
+    this.pdfUrl = null;
   }
 
   getStatusColor(status: string): string {
@@ -111,7 +128,7 @@ export class DocumentsPage implements OnInit {
   }
 
   getSectionLabel(key: string): string {
-    return key.replace(/_/g, ' ').replace(/^\d+\s*/, (m) => m + '. ');
+    return key.replace(/_/g, ' ').replace(/^\d+\s*/, (m: string) => m + '. ');
   }
 
   formatKey(key: string): string {

@@ -1,40 +1,12 @@
-<ion-header>
-  <ion-toolbar color="primary">
-    <ion-buttons slot="start">
-      <img src="https://img.icons8.com/color/32/microsoft.png" alt="Microsoft" class="ms-logo">
-    </ion-buttons>
-    <ion-title>AI Search Agent</ion-title>
-    <ion-buttons slot="end">
-      <ion-button routerLink="/prompts" fill="clear" title="Sample Prompts">
-        <ion-icon name="list-outline" slot="icon-only"></ion-icon>
-      </ion-button>
-      <ion-button routerLink="/documents" fill="clear" title="Documents">
-        <ion-icon name="folder-outline" slot="icon-only"></ion-icon>
-      </ion-button>
-      <ion-button routerLink="/history" fill="clear" title="History">
-        <ion-icon name="time-outline" slot="icon-only"></ion-icon>
-      </ion-button>
-      <ion-button (click)="clearChat()" fill="clear" title="Clear Chat">
-        <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-  <!-- Use-case tabs -->
-  <ion-toolbar color="primary">
-    <ion-segment [(ngModel)]="activeUseCase" (ionChange)="switchUseCase($any($event).detail.value)">
-      <ion-segment-button *ngFor="let uc of useCases" [value]="uc.key">
-        <ion-label>{{ uc.label }}</ion-label>
-      </ion-segment-button>
-    </ion-segment>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content class="chat-content" #chatContent>
   <!-- Empty state -->
   <div class="empty-state" *ngIf="messages.length === 0 && !isLoading">
     <ion-icon name="chatbubbles-outline" class="empty-icon"></ion-icon>
     <h2>How can I help you?</h2>
-    <p>Ask a question about {{ activeUseCase === 'engineering_docs' ? 'manufacturing test cases' : 'RF filter designs' }}.</p>
+    <p>Ask a question about {{ uc.active.label }}.</p>
+    <ion-button fill="clear" (click)="clearChat()" size="small" color="medium">
+      <ion-icon name="trash-outline" slot="start"></ion-icon> Clear History
+    </ion-button>
   </div>
 
   <!-- Messages -->
@@ -117,11 +89,4 @@
       </ion-button>
     </div>
   </ion-toolbar>
-  <div class="copyright-bar">
-    &copy; 2026 Michael Yaacoub &mdash; Sr Solution Engineer, Microsoft
-    &nbsp;|&nbsp;
-    <a href="https://www.github.com/csdmichael" target="_blank" rel="noopener">GitHub</a>
-    &nbsp;&middot;&nbsp;
-    <a href="https://www.linkedin.com/in/michael-yaacoub-7a46436/" target="_blank" rel="noopener">LinkedIn</a>
-  </div>
 </ion-footer>

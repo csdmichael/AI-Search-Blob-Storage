@@ -292,3 +292,17 @@ def get_document(doc_id: str, use_case: str = "engineering_docs"):
         with open(txt_path, "r", encoding="utf-8") as f:
             return {"format": "text", "doc_id": doc_id, "content": f.read()}
     raise HTTPException(status_code=404, detail=f"Document {doc_id} not found")
+
+
+from fastapi.responses import FileResponse  # noqa: E402
+
+@app.get("/api/documents/{doc_id}/pdf")
+def get_document_pdf(doc_id: str, use_case: str = "engineering_docs"):
+    """Serve the raw PDF file for in-browser viewing."""
+    if use_case not in ("engineering_docs", "filter_design"):
+        raise HTTPException(status_code=400, detail=f"Invalid use_case: {use_case}")
+    data_dir = config.uc_data_dir(use_case)
+    pdf_path = os.path.join(data_dir, f"{doc_id}.pdf")
+    if os.path.exists(pdf_path):
+        return FileResponse(pdf_path, media_type="application/pdf", filename=f"{doc_id}.pdf")
+    raise HTTPException(status_code=404, detail=f"PDF {doc_id}.pdf not found")

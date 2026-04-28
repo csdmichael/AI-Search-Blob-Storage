@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { UseCaseService } from './services/use-case.service';
 
 @Component({
   selector: 'app-root',
@@ -7,5 +8,9 @@ import { Component } from '@angular/core';
   standalone: false,
 })
 export class AppComponent {
-  constructor() {}
+  constructor(public ucService: UseCaseService) {}
+
+  onUseCaseChange(key: string) {
+    this.ucService.switch(key);
+  }
 }

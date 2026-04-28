@@ -1,38 +1,26 @@
-<ion-header>
-  <ion-toolbar color="primary">
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/chat"></ion-back-button>
-      <img src="https://img.icons8.com/color/32/microsoft.png" alt="Microsoft" class="ms-logo">
-    </ion-buttons>
-    <ion-title>Documents</ion-title>
-  </ion-toolbar>
-  <ion-toolbar color="primary">
-    <ion-segment [(ngModel)]="activeUseCase" (ionChange)="switchUseCase($any($event).detail.value)">
-      <ion-segment-button *ngFor="let uc of useCases" [value]="uc.key">
-        <ion-label>{{ uc.label }}</ion-label>
-      </ion-segment-button>
-    </ion-segment>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content>
   <div class="docs-container">
 
     <!-- Document Detail View -->
-    <ion-card *ngIf="selectedDoc" class="doc-detail-card">
+    <ion-card *ngIf="selectedDoc || pdfUrl" class="doc-detail-card">
       <ion-card-header>
         <ion-card-title>
           <ion-button fill="clear" size="small" (click)="closeDocument()">
             <ion-icon name="arrow-back" slot="start"></ion-icon> Back
           </ion-button>
-          {{ selectedDoc.doc_id }}
+          {{ selectedDocId }}
         </ion-card-title>
-        <ion-card-subtitle *ngIf="selectedDoc.format === 'json' && selectedDoc.content.title">
-          {{ selectedDoc.content.title }}
+        <ion-card-subtitle *ngIf="selectedDoc?.format === 'json' && selectedDoc?.content?.title">
+          {{ selectedDoc!.content.title }}
         </ion-card-subtitle>
       </ion-card-header>
       <ion-card-content>
+        <!-- PDF viewer (actual PDF in iframe) -->
+        <div *ngIf="pdfUrl" class="pdf-viewer">
+          <iframe [src]="pdfUrl" class="pdf-iframe"></iframe>
+        </div>
         <!-- JSON structured view -->
+        <ng-container *ngIf="selectedDoc">
         <div *ngIf="selectedDoc.format === 'json'" class="json-view">
           <ion-grid>
             <ion-row>
@@ -69,19 +57,20 @@
 
         <!-- Plain text view -->
         <pre *ngIf="selectedDoc.format === 'text'" class="text-view">{{ selectedDoc.content }}</pre>
+        </ng-container>
       </ion-card-content>
     </ion-card>
 
     <!-- Document List View -->
-    <div *ngIf="!selectedDoc">
+    <div *ngIf="!selectedDoc && !pdfUrl">
       <!-- Search & filter bar -->
       <ion-toolbar class="filter-bar">
         <ion-searchbar [(ngModel)]="searchText" (ionInput)="applyFilter()" placeholder="Search documents..." debounce="300"></ion-searchbar>
         <ion-segment [(ngModel)]="filterType" (ionChange)="applyFilter()" class="type-filter">
           <ion-segment-button value="all"><ion-label>All</ion-label></ion-segment-button>
-          <ion-segment-button value="json"><ion-label>JSON</ion-label></ion-segment-button>
-          <ion-segment-button value="txt"><ion-label>TXT</ion-label></ion-segment-button>
-          <ion-segment-button value="pdf"><ion-label>PDF</ion-label></ion-segment-button>
+          <ion-segment-button *ngFor="let t of availableTypes" [value]="t">
+            <ion-label>{{ t | uppercase }}</ion-label>
+          </ion-segment-button>
         </ion-segment>
       </ion-toolbar>
 

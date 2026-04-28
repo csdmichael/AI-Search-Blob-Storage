@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 import { ApiService, SamplePrompt, BatchResponse, BatchResultItem } from '../services/api.service';
+import { UseCaseService } from '../services/use-case.service';
 
 interface SelectablePrompt extends SamplePrompt {
   selected: boolean;
@@ -13,13 +15,7 @@ interface SelectablePrompt extends SamplePrompt {
   styleUrls: ['./prompts.page.scss'],
   standalone: false,
 })
-export class PromptsPage implements OnInit {
-  useCases = [
-    { key: 'engineering_docs', label: 'Engineering Docs' },
-    { key: 'filter_design', label: 'Filter Design' },
-  ];
-  activeUseCase = 'engineering_docs';
-
+export class PromptsPage implements OnInit, OnDestroy {
   categories = ['keyword', 'semantic', 'agent'];
   prompts: Record<string, SelectablePrompt[]> = { keyword: [], semantic: [], agent: [] };
 
@@ -27,25 +23,26 @@ export class PromptsPage implements OnInit {
   batchResult: BatchResponse | null = null;
   runProgress = 0;
   runTotal = 0;
+  private ucSub!: Subscription;
 
   constructor(
+    public uc: UseCaseService,
     private api: ApiService,
     private toast: ToastController,
     private router: Router,
   ) {}
 
   ngOnInit() {
-    this.loadPrompts();
+    this.ucSub = this.uc.active$.subscribe(() => {
+      this.batchResult = null;
+      this.loadPrompts();
+    });
   }
 
-  switchUseCase(key: string) {
-    this.activeUseCase = key;
-    this.batchResult = null;
-    this.loadPrompts();
-  }
+  ngOnDestroy() { if (this.ucSub) this.ucSub.unsubscribe(); }
 
   loadPrompts() {
-    this.api.getPrompts(this.activeUseCase).subscribe((data) => {
+    this.api.getPrompts(this.uc.activeKey).subscribe((data) => {
       for (const cat of this.categories) {
         const items = (data as any)[cat] || [];
         this.prompts[cat] = items.map((p: SamplePrompt) => ({ ...p, selected: false }));
@@ -85,7 +82,7 @@ export class PromptsPage implements OnInit {
   }
 
   useInChat(text: string) {
-    this.router.navigate(['/chat'], { queryParams: { prompt: text, use_case: this.activeUseCase } });
+    this.router.navigate(['/chat'], { queryParams: { prompt: text, use_case: this.uc.activeKey } });
   }
 
   runSelected() {
@@ -99,7 +96,7 @@ export class PromptsPage implements OnInit {
 
     const texts = selected.map((p) => p.text);
 
-    this.api.batchRun(texts, this.activeUseCase).subscribe({
+    this.api.batchRun(texts, this.uc.activeKey).subscribe({
       next: (res: BatchResponse) => {
         this.batchResult = res;
         this.runProgress = res.total;

@@ -1,3 +1,45 @@
 <ion-app>
+  <!-- Global header -->
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-buttons slot="start">
+        <img src="https://img.icons8.com/color/32/microsoft.png" alt="Microsoft" class="ms-logo">
+      </ion-buttons>
+      <ion-title routerLink="/chat" style="cursor:pointer">AI Search POC</ion-title>
+      <ion-buttons slot="end">
+        <ion-button routerLink="/chat" fill="clear" title="Chat">
+          <ion-icon name="chatbubble-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+        <ion-button routerLink="/prompts" fill="clear" title="Prompts">
+          <ion-icon name="list-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+        <ion-button routerLink="/documents" fill="clear" title="Documents">
+          <ion-icon name="folder-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+        <ion-button routerLink="/history" fill="clear" title="History">
+          <ion-icon name="time-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+    <ion-toolbar color="primary" class="uc-toolbar">
+      <ion-segment [value]="ucService.activeKey" (ionChange)="onUseCaseChange($any($event).detail.value)">
+        <ion-segment-button *ngFor="let uc of ucService.useCases" [value]="uc.key">
+          <ion-label>{{ uc.label }}</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </ion-toolbar>
+  </ion-header>
+
   <ion-router-outlet></ion-router-outlet>
+
+  <!-- Global footer -->
+  <ion-footer class="global-footer">
+    <div class="copyright-bar">
+      &copy; 2026 Michael Yaacoub &mdash; Sr Solution Engineer, Microsoft
+      &nbsp;|&nbsp;
+      <a href="https://www.github.com/csdmichael" target="_blank" rel="noopener">GitHub</a>
+      &nbsp;&middot;&nbsp;
+      <a href="https://www.linkedin.com/in/michael-yaacoub-7a46436/" target="_blank" rel="noopener">LinkedIn</a>
+    </div>
+  </ion-footer>
 </ion-app>

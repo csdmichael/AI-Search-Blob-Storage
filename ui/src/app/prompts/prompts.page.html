@@ -1,28 +1,15 @@
-<ion-header>
-  <ion-toolbar color="primary">
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/chat"></ion-back-button>
-      <img src="https://img.icons8.com/color/32/microsoft.png" alt="Microsoft" class="ms-logo">
-    </ion-buttons>
-    <ion-title>Sample Prompts</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="runSelected()" [disabled]="selectedCount === 0 || isRunning" fill="solid" color="success">
-        <ion-icon name="play" slot="start"></ion-icon>
-        Run {{ selectedCount > 0 ? '(' + selectedCount + ')' : '' }}
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-  <ion-toolbar color="primary">
-    <ion-segment [(ngModel)]="activeUseCase" (ionChange)="switchUseCase($any($event).detail.value)">
-      <ion-segment-button *ngFor="let uc of useCases" [value]="uc.key">
-        <ion-label>{{ uc.label }}</ion-label>
-      </ion-segment-button>
-    </ion-segment>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content>
   <div class="prompts-container">
+    <!-- Run bar -->
+    <ion-toolbar class="run-bar">
+      <ion-title size="small">Sample Prompts</ion-title>
+      <ion-buttons slot="end">
+        <ion-button (click)="runSelected()" [disabled]="selectedCount === 0 || isRunning" fill="solid" color="success">
+          <ion-icon name="play" slot="start"></ion-icon>
+          Run {{ selectedCount > 0 ? '(' + selectedCount + ')' : '' }}
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
     <!-- Select All -->
     <ion-item lines="none" class="select-all-bar">
       <ion-checkbox slot="start" [checked]="allSelected" (ionChange)="toggleAll($any($event).detail.checked)"></ion-checkbox>

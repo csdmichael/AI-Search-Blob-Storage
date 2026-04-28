@@ -1,6 +1,8 @@
-import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { ApiService, ChatResponse } from '../services/api.service';
+import { UseCaseService } from '../services/use-case.service';
 
 interface ChatMessage {
   role: 'user' | 'assistant';
@@ -19,14 +21,9 @@ interface ChatMessage {
   styleUrls: ['./chat.page.scss'],
   standalone: false,
 })
-export class ChatPage implements OnInit {
+export class ChatPage implements OnInit, OnDestroy {
   @ViewChild('chatContent', { read: ElementRef }) chatContent!: ElementRef;
 
-  useCases = [
-    { key: 'engineering_docs', label: 'Engineering Docs' },
-    { key: 'filter_design', label: 'Filter Design' },
-  ];
-  activeUseCase = 'engineering_docs';
   conversations: Record<string, ChatMessage[]> = {
     engineering_docs: [],
     filter_design: [],
@@ -35,14 +32,15 @@ export class ChatPage implements OnInit {
   inputText = '';
   isLoading = false;
   feedbackNotes = '';
+  private ucSub!: Subscription;
 
-  constructor(private api: ApiService, private route: ActivatedRoute) {}
+  constructor(public uc: UseCaseService, private api: ApiService, private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.loadHistory();
     this.route.queryParams.subscribe((params) => {
-      if (params['use_case'] && this.conversations[params['use_case']]) {
-        this.activeUseCase = params['use_case'];
+      if (params['use_case']) {
+        this.uc.switch(params['use_case']);
       }
       if (params['prompt']) {
         this.inputText = params['prompt'];
@@ -50,12 +48,14 @@ export class ChatPage implements OnInit {
     });
   }
 
-  get messages(): ChatMessage[] {
-    return this.conversations[this.activeUseCase];
+  ngOnDestroy() {
+    if (this.ucSub) this.ucSub.unsubscribe();
   }
 
-  switchUseCase(key: string) {
-    this.activeUseCase = key;
+  get activeUseCase(): string { return this.uc.activeKey; }
+
+  get messages(): ChatMessage[] {
+    return this.conversations[this.activeUseCase];
   }
 
   sendMessage() {

@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { ApiService } from '../services/api.service';
+import { UseCaseService } from '../services/use-case.service';
 
 interface HistoryEntry {
   role: string;
@@ -27,27 +29,20 @@ interface FeedbackEntry {
   styleUrls: ['./history.page.scss'],
   standalone: false,
 })
-export class HistoryPage implements OnInit {
-  useCases = [
-    { key: 'engineering_docs', label: 'Engineering Docs' },
-    { key: 'filter_design', label: 'Filter Design' },
-  ];
-  activeUseCase = 'engineering_docs';
+export class HistoryPage implements OnInit, OnDestroy {
   activeTab = 'conversations';
 
   conversations: HistoryEntry[] = [];
   feedback: FeedbackEntry[] = [];
+  private ucSub!: Subscription;
 
-  constructor(private api: ApiService) {}
+  constructor(public uc: UseCaseService, private api: ApiService) {}
 
   ngOnInit() {
-    this.loadAll();
+    this.ucSub = this.uc.active$.subscribe(() => this.loadAll());
   }
 
-  switchUseCase(key: string) {
-    this.activeUseCase = key;
-    this.loadAll();
-  }
+  ngOnDestroy() { if (this.ucSub) this.ucSub.unsubscribe(); }
 
   loadAll() {
     this.loadConversations();
@@ -59,7 +54,7 @@ export class HistoryPage implements OnInit {
       const saved = localStorage.getItem('chat_history');
       if (saved) {
         const parsed = JSON.parse(saved);
-        this.conversations = (parsed[this.activeUseCase] || []).filter(
+        this.conversations = (parsed[this.uc.activeKey] || []).filter(
           (m: HistoryEntry) => m.role === 'assistant'
         );
       } else {
@@ -71,7 +66,7 @@ export class HistoryPage implements OnInit {
   }
 
   loadFeedback() {
-    this.api.getFeedback(this.activeUseCase).subscribe({
+    this.api.getFeedback(this.uc.activeKey).subscribe({
       next: (data) => { this.feedback = data; },
       error: () => { this.feedback = []; },
     });
