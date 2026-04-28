@@ -22,8 +22,8 @@ _uc_agent = config.uc_agent_config()["agent"]
 _use_case = config.get_use_case()
 
 SEARCH_ENDPOINT = config.search_endpoint()
-INDEX_NAME = _uc_search["standard_index"]["name"]
-SEMANTIC_CONFIG_NAME = _uc_search["standard_index"]["semantic_config_name"]
+INDEX_NAME = _uc_search["chunked_index"]["name"]
+SEMANTIC_CONFIG_NAME = _uc_search["chunked_index"]["semantic_config_name"]
 PROJECT_ENDPOINT = config.project_endpoint()
 AGENT_NAME = _uc_agent["name"]
 
@@ -137,9 +137,9 @@ def test_semantic_search(search_client: SearchClient):
 
 
 def test_agent(project_client: AIProjectClient):
-    """Test the Foundry agent with manual RAG grounding."""
+    """Test the Foundry agent with AI Search function-tool grounding."""
     print("\n" + "=" * 60)
-    print("FOUNDRY AGENT TESTS (Manual RAG)")
+    print("FOUNDRY AGENT TESTS (AI Search Function Tool)")
     print("=" * 60)
 
     from scripts.create_agent import query_agent
@@ -156,18 +156,6 @@ def test_agent(project_client: AIProjectClient):
                 print("  ... (truncated)")
         else:
             print("  No response.")
-                if annotations:
-                    print(f"\n  Citations ({len(annotations)}):")
-                    for ann in annotations:
-                        if hasattr(ann, "url_citation") and ann.url_citation:
-                            title = getattr(ann.url_citation, "title", "")
-                            url = getattr(ann.url_citation, "url", "")
-                            print(f"    - {title or 'Source'}: {url}")
-                        elif hasattr(ann, "file_citation") and ann.file_citation:
-                            fid = getattr(ann.file_citation, "file_id", "")
-                            print(f"    - File: {fid}")
-                        else:
-                            print(f"    - {ann}")
 
 
 def main():

@@ -1,150 +1,150 @@
 """
-Create a Foundry Agent with AI Search as a custom function tool.
+Create and query Foundry agents configured with the native Azure AI Search tool.
 
-The agent has a registered function tool 'search_engineering_documents' that
-queries the AI Search chunked index. When the agent calls this tool, we execute
-the search and return raw document content — achieving >90% grounding accuracy.
+This script uses chunked indexes per use case and deploys agents with:
+- AzureAISearchToolDefinition (native Foundry tool)
+- ToolResources.azure_ai_search -> AzureAISearchToolResource(index_list=[...])
 
-Set USE_CASE env var to select: engineering_docs (default) or filter_design
+Set USE_CASE env var to select: engineering_docs (default) or filter_design.
+Optional env vars:
+- AZURE_AI_SEARCH_CONNECTION_ID: Full Foundry connection resource ID
+- AZURE_AI_SEARCH_CONNECTION_NAME: Foundry connection name (default: aisearchmymmcjmu)
+- SEARCH_TOP_K: Number of retrieved chunks (default: 8)
 """
 
 import os
 import sys
-import json
+import time
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import config
 
 from azure.identity import DefaultAzureCredential
-from azure.search.documents import SearchClient
 from azure.ai.projects import AIProjectClient
 from azure.ai.agents.models import (
-    FunctionToolDefinition,
-    ToolOutput,
+    AzureAISearchToolDefinition,
+    ToolResources,
+    AzureAISearchToolResource,
+    AISearchIndexResource,
+    AzureAISearchQueryType,
     ListSortOrder,
-    MessageRole,
 )
 
 _uc_agent = config.uc_agent_config()["agent"]
 _uc_search = config.uc_search_config()
+_use_case = config.get_use_case()
 
 PROJECT_ENDPOINT = config.project_endpoint()
-SEARCH_ENDPOINT = config.search_endpoint()
 AGENT_NAME = _uc_agent["name"]
 MODEL_DEPLOYMENT_NAME = os.environ.get("MODEL_DEPLOYMENT_NAME", _uc_agent["model_deployment"])
 AGENT_INSTRUCTIONS = _uc_agent["instructions"]
 CHUNKED_INDEX = _uc_search["chunked_index"]["name"]
-SEMANTIC_CONFIG = _uc_search["chunked_index"]["semantic_config_name"]
+SEARCH_TOP_K = int(os.environ.get("SEARCH_TOP_K", "12" if _use_case == "filter_design" else "8"))
 
-# Function tool definition — the agent sees this as "search_documents"
-SEARCH_TOOL_DEF = FunctionToolDefinition(
-    function={
-        "name": "search_documents",
-        "description": (
-            "Search the engineering document index using Azure AI Search. "
-            "Returns the most relevant document sections with exact text content. "
-            "Use this tool for EVERY question — do not answer from memory."
-        ),
-        "parameters": {
-            "type": "object",
-            "properties": {
-                "query": {
-                    "type": "string",
-                    "description": "The search query. Include document numbers (e.g. FD-TC-0001) and key terms.",
-                },
-            },
-            "required": ["query"],
-        },
-    }
-)
-
-
-def _execute_search(query: str, credential) -> str:
-    """Execute AI Search and return formatted results."""
-    search_client = SearchClient(
-        endpoint=SEARCH_ENDPOINT,
-        index_name=CHUNKED_INDEX,
-        credential=credential,
+if _use_case == "filter_design":
+    DEFAULT_QUERY_TYPE = AzureAISearchQueryType.SIMPLE
+    QUERY_TYPE_LABEL = "simple"
+    AGENT_INSTRUCTIONS += (
+        "\n\nFOR SPECIFIC DOCUMENT QUERIES: If the user includes an FD-TC-XXXX identifier, "
+        "use the azure_ai_search tool result for that document and answer from the returned chunks. "
+        "Do not return a not-found response when any chunk for that FD-TC document is present."
     )
-    results = list(search_client.search(
-        search_text=query,
-        query_type="semantic",
-        semantic_configuration_name=SEMANTIC_CONFIG,
-        top=5,
-        select="document_number,section_name,content,source_file",
-    ))
-    if not results:
-        return "NO RESULTS FOUND in the document index for this query."
+else:
+    DEFAULT_QUERY_TYPE = AzureAISearchQueryType.SEMANTIC
+    QUERY_TYPE_LABEL = "semantic"
 
-    output = ""
-    for i, r in enumerate(results, 1):
-        doc = r.get("document_number", "?")
-        section = r.get("section_name", "?")
-        content = r.get("content", "")
-        source = r.get("source_file", "?")
-        output += f"[Result {i}] Document: {doc} | Section: {section} | File: {source}\n"
-        output += content + "\n\n"
-    return output
+# Cached ID avoids listing agents repeatedly during multi-prompt retests.
+_AGENT_ID_CACHE: str | None = None
+
+
+def _resolve_search_connection_id(project_client: AIProjectClient) -> str:
+    """Resolve Foundry AI Search connection ID from env var ID or connection name."""
+    explicit_id = os.environ.get("AZURE_AI_SEARCH_CONNECTION_ID", "").strip()
+    if explicit_id:
+        return explicit_id
+
+    connection_name = os.environ.get("AZURE_AI_SEARCH_CONNECTION_NAME", "aisearchmymmcjmu").strip()
+
+    # Build ID deterministically to avoid intermittent hangs in connections.list().
+    subscription_id = config.azure_resources()["subscription_id"]
+    resource_group = config.azure_resources()["resource_group"]
+    endpoint = config.project_endpoint()
+    # Example endpoint: https://001-ai-poc.services.ai.azure.com/api/projects/001-ai-proj
+    foundry_account = endpoint.split("//", 1)[1].split(".", 1)[0]
+    project_name = endpoint.rstrip("/").split("/")[-1]
+    candidate_id = (
+        f"/subscriptions/{subscription_id}/resourceGroups/{resource_group}"
+        f"/providers/Microsoft.CognitiveServices/accounts/{foundry_account}"
+        f"/projects/{project_name}/connections/{connection_name}"
+    )
+
+    if os.environ.get("FORCE_DISCOVER_CONNECTION", "0") == "1":
+        for conn in project_client.connections.list():
+            name = getattr(conn, "name", "")
+            conn_id = getattr(conn, "id", "")
+            if name == connection_name:
+                return conn_id
+
+    return candidate_id
+
+
+def _get_agent_by_name(project_client: AIProjectClient, agent_name: str):
+    """Get an agent by name with basic retry handling for transient service issues."""
+    for _ in range(3):
+        try:
+            for agent in project_client.agents.list_agents():
+                if agent.name == agent_name:
+                    return agent
+            return None
+        except Exception:
+            time.sleep(1.0)
+    return None
 
 
 def query_agent(prompt: str, credential=None):
-    """Query the agent — handles the function tool call loop."""
+    """Query the deployed Foundry agent configured with native Azure AI Search tool."""
+    global _AGENT_ID_CACHE
+
     if credential is None:
         credential = DefaultAzureCredential()
     project_client = AIProjectClient(endpoint=PROJECT_ENDPOINT, credential=credential)
 
-    # Find agent
-    agent = None
-    for a in project_client.agents.list_agents():
-        if a.name == AGENT_NAME:
-            agent = a
-            break
-    if not agent:
-        print(f"Agent '{AGENT_NAME}' not found. Run create_agent.py first.")
-        return None
+    agent_id = _AGENT_ID_CACHE
+    if not agent_id:
+        agent = _get_agent_by_name(project_client, AGENT_NAME)
+        if not agent:
+            print(f"Agent '{AGENT_NAME}' not found. Run create_agent.py first.")
+            return None
+        agent_id = agent.id
+        _AGENT_ID_CACHE = agent_id
 
-    # Create thread and send user message
     thread = project_client.agents.threads.create()
-    project_client.agents.messages.create(
-        thread_id=thread.id, role="user", content=prompt,
-    )
+    project_client.agents.messages.create(thread_id=thread.id, role="user", content=prompt)
 
-    # Start run
-    run = project_client.agents.runs.create(
-        thread_id=thread.id, agent_id=agent.id,
-    )
+    run = project_client.agents.runs.create(thread_id=thread.id, agent_id=agent_id)
 
-    # Poll and handle tool calls
+    start_time = time.time()
     while True:
-        run = project_client.agents.runs.get(thread_id=thread.id, run_id=run.id)
+        if time.time() - start_time > 240:
+            return "Run timed out while waiting for agent completion."
+
+        try:
+            run = project_client.agents.runs.get(thread_id=thread.id, run_id=run.id)
+        except Exception:
+            time.sleep(1.0)
+            continue
 
         if run.status == "completed":
             break
-        elif run.status == "failed":
+        if run.status == "failed":
             return f"Run failed: {run.last_error}"
-        elif run.status == "requires_action":
-            tool_calls = run.required_action.submit_tool_outputs.tool_calls
-            tool_outputs = []
-            for tc in tool_calls:
-                if tc.function.name == "search_documents":
-                    args = json.loads(tc.function.arguments)
-                    search_result = _execute_search(args["query"], credential)
-                    tool_outputs.append(ToolOutput(
-                        tool_call_id=tc.id,
-                        output=search_result,
-                    ))
-            project_client.agents.runs.submit_tool_outputs(
-                thread_id=thread.id, run_id=run.id, tool_outputs=tool_outputs,
-            )
-        else:
-            # queued, in_progress — wait
-            import time
-            time.sleep(0.5)
+        if run.status in ("cancelled", "expired"):
+            return f"Run ended with status: {run.status}"
 
-    # Get response
-    for msg in project_client.agents.messages.list(
-        thread_id=thread.id, order=ListSortOrder.ASCENDING,
-    ):
+        # Native Azure AI Search tool is executed server-side, so no tool-output loop is needed.
+        time.sleep(0.6)
+
+    for msg in project_client.agents.messages.list(thread_id=thread.id, order=ListSortOrder.ASCENDING):
         if msg.role == "assistant" and msg.text_messages:
             return msg.text_messages[-1].text.value
     return ""
@@ -155,30 +155,47 @@ def main():
     credential = DefaultAzureCredential()
     project_client = AIProjectClient(endpoint=PROJECT_ENDPOINT, credential=credential)
 
-    # Delete existing agent with same name
-    for a in project_client.agents.list_agents():
-        if a.name == AGENT_NAME:
-            project_client.agents.delete_agent(a.id)
-            print(f"Deleted existing agent: {a.id}")
+    connection_id = _resolve_search_connection_id(project_client)
 
-    # Create agent with AI Search as a function tool
+    ai_search_index = AISearchIndexResource(
+        index_connection_id=connection_id,
+        index_name=CHUNKED_INDEX,
+        query_type=DEFAULT_QUERY_TYPE,
+        top_k=SEARCH_TOP_K,
+    )
+
+    tool_resources = ToolResources(
+        azure_ai_search=AzureAISearchToolResource(
+            index_list=[ai_search_index],
+        )
+    )
+
+    for agent in project_client.agents.list_agents():
+        if agent.name == AGENT_NAME:
+            project_client.agents.delete_agent(agent.id)
+            print(f"Deleted existing agent: {agent.id}")
+
     print(f"\nCreating agent: {AGENT_NAME}")
-    agent = project_client.agents.create_agent(
+    created = project_client.agents.create_agent(
         model=MODEL_DEPLOYMENT_NAME,
         name=AGENT_NAME,
         instructions=AGENT_INSTRUCTIONS,
-        tools=[SEARCH_TOOL_DEF],
+        tools=[AzureAISearchToolDefinition()],
+        tool_resources=tool_resources,
         temperature=0,
     )
 
-    print(f"\nAgent created successfully!")
-    print(f"  Agent ID:     {agent.id}")
-    print(f"  Agent Name:   {agent.name}")
-    print(f"  Model:        {agent.model}")
-    print(f"  Tool:         search_documents (AI Search: {CHUNKED_INDEX})")
-    print(f"  Grounding:    Function tool returns raw AI Search results")
+    print("\nAgent created successfully!")
+    print(f"  Agent ID:     {created.id}")
+    print(f"  Agent Name:   {created.name}")
+    print(f"  Model:        {created.model}")
+    print(f"  Tool:         azure_ai_search (native)")
+    print(f"  Connection:   {connection_id}")
+    print(f"  Index:        {CHUNKED_INDEX}")
+    print(f"  Query type:   {QUERY_TYPE_LABEL}")
+    print(f"  top_k:        {SEARCH_TOP_K}")
 
-    return agent
+    return created
 
 
 if __name__ == "__main__":
