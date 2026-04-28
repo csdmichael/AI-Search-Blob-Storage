@@ -137,62 +137,25 @@ def test_semantic_search(search_client: SearchClient):
 
 
 def test_agent(project_client: AIProjectClient):
-    """Test the Foundry agent with sample prompts."""
+    """Test the Foundry agent with manual RAG grounding."""
     print("\n" + "=" * 60)
-    print("FOUNDRY AGENT TESTS")
+    print("FOUNDRY AGENT TESTS (Manual RAG)")
     print("=" * 60)
 
-    # List agents to find ours
-    agents = project_client.agents.list_agents()
-    agent = None
-    for a in agents:
-        if a.name == AGENT_NAME:
-            agent = a
-            break
+    from scripts.create_agent import query_agent
 
-    if not agent:
-        print(f"Agent '{AGENT_NAME}' not found. Run create_agent.py first.")
-        return
-
-    print(f"Found agent: {agent.name} (ID: {agent.id})")
-
+    credential = DefaultAzureCredential()
     test_prompts = _QUERIES[_use_case]["agent"]
 
     for prompt in test_prompts:
         print(f"\n--- Prompt: '{prompt}' ---")
-
-        thread = project_client.agents.threads.create()
-        project_client.agents.messages.create(
-            thread_id=thread.id,
-            role="user",
-            content=prompt,
-        )
-
-        run = project_client.agents.runs.create_and_process(
-            thread_id=thread.id,
-            agent_id=agent.id,
-        )
-
-        if run.status == "failed":
-            print(f"  Run failed: {run.last_error}")
-            continue
-
-        messages = project_client.agents.messages.list(
-            thread_id=thread.id,
-            order=ListSortOrder.ASCENDING,
-        )
-
-        for msg in messages:
-            if msg.role == "assistant" and msg.text_messages:
-                last_text = msg.text_messages[-1]
-                response = last_text.text.value
-                annotations = last_text.text.annotations if hasattr(last_text.text, "annotations") else []
-
-                print(f"  Agent Response:\n  {response[:800]}")
-                if len(response) > 800:
-                    print("  ... (truncated)")
-
-                # Display citations from annotations
+        response = query_agent(prompt, credential=credential)
+        if response:
+            print(f"  Agent Response:\n  {response[:800]}")
+            if len(response) > 800:
+                print("  ... (truncated)")
+        else:
+            print("  No response.")
                 if annotations:
                     print(f"\n  Citations ({len(annotations)}):")
                     for ann in annotations:
