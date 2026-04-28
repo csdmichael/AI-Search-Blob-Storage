@@ -8,3 +8,6 @@ openai
 matplotlib
 fpdf2
 pypdf
+fastapi
+uvicorn
+gunicorn

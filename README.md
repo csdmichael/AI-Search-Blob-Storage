@@ -31,6 +31,16 @@ Each use case has its own **README, architecture diagram, and demo script** read
 | **Managed Identity** | `DefaultAzureCredential` | All authentication uses managed identity — no keys or secrets |
 | **Ranking & Feedback** | `ranking_feedback.py` | Feedback-driven re-ranking to improve accuracy from 90% to 95% |
 
+### Deployed Web App URLs
+
+| App | URL | Description |
+|-----|-----|-------------|
+| **API** | https://ai-search-agent-api.azurewebsites.net | FastAPI backend — proxies chat, batch, feedback, and prompt endpoints to the Foundry agents |
+| **API Docs** | https://ai-search-agent-api.azurewebsites.net/docs | Swagger UI for all API endpoints |
+| **UI** | https://ai-search-agent-ui.azurewebsites.net | Ionic Angular chat UI — Copilot-style interface with use-case tabs, batch testing, and feedback |
+
+Both apps run on the `plan-taxforms` Linux B1 App Service plan in `ai-myaacoub`.
+
 ---
 
 ## Prerequisites

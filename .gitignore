@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+
+# Deployment artifacts
+*.zip
+api-logs*/
+api-logs*.zip
+
+# Node / Ionic
+ui/node_modules/
+ui/www/
+ui/.angular/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+*.swp
