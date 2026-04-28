@@ -1,0 +1,109 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>AI Search Agent</ion-title>
+    <ion-buttons slot="end">
+      <ion-button routerLink="/prompts" fill="clear">
+        <ion-icon name="list-outline" slot="start"></ion-icon>
+        Prompts
+      </ion-button>
+      <ion-button (click)="clearChat()" fill="clear">
+        <ion-icon name="trash-outline" slot="start"></ion-icon>
+        Clear
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <!-- Use-case tabs -->
+  <ion-toolbar color="primary">
+    <ion-segment [(ngModel)]="activeUseCase" (ionChange)="switchUseCase($any($event).detail.value)">
+      <ion-segment-button *ngFor="let uc of useCases" [value]="uc.key">
+        <ion-label>{{ uc.label }}</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="chat-content" #chatContent>
+  <!-- Empty state -->
+  <div class="empty-state" *ngIf="messages.length === 0 && !isLoading">
+    <ion-icon name="chatbubbles-outline" class="empty-icon"></ion-icon>
+    <h2>How can I help you?</h2>
+    <p>Ask a question about {{ activeUseCase === 'engineering_docs' ? 'manufacturing test cases' : 'RF filter designs' }}.</p>
+  </div>
+
+  <!-- Messages -->
+  <div class="messages-container">
+    <div *ngFor="let msg of messages"
+         class="message-row"
+         [ngClass]="{ 'user-row': msg.role === 'user', 'assistant-row': msg.role === 'assistant' }">
+      <div class="message-bubble" [ngClass]="msg.role">
+        <div class="avatar">
+          <ion-icon [name]="msg.role === 'user' ? 'person-circle' : 'sparkles'"></ion-icon>
+        </div>
+        <div class="message-body">
+          <div class="message-text" [innerHTML]="msg.text | formatResponse"></div>
+          <!-- Sources -->
+          <div class="sources" *ngIf="msg.sources && msg.sources.length">
+            <ion-chip *ngFor="let src of msg.sources" color="tertiary" size="small" outline>
+              <ion-icon name="document-outline"></ion-icon>
+              <ion-label>{{ src }}</ion-label>
+            </ion-chip>
+          </div>
+          <!-- Metadata + feedback -->
+          <div class="message-meta" *ngIf="msg.role === 'assistant'">
+            <span class="duration" *ngIf="msg.duration_ms">{{ msg.duration_ms }}ms</span>
+            <span class="feedback-btns">
+              <ion-button fill="clear" size="small"
+                          [color]="msg.feedbackGiven === 'up' ? 'success' : 'medium'"
+                          (click)="giveFeedback(msg, true)"
+                          [disabled]="msg.feedbackGiven !== null && msg.feedbackGiven !== undefined">
+                <ion-icon name="thumbs-up-outline" slot="icon-only"></ion-icon>
+              </ion-button>
+              <ion-button fill="clear" size="small"
+                          [color]="msg.feedbackGiven === 'down' ? 'danger' : 'medium'"
+                          (click)="giveFeedback(msg, false)"
+                          [disabled]="msg.feedbackGiven !== null && msg.feedbackGiven !== undefined">
+                <ion-icon name="thumbs-down-outline" slot="icon-only"></ion-icon>
+              </ion-button>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Typing indicator -->
+    <div class="message-row assistant-row" *ngIf="isLoading">
+      <div class="message-bubble assistant">
+        <div class="avatar"><ion-icon name="sparkles"></ion-icon></div>
+        <div class="message-body">
+          <div class="typing-indicator">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<!-- Input bar -->
+<ion-footer>
+  <ion-toolbar>
+    <div class="input-bar">
+      <textarea
+        class="chat-input"
+        [(ngModel)]="inputText"
+        (keydown)="onKeyDown($event)"
+        placeholder="Ask a question..."
+        rows="1"
+      ></textarea>
+      <ion-button
+        class="send-btn"
+        (click)="sendMessage()"
+        [disabled]="!inputText.trim() || isLoading"
+        fill="solid"
+        color="primary"
+        shape="round">
+        <ion-icon name="send" slot="icon-only"></ion-icon>
+      </ion-button>
+    </div>
+  </ion-toolbar>
+</ion-footer>

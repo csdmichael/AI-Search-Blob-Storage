@@ -35,3 +35,13 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import "@ionic/angular/css/palettes/dark.system.css";
+
+/* App custom global styles */
+.citation {
+  background: var(--ion-color-tertiary-tint, #e0f0ff);
+  color: var(--ion-color-tertiary-shade, #0066cc);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 0.82em;
+  cursor: help;
+}
