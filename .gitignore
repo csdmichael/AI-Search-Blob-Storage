@@ -7,6 +7,7 @@ __pycache__/
 *.zip
 api-logs*/
 ui-logs*/
+*-publish-profile.xml
 
 # Node / Ionic
 ui/node_modules/
