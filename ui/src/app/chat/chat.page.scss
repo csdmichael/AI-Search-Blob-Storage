@@ -193,3 +193,18 @@ ion-footer ion-toolbar {
   .message-bubble { max-width: 92%; }
   .input-bar { padding: 0.4rem 0.5rem; }
 }
+
+.ms-logo {
+  width: 28px;
+  height: 28px;
+  margin-left: 8px;
+}
+
+.copyright-bar {
+  text-align: center;
+  font-size: 0.7rem;
+  color: var(--ion-color-medium);
+  padding: 4px 0;
+  background: var(--ion-color-light);
+  border-top: 1px solid var(--ion-color-light-shade);
+}

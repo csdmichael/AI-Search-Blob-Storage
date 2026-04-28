@@ -53,3 +53,24 @@
     text-decoration: none;
   }
 }
+
+.ms-logo {
+  width: 28px;
+  height: 28px;
+  margin-left: 8px;
+}
+
+.copyright-bar {
+  text-align: center;
+  font-size: 0.7rem;
+  color: var(--ion-color-medium);
+  padding: 4px 0;
+  background: var(--ion-color-light);
+  border-top: 1px solid var(--ion-color-light-shade, #d7d8da);
+
+  a {
+    color: var(--ion-color-primary);
+    text-decoration: none;
+    &:hover { text-decoration: underline; }
+  }
+}

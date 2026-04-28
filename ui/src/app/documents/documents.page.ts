@@ -27,15 +27,14 @@ export class DocumentsPage implements OnInit {
   constructor(private api: ApiService, private route: ActivatedRoute) {}
 
   ngOnInit() {
-    this.route.params.subscribe((params) => {
-      if (params['docId']) {
-        this.selectedDocId = params['docId'];
+    // Use combineLatest-like approach: read both params first, then load
+    this.route.queryParams.subscribe((qp) => {
+      if (qp['use_case'] && qp['use_case'] !== this.activeUseCase) {
+        this.activeUseCase = qp['use_case'];
       }
     });
-    this.route.queryParams.subscribe((params) => {
-      if (params['use_case']) {
-        this.activeUseCase = params['use_case'];
-      }
+    this.route.params.subscribe((params) => {
+      this.selectedDocId = params['docId'] || '';
       this.loadDocuments();
     });
   }
