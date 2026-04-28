@@ -99,17 +99,22 @@ def generate_test_procedure(inspection_type, product_line, defect_type):
     return "\n".join(steps)
 
 
-def generate_acceptance_criteria(inspection_type, technology_node):
+def generate_acceptance_criteria(inspection_type, technology_node, throughput=None,
+                                  classification_accuracy=None, repeatability=None, correlation=None):
     """Generate acceptance criteria for the test case."""
+    throughput = throughput or random.randint(40, 120)
+    classification_accuracy = classification_accuracy or random.randint(90, 99)
+    repeatability = repeatability or round(random.uniform(0.5, 3.0), 1)
+    correlation = correlation or round(random.uniform(0.92, 0.99), 2)
     criteria = [
         f"- Defect detection sensitivity must meet {technology_node} node requirements",
         f"- False positive rate shall not exceed 5% of total detected events",
-        f"- Scan throughput must be ≥ {random.randint(40, 120)} wafers per hour",
-        f"- Classification accuracy shall be ≥ {random.randint(90, 99)}% for known defect types",
-        f"- Repeatability (3-sigma) shall be within ±{random.uniform(0.5, 3.0):.1f}% for {inspection_type}",
+        f"- Scan throughput must be ≥ {throughput} wafers per hour",
+        f"- Classification accuracy shall be ≥ {classification_accuracy}% for known defect types",
+        f"- Repeatability (3-sigma) shall be within ±{repeatability}% for {inspection_type}",
         f"- System uptime during test shall be ≥ 98%",
         f"- All results must be traceable through the MES integration",
-        f"- Measurement correlation with reference tool shall be ≥ {random.uniform(0.92, 0.99):.2f} R²",
+        f"- Measurement correlation with reference tool shall be ≥ {correlation} R²",
     ]
     return "\n".join(criteria)
 
@@ -140,6 +145,38 @@ def generate_document(doc_id):
     defect_density = round(defect_count / (3.14159 * (150 if wafer_size == "300mm" else 100) ** 2) * 1e4, 2)
     nuisance_rate = round(random.uniform(0.5, 8.0), 1)
     capture_rate = round(random.uniform(85.0, 99.9), 1)
+    wafers_tested = random.randint(5, 50)
+    test_duration = random.randint(30, 480)
+    system_uptime = round(random.uniform(96.0, 100.0), 1)
+    scan_speed_label = random.choice(["High", "Medium", "Low"])
+    scan_speed_val = random.randint(50, 200)
+    pixel_size = random.choice(["0.1μm", "0.25μm", "0.5μm", "1.0μm"])
+    edge_exclusion = random.randint(2, 5)
+    sampling_plan = random.choice(["Full wafer", "5-point", "9-point", "21-point"])
+    sw_version = f"v{random.randint(8, 15)}.{random.randint(0, 9)}.{random.randint(100, 999)}"
+    illumination_mode = "Darkfield" if random.random() > 0.5 else "Brightfield"
+    recipe = f"{inspection_type.replace(' ', '_').upper()}_{tech_node}_{process_step.replace('-', '_').upper()}"
+    classification_accuracy = random.randint(90, 99)
+    throughput = random.randint(40, 120)
+    repeatability = round(random.uniform(0.5, 3.0), 1)
+    correlation = round(random.uniform(0.92, 0.99), 2)
+    obs_d = random.choice([
+        "No significant drift was observed during the test duration.",
+        "Minor calibration drift was detected after extended run; re-calibration resolved the issue.",
+        "Edge-zone defect detection showed improved performance compared to previous revision.",
+        "Cross-correlation with the reference SEM confirmed classification accuracy.",
+        "Throughput metrics met production requirements without sensitivity compromise.",
+    ])
+    obs_e = random.choice([
+        "The system successfully integrated with the factory automation host.",
+        "SECS/GEM communication was verified with zero packet loss during data transfer.",
+        "Recipe portability between systems at this fab was confirmed.",
+        "Statistical process control charts showed stable performance over the test period.",
+        "The defect review station correlation was within specification.",
+    ])
+    approver = "Dr. " + random.choice(["Richard Lee", "Susan Park", "Hans Schmidt", "Kenji Watanabe"])
+    sign_reviewer_delta = random.randint(1, 7)
+    sign_approver_delta = random.randint(3, 14)
 
     document = f"""{'='*80}
 ENGINEERING TEST CASE DOCUMENT
@@ -201,13 +238,13 @@ and to qualify new recipe configurations.
 {'─'*80}
 
 System:                {product_line}
-Software Version:      v{random.randint(8, 15)}.{random.randint(0, 9)}.{random.randint(100, 999)}
-Recipe:                {inspection_type.replace(' ', '_').upper()}_{tech_node}_{process_step.replace('-', '_').upper()}
-Illumination Mode:     {"Darkfield" if random.random() > 0.5 else "Brightfield"}
-Scan Speed:            {random.choice(["High", "Medium", "Low"])} ({random.randint(50, 200)} mm/s)
-Pixel Size:            {random.choice(["0.1μm", "0.25μm", "0.5μm", "1.0μm"])}
-Edge Exclusion:        {random.randint(2, 5)}mm
-Sampling Plan:         {random.choice(["Full wafer", "5-point", "9-point", "21-point"])} sampling
+Software Version:      {sw_version}
+Recipe:                {recipe}
+Illumination Mode:     {illumination_mode}
+Scan Speed:            {scan_speed_label} ({scan_speed_val} mm/s)
+Pixel Size:            {pixel_size}
+Edge Exclusion:        {edge_exclusion}mm
+Sampling Plan:         {sampling_plan} sampling
 
 {'─'*80}
 4. TEST PROCEDURE
@@ -219,20 +256,22 @@ Sampling Plan:         {random.choice(["Full wafer", "5-point", "9-point", "21-p
 5. ACCEPTANCE CRITERIA
 {'─'*80}
 
-{generate_acceptance_criteria(inspection_type, tech_node)}
+{generate_acceptance_criteria(inspection_type, tech_node,
+                              throughput=throughput, classification_accuracy=classification_accuracy,
+                              repeatability=repeatability, correlation=correlation)}
 
 {'─'*80}
 6. TEST RESULTS
 {'─'*80}
 
 Test Execution Date:   {modified_date.strftime('%Y-%m-%d')}
-Wafers Tested:         {random.randint(5, 50)}
+Wafers Tested:         {wafers_tested}
 Total Defects Found:   {defect_count}
 Defect Density:        {defect_density} defects/cm²
 Nuisance Rate:         {nuisance_rate}%
 Capture Rate:          {capture_rate}%
-Test Duration:         {random.randint(30, 480)} minutes
-System Uptime:         {round(random.uniform(96.0, 100.0), 1)}%
+Test Duration:         {test_duration} minutes
+System Uptime:         {system_uptime}%
 
 Result Classification: {status}
 
@@ -249,21 +288,9 @@ b) {"The capture rate exceeded the minimum threshold, confirming system readines
 
 c) {"Nuisance rate is within acceptable limits." if nuisance_rate < 5 else "Nuisance rate exceeds the target threshold; recipe tuning is recommended."}
 
-d) {random.choice([
-    "No significant drift was observed during the test duration.",
-    "Minor calibration drift was detected after extended run; re-calibration resolved the issue.",
-    "Edge-zone defect detection showed improved performance compared to previous revision.",
-    "Cross-correlation with the reference SEM confirmed classification accuracy.",
-    "Throughput metrics met production requirements without sensitivity compromise.",
-])}
+d) {obs_d}
 
-e) {random.choice([
-    "The system successfully integrated with the factory automation host.",
-    "SECS/GEM communication was verified with zero packet loss during data transfer.",
-    "Recipe portability between systems at this fab was confirmed.",
-    "Statistical process control charts showed stable performance over the test period.",
-    "The defect review station correlation was within specification.",
-])}
+e) {obs_e}
 
 {'─'*80}
 8. CORRECTIVE ACTIONS (if applicable)
@@ -282,14 +309,124 @@ The following corrective actions are recommended:
 {'─'*80}
 
 Author:     {engineer:<30s} Date: {modified_date.strftime('%Y-%m-%d')}
-Reviewer:   {reviewer:<30s} Date: {(modified_date + timedelta(days=random.randint(1, 7))).strftime('%Y-%m-%d')}
-Approver:   {"Dr. " + random.choice(["Richard Lee", "Susan Park", "Hans Schmidt", "Kenji Watanabe"]):<30s} Date: {(modified_date + timedelta(days=random.randint(3, 14))).strftime('%Y-%m-%d')}
+Reviewer:   {reviewer:<30s} Date: {(modified_date + timedelta(days=sign_reviewer_delta)).strftime('%Y-%m-%d')}
+Approver:   {approver:<30s} Date: {(modified_date + timedelta(days=sign_approver_delta)).strftime('%Y-%m-%d')}
 
 {'='*80}
 END OF DOCUMENT - {doc_number}
 {'='*80}
 """
-    return doc_number, document
+    return doc_number, document, {
+        "document_number": doc_number,
+        "revision": revision,
+        "classification": CLASSIFICATION,
+        "title": f"{inspection_type} - {defect_type} Detection on {product_line}",
+        "subtitle": f"{process_step} Quality Validation for {tech_node} Node Manufacturing",
+        "author": engineer,
+        "reviewer": reviewer,
+        "approver": approver,
+        "created_date": created_date.strftime("%Y-%m-%d"),
+        "last_modified": modified_date.strftime("%Y-%m-%d"),
+        "status": status,
+        "priority": priority,
+        "severity_level": severity,
+        "product_line": product_line,
+        "inspection_type": inspection_type,
+        "target_defect": defect_type,
+        "process_step": process_step,
+        "wafer_size": wafer_size,
+        "technology_node": tech_node,
+        "fab_location": fab,
+        "software_version": sw_version,
+        "recipe": recipe,
+        "illumination_mode": illumination_mode,
+        "scan_speed": f"{scan_speed_label} ({scan_speed_val} mm/s)",
+        "pixel_size": pixel_size,
+        "edge_exclusion_mm": edge_exclusion,
+        "sampling_plan": sampling_plan,
+        "defect_count": defect_count,
+        "defect_density_per_cm2": defect_density,
+        "nuisance_rate_pct": nuisance_rate,
+        "capture_rate_pct": capture_rate,
+        "wafers_tested": wafers_tested,
+        "test_duration_min": test_duration,
+        "system_uptime_pct": system_uptime,
+        "throughput_wafers_per_hr": throughput,
+        "classification_accuracy_pct": classification_accuracy,
+        "sections": {
+            "1_OBJECTIVE": (
+                f"This test case validates the capability of the {product_line} system to detect "
+                f"and classify {defect_type} defects during {process_step.lower()} inspection "
+                f"at the {tech_node} technology node. The test is conducted at {fab} to ensure "
+                f"manufacturing quality standards are met for {wafer_size} wafer production.\n\n"
+                f"The primary objective is to verify that the inspection system meets the required "
+                f"detection sensitivity and classification accuracy for {defect_type} defects "
+                f"that are critical to yield at the {tech_node} node. This test case is part of "
+                f"the ongoing qualification program for the {product_line} platform."
+            ),
+            "2_SCOPE": (
+                f"- Product Line: {product_line}\n"
+                f"- Inspection Type: {inspection_type}\n"
+                f"- Target Defect: {defect_type}\n"
+                f"- Process Step: {process_step}\n"
+                f"- Wafer Size: {wafer_size}\n"
+                f"- Technology Node: {tech_node}\n"
+                f"- Fab Location: {fab}\n\n"
+                f"This test case applies to all {product_line} systems deployed at {fab} "
+                f"for {process_step.lower()} monitoring in the {tech_node} manufacturing line. "
+                f"Results from this test are used to establish baseline performance metrics "
+                f"and to qualify new recipe configurations."
+            ),
+            "3_TEST_CONFIGURATION": (
+                f"System: {product_line}\n"
+                f"Software Version: {sw_version}\n"
+                f"Recipe: {recipe}\n"
+                f"Illumination Mode: {illumination_mode}\n"
+                f"Scan Speed: {scan_speed_label} ({scan_speed_val} mm/s)\n"
+                f"Pixel Size: {pixel_size}\n"
+                f"Edge Exclusion: {edge_exclusion}mm\n"
+                f"Sampling Plan: {sampling_plan} sampling"
+            ),
+            "4_TEST_PROCEDURE": generate_test_procedure(inspection_type, product_line, defect_type),
+            "5_ACCEPTANCE_CRITERIA": generate_acceptance_criteria(
+                inspection_type, tech_node,
+                throughput=throughput, classification_accuracy=classification_accuracy,
+                repeatability=repeatability, correlation=correlation
+            ),
+            "6_TEST_RESULTS": (
+                f"Test Execution Date: {modified_date.strftime('%Y-%m-%d')}\n"
+                f"Wafers Tested: {wafers_tested}\n"
+                f"Total Defects Found: {defect_count}\n"
+                f"Defect Density: {defect_density} defects/cm²\n"
+                f"Nuisance Rate: {nuisance_rate}%\n"
+                f"Capture Rate: {capture_rate}%\n"
+                f"Test Duration: {test_duration} minutes\n"
+                f"System Uptime: {system_uptime}%\n\n"
+                f"Result Classification: {status}"
+            ),
+            "7_OBSERVATIONS": (
+                f"a) The {product_line} demonstrated "
+                f"{'excellent' if status == 'PASS' else 'acceptable' if status == 'CONDITIONAL PASS' else 'below-target'} performance "
+                f"in detecting {defect_type} at the {tech_node} node.\n\n"
+                f"b) {'The capture rate exceeded the minimum threshold, confirming system readiness.' if capture_rate > 90 else 'The capture rate requires optimization of the detection algorithm.'}\n\n"
+                f"c) {'Nuisance rate is within acceptable limits.' if nuisance_rate < 5 else 'Nuisance rate exceeds the target threshold; recipe tuning is recommended.'}\n\n"
+                f"d) {obs_d}\n\ne) {obs_e}"
+            ),
+            "8_CORRECTIVE_ACTIONS": (
+                "No corrective actions required. Test passed all acceptance criteria."
+                if status == "PASS" else
+                f"The following corrective actions are recommended:\n\n"
+                f"1. {'Re-tune detection algorithm thresholds for ' + defect_type + ' at ' + tech_node + ' node.' if status == 'FAIL' else 'Review edge-zone detection parameters for optimization.'}\n"
+                f"2. {'Schedule follow-up test after recipe optimization.' if status != 'PASS' else 'N/A'}\n"
+                f"3. {'Escalate to R&D for algorithm enhancement if re-tuning does not resolve sensitivity gap.' if status == 'FAIL' else 'Monitor performance over next 30 production days.'}"
+            ),
+            "9_SIGN_OFF": (
+                f"Author: {engineer}  Date: {modified_date.strftime('%Y-%m-%d')}\n"
+                f"Reviewer: {reviewer}  Date: {(modified_date + timedelta(days=sign_reviewer_delta)).strftime('%Y-%m-%d')}\n"
+                f"Approver: {approver}  Date: {(modified_date + timedelta(days=sign_approver_delta)).strftime('%Y-%m-%d')}"
+            ),
+        },
+    }
 
 
 def main():
@@ -299,22 +436,29 @@ def main():
     manifest = []
 
     for i in range(1, TOTAL_DOCUMENTS + 1):
-        doc_number, content = generate_document(i)
+        doc_number, content, json_doc = generate_document(i)
         filename = f"{doc_number}.txt"
         filepath = os.path.join(DATA_DIR, filename)
 
         with open(filepath, "w", encoding="utf-8") as f:
             f.write(content)
 
-        manifest.append({"id": i, "document_number": doc_number, "filename": filename})
-        print(f"  Generated: {filename}")
+        # Save structured JSON alongside the TXT — used by chunk_and_index.py
+        # for reliable, regex-free section extraction
+        json_filename = f"{doc_number}.json"
+        json_filepath = os.path.join(DATA_DIR, json_filename)
+        with open(json_filepath, "w", encoding="utf-8") as jf:
+            json.dump(json_doc, jf, indent=2, default=str)
+
+        manifest.append({"id": i, "document_number": doc_number, "filename": filename, "json_filename": json_filename})
+        print(f"  Generated: {filename} + {json_filename}")
 
     # Write manifest
     manifest_path = os.path.join(DATA_DIR, "manifest.json")
     with open(manifest_path, "w", encoding="utf-8") as f:
         json.dump(manifest, f, indent=2)
 
-    print(f"\nSuccessfully generated {TOTAL_DOCUMENTS} documents and manifest.json in {DATA_DIR}")
+    print(f"\nSuccessfully generated {TOTAL_DOCUMENTS} TXT + JSON documents and manifest.json in {DATA_DIR}")
 
 
 if __name__ == "__main__":
