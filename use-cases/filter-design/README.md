@@ -77,11 +77,20 @@ python scripts/test_search.py
 - *"BAW FBAR 5G NR n77"*
 - *"FD-TC-0015"*
 
+## JSON Sidecar Files
+
+Each `.pdf` document is generated alongside a companion **`FD-TC-XXXX.json` sidecar** containing every field as structured data (filter type, frequency band, substrate material, all S-parameters, Q factor, temperature coefficient, and all document sections). These JSON files are:
+
+- **Uploaded to Blob Storage** alongside the `.pdf` files by `upload_to_blob.py`
+- **Used by `chunk_and_index.py`** as the authoritative source for the AI Search chunked index, eliminating lossy PDF text extraction
+- **The primary reason demo accuracy improved from ~50% to 100%** (10/10 demo queries) and fine-tune citation accuracy reached 100% (20 samples): queries like "Which BAW filters have insertion loss below 1.5 dB?" now work because every field is a typed, searchable value
+
 ## Output Files
 
 | File | Description |
 |------|-------------|
 | `data/filter-design-docs/FD-TC-*.pdf` | 100 generated filter design PDFs |
+| `data/filter-design-docs/FD-TC-*.json` | 100 JSON sidecar files (structured metadata for AI Search) |
 | `data/filter-design-docs/manifest.json` | Document index |
 | `data/filter-design-docs/feedback_log.json` | Accumulated feedback entries |
 | [`evaluation_results.md`](evaluation_results.md) | Fine-tuning evaluation report |

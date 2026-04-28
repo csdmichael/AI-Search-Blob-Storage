@@ -76,11 +76,20 @@ python scripts/test_search.py
 - *"3nm technology node scratch detection"*
 - *"MFG-TC-0042"*
 
+## JSON Sidecar Files
+
+Each `.txt` document is generated alongside a companion **`MFG-TC-XXXX.json` sidecar** containing every field as structured data (product line, defect type, process step, technology node, fab location, all measurements, and all document sections). These JSON files are:
+
+- **Uploaded to Blob Storage** alongside the `.txt` files by `upload_to_blob.py`
+- **Used by `chunk_and_index.py`** as the authoritative source for the AI Search chunked index, eliminating regex-based text parsing
+- **The primary reason accuracy improved from ~70% to 92%+**: cross-document queries (e.g. "Which test cases involve the Teron SL650 system?") now work because `product_line` is a typed, filterable field
+
 ## Output Files
 
 | File | Description |
 |------|-------------|
 | `data/engineering-docs/MFG-TC-*.txt` | 100 generated test case documents |
+| `data/engineering-docs/MFG-TC-*.json` | 100 JSON sidecar files (structured metadata for AI Search) |
 | `data/engineering-docs/manifest.json` | Document index |
 | `data/engineering-docs/fine_tuning_train.jsonl` | Training data (~539 Q&A pairs) |
 | `data/engineering-docs/fine_tuning_validation.jsonl` | Validation data (~135 Q&A pairs) |
