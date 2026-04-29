@@ -1,0 +1,31 @@
+# Ignore everything not needed in the API container
+.git
+.github
+.venv
+__pycache__
+*.pyc
+
+# UI (deployed separately)
+ui/
+ui-logs*/
+
+# Log archives
+api-logs*/
+
+# Dev/build artifacts
+*.zip
+*.tar.gz
+node_modules/
+www/
+
+# Publish profiles (secrets)
+*-publish-profile.xml
+
+# IDE
+.vscode/
+.idea/
+
+# Docs (not needed at runtime)
+docs/
+README.md
+LICENSE

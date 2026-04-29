@@ -10,23 +10,16 @@ permissions:
 env:
   AZURE_SUBSCRIPTION_ID: "86b37969-9445-49cf-b03f-d8866235171c"
   AZURE_RESOURCE_GROUP: "ai-myaacoub"
+  ACR_NAME: "aisearchagentacr"
+  API_IMAGE: "ai-search-agent-api"
 
 jobs:
   deploy-api:
-    name: Deploy API to App Service
+    name: Build & Deploy API Container
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-          cache: pip
-
-      - name: Install runtime Python dependencies
-        run: pip install -r requirements-api.txt --target .python_packages/lib/site-packages
 
       - name: Azure Login (OIDC)
         uses: azure/login@v2
@@ -35,49 +28,53 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ env.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Configure API App Service settings
+      - name: Ensure ACR exists
+        run: |
+          az acr show --name ${{ env.ACR_NAME }} --resource-group ${{ env.AZURE_RESOURCE_GROUP }} 2>/dev/null || \
+          az acr create --name ${{ env.ACR_NAME }} --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --sku Basic --admin-enabled true
+
+      - name: Build image in ACR
+        run: |
+          az acr build \
+            --registry ${{ env.ACR_NAME }} \
+            --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+            --image ${{ env.API_IMAGE }}:${{ github.sha }} \
+            --image ${{ env.API_IMAGE }}:latest \
+            --file Dockerfile .
+
+      - name: Get ACR credentials
+        id: acr-creds
+        run: |
+          ACR_SERVER=$(az acr show --name ${{ env.ACR_NAME }} --query loginServer -o tsv)
+          ACR_USER=$(az acr credential show --name ${{ env.ACR_NAME }} --query username -o tsv)
+          ACR_PASS=$(az acr credential show --name ${{ env.ACR_NAME }} --query "passwords[0].value" -o tsv)
+          echo "server=$ACR_SERVER" >> "$GITHUB_OUTPUT"
+          echo "username=$ACR_USER" >> "$GITHUB_OUTPUT"
+          echo "::add-mask::$ACR_PASS"
+          echo "password=$ACR_PASS" >> "$GITHUB_OUTPUT"
+
+      - name: Configure App Service for container
         run: |
           az webapp config appsettings set \
             --name ai-search-agent-api \
             --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
             --settings \
-              SCM_DO_BUILD_DURING_DEPLOYMENT=false \
-              ENABLE_ORYX_BUILD=false \
-              PYTHONPATH="/home/site/wwwroot:/home/site/wwwroot/.python_packages/lib/site-packages"
-          az webapp config appsettings delete \
+              WEBSITES_PORT=8000 \
+              DOCKER_REGISTRY_SERVER_URL=https://${{ steps.acr-creds.outputs.server }} \
+              DOCKER_REGISTRY_SERVER_USERNAME=${{ steps.acr-creds.outputs.username }} \
+              DOCKER_REGISTRY_SERVER_PASSWORD=${{ steps.acr-creds.outputs.password }}
+
+      - name: Deploy container to App Service
+        run: |
+          az webapp config container set \
             --name ai-search-agent-api \
             --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
-            --setting-names WEBSITE_STARTUP_FILE WEBSITES_PORT WEBSITE_RUN_FROM_PACKAGE 2>/dev/null || true
+            --container-image-name ${{ steps.acr-creds.outputs.server }}/${{ env.API_IMAGE }}:${{ github.sha }} \
+            --container-registry-url https://${{ steps.acr-creds.outputs.server }} \
+            --container-registry-user ${{ steps.acr-creds.outputs.username }} \
+            --container-registry-password ${{ steps.acr-creds.outputs.password }}
 
-      - name: Configure API startup command
-        run: |
-          az webapp config set \
-            --name ai-search-agent-api \
-            --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
-            --startup-file "gunicorn app:app --workers 2 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000 --timeout 240"
-
-      - name: Create API deployment package
-        run: |
-          cp requirements-api.txt requirements.txt
-          zip -r api-deploy.zip \
-            app.py startup.sh requirements.txt \
-            api/ config/ scripts/ data/ \
-            .python_packages/ \
-            -x '*/__pycache__/*' '*.pyc'
-          echo "API zip size: $(du -h api-deploy.zip | cut -f1)"
-
-      - name: Deploy API to App Service
-        run: |
-          az webapp deploy \
-            --name ai-search-agent-api \
-            --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
-            --src-path api-deploy.zip \
-            --type zip \
-            --clean true \
-            --restart true \
-            --timeout 600
-
-      - name: Restart API App Service
+      - name: Restart App Service
         run: |
           az webapp restart \
             --name ai-search-agent-api \
