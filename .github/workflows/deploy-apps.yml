@@ -25,9 +25,6 @@ jobs:
           python-version: "3.12"
           cache: pip
 
-      - name: Install Python dependencies
-        run: pip install -r requirements.txt --target .python_packages/lib/site-packages
-
       - name: Azure Login (OIDC)
         uses: azure/login@v2
         with:
@@ -40,16 +37,22 @@ jobs:
           zip -r api-deploy.zip \
             app.py startup.sh requirements.txt .python-version \
             api/ config/ scripts/ data/ \
-            .python_packages/ \
             -x '*/__pycache__/*' '*.pyc'
           echo "API zip size: $(du -h api-deploy.zip | cut -f1)"
 
-      - name: Disable Oryx remote build
+      - name: Enable Oryx remote build
         run: |
           az webapp config appsettings set \
             --name ai-search-agent-api \
             --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
-            --settings SCM_DO_BUILD_DURING_DEPLOYMENT=false ENABLE_ORYX_BUILD=false
+            --settings SCM_DO_BUILD_DURING_DEPLOYMENT=true ENABLE_ORYX_BUILD=true
+
+      - name: Configure API startup command
+        run: |
+          az webapp config set \
+            --name ai-search-agent-api \
+            --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+            --startup-file "startup.sh"
 
       - name: Deploy API to App Service
         run: |
@@ -111,6 +114,13 @@ jobs:
             --name ai-search-agent-ui \
             --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
             --settings SCM_DO_BUILD_DURING_DEPLOYMENT=false ENABLE_ORYX_BUILD=false
+
+      - name: Configure UI startup command
+        run: |
+          az webapp config set \
+            --name ai-search-agent-ui \
+            --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+            --startup-file "node server.js"
 
       - name: Deploy UI to App Service
         run: |
