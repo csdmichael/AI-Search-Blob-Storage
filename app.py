@@ -37,56 +37,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ── Sample prompts ──────────────────────────────────────────────────
+# ── Sample prompts (loaded from config/prompts_config.json) ─────────
 
-SAMPLE_PROMPTS = {
-    "engineering_docs": {
-        "keyword": [
-            {"text": "Surfscan SP7 particle detection", "category": "keyword"},
-            {"text": "FinFET inspection post-etch defect", "category": "keyword"},
-            {"text": "3nm technology node scratch detection", "category": "keyword"},
-            {"text": "CMP process wafer inspection FAIL", "category": "keyword"},
-            {"text": "overlay metrology Archer 700", "category": "keyword"},
-        ],
-        "semantic": [
-            {"text": "What are the most common defect types found during wafer inspection?", "category": "semantic"},
-            {"text": "Which test cases failed and what corrective actions were recommended?", "category": "semantic"},
-            {"text": "How does the Surfscan system detect crystal originated particles?", "category": "semantic"},
-            {"text": "What is the acceptance criteria for 5nm node patterned wafer inspection?", "category": "semantic"},
-            {"text": "Show me test results for post-CMP contamination inspection", "category": "semantic"},
-        ],
-        "agent": [
-            {"text": "What defect types are detected by the Surfscan SP7 system?", "category": "agent"},
-            {"text": "List all test cases that failed for 3nm technology node.", "category": "agent"},
-            {"text": "What are the corrective actions for high nuisance rates?", "category": "agent"},
-            {"text": "What is the capture rate for MFG-TC-0001?", "category": "agent"},
-            {"text": "Which inspection systems are used for FinFET manufacturing?", "category": "agent"},
-        ],
-    },
-    "filter_design": {
-        "keyword": [
-            {"text": "SAW filter Band 7 insertion loss", "category": "keyword"},
-            {"text": "BAW FBAR 5G NR n77", "category": "keyword"},
-            {"text": "TC-SAW temperature compensation", "category": "keyword"},
-            {"text": "duplexer isolation rejection", "category": "keyword"},
-            {"text": "LiNbO3 substrate Q factor", "category": "keyword"},
-        ],
-        "semantic": [
-            {"text": "What filter designs target 5G NR sub-6 GHz bands?", "category": "semantic"},
-            {"text": "Which filter test cases failed and what corrective actions were recommended?", "category": "semantic"},
-            {"text": "How does temperature affect SAW filter frequency stability?", "category": "semantic"},
-            {"text": "What are the acceptance criteria for BAW filter insertion loss?", "category": "semantic"},
-            {"text": "Show me test results for WiFi 6E coexistence filters", "category": "semantic"},
-        ],
-        "agent": [
-            {"text": "What are the design parameters for Band 7 SAW filters?", "category": "agent"},
-            {"text": "List all filter designs that failed acceptance criteria.", "category": "agent"},
-            {"text": "What corrective actions are recommended for high insertion loss?", "category": "agent"},
-            {"text": "What is the Q factor for FD-TC-0003?", "category": "agent"},
-            {"text": "What is the insertion loss for FD-TC-0003?", "category": "agent"},
-        ],
-    },
-}
+SAMPLE_PROMPTS = config.prompts_config()["use_cases"]
 
 
 # ── Models ──────────────────────────────────────────────────────────
