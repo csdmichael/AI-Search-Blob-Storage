@@ -35,19 +35,26 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ env.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Disable Oryx remote build
+      - name: Configure API App Service settings
         run: |
           az webapp config appsettings set \
             --name ai-search-agent-api \
             --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
-            --settings SCM_DO_BUILD_DURING_DEPLOYMENT=false ENABLE_ORYX_BUILD=false
+            --settings \
+              SCM_DO_BUILD_DURING_DEPLOYMENT=false \
+              ENABLE_ORYX_BUILD=false \
+              PYTHONPATH="/home/site/wwwroot:/home/site/wwwroot/.python_packages/lib/site-packages"
+          az webapp config appsettings delete \
+            --name ai-search-agent-api \
+            --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+            --setting-names WEBSITE_STARTUP_FILE WEBSITES_PORT 2>/dev/null || true
 
       - name: Configure API startup command
         run: |
           az webapp config set \
             --name ai-search-agent-api \
             --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
-            --startup-file "startup.sh"
+            --startup-file "gunicorn app:app --workers 2 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000 --timeout 240"
 
       - name: Create API deployment package
         run: |

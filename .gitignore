@@ -5,6 +5,7 @@ __pycache__/
 
 # Deployment artifacts
 *.zip
+.python_packages/
 api-logs*/
 ui-logs*/
 *-publish-profile.xml
