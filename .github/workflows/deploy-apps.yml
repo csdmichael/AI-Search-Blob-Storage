@@ -19,6 +19,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt --target .python_packages/lib/site-packages
+
       - name: Azure Login (OIDC)
         uses: azure/login@v2
         with:
@@ -28,10 +37,11 @@ jobs:
 
       - name: Create API deployment package
         run: |
-          zip -r api-deploy.zip . \
-            -x 'ui/*' '.venv/*' 'node_modules/*' \
-            'api-logs*' 'ui-logs*' \
-            '__pycache__/*' '.git/*' '*.zip'
+          zip -r api-deploy.zip \
+            app.py startup.sh requirements.txt .python-version \
+            api/ config/ scripts/ data/ \
+            .python_packages/ \
+            -x '*/__pycache__/*' '*.pyc'
           echo "API zip size: $(du -h api-deploy.zip | cut -f1)"
 
       - name: Deploy API to App Service
@@ -66,11 +76,14 @@ jobs:
 
       - name: Create UI deployment package
         run: |
+          cd ui
+          npm ci --production --prefix /tmp/ui-pkg --package-lock-only 2>/dev/null || true
           mkdir -p /tmp/ui-pkg
-          cp -r ui/www /tmp/ui-pkg/www
-          cp ui/server.js /tmp/ui-pkg/
-          cp ui/deploy-package.json /tmp/ui-pkg/package.json
+          cp -r www /tmp/ui-pkg/www
+          cp server.js /tmp/ui-pkg/
+          cp deploy-package.json /tmp/ui-pkg/package.json
           cd /tmp/ui-pkg
+          npm install --production
           zip -r $GITHUB_WORKSPACE/ui-deploy.zip .
           echo "UI zip size: $(du -h $GITHUB_WORKSPACE/ui-deploy.zip | cut -f1)"
 
