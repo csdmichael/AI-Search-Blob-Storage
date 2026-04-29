@@ -15,13 +15,20 @@
         </ion-card-subtitle>
       </ion-card-header>
       <ion-card-content>
-        <!-- PDF viewer (actual PDF in iframe, hidden for JSON documents) -->
-        <div *ngIf="pdfUrl && selectedDoc?.format !== 'json'" class="pdf-viewer">
+        <!-- PDF viewer -->
+        <div *ngIf="pdfUrl" class="pdf-viewer">
           <iframe [src]="pdfUrl" class="pdf-iframe"></iframe>
         </div>
         <!-- JSON structured view -->
         <ng-container *ngIf="selectedDoc">
         <div *ngIf="selectedDoc.format === 'json'" class="json-view">
+          <!-- Parsed / Raw tabs -->
+          <ion-segment [(ngModel)]="jsonTab" class="json-tabs">
+            <ion-segment-button value="parsed"><ion-label>Parsed</ion-label></ion-segment-button>
+            <ion-segment-button value="raw"><ion-label>Raw JSON</ion-label></ion-segment-button>
+          </ion-segment>
+
+          <div *ngIf="jsonTab === 'parsed'">
           <ion-grid>
             <ion-row>
               <ion-col size="6" size-md="4" *ngFor="let key of ['status','filter_type','frequency_band','substrate_material','product_line','target_defect','process_step','technology_node','design_center','fab_location']">
@@ -53,6 +60,10 @@
             <ion-item-divider color="light" class="section-divider">{{ getSectionLabel(secKey) }}</ion-item-divider>
             <div class="section-content">{{ selectedDoc.content.sections[secKey] }}</div>
           </div>
+          </div>
+
+          <!-- Raw JSON tab -->
+          <pre *ngIf="jsonTab === 'raw'" class="raw-json-view">{{ selectedDoc.content | json }}</pre>
         </div>
 
         <!-- Plain text view -->

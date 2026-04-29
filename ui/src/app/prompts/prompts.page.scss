@@ -74,9 +74,11 @@
   margin-bottom: 0.5rem;
 
   ion-item-divider {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    --padding-start: 0;
+    font-weight: 700;
 
     .count-badge {
       margin-left: 8px;
@@ -86,7 +88,7 @@
 }
 
 .prompt-item {
-  --padding-start: 0;
+  --padding-start: 2rem;
 
   ion-label {
     font-size: 0.9rem;

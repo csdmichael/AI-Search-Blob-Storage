@@ -23,6 +23,7 @@ export class DocumentsPage implements OnInit, OnDestroy {
   selectedDoc: DocumentDetail | null = null;
   selectedDocId = '';
   pdfUrl: SafeResourceUrl | null = null;
+  jsonTab: 'parsed' | 'raw' = 'parsed';
 
   private ucSub!: Subscription;
 
@@ -86,16 +87,17 @@ export class DocumentsPage implements OnInit, OnDestroy {
     this.selectedDocId = docId;
     this.pdfUrl = null;
     this.selectedDoc = null;
+    this.jsonTab = 'parsed';
 
-    // Check if this use case has PDFs and the specific document is not JSON
     const entry = this.documents.find((d) => d.doc_id === docId);
-    if (this.uc.active.fileFormat === 'pdf' && entry?.type !== 'json') {
-      // Show the actual PDF via iframe
+
+    // Show PDF viewer for PDF documents
+    if (entry?.type === 'pdf') {
       const url = this.api.getPdfUrl(docId, this.uc.activeKey);
       this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
     }
 
-    // Also load JSON metadata
+    // Also load JSON/text metadata
     this.api.getDocument(docId, this.uc.activeKey).subscribe({
       next: (doc) => { this.selectedDoc = doc; },
       error: () => { /* PDF-only doc, no JSON — that's OK */ },
