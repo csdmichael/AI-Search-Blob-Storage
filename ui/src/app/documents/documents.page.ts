@@ -87,8 +87,9 @@ export class DocumentsPage implements OnInit, OnDestroy {
     this.pdfUrl = null;
     this.selectedDoc = null;
 
-    // Check if this use case has PDFs
-    if (this.uc.active.fileFormat === 'pdf') {
+    // Check if this use case has PDFs and the specific document is not JSON
+    const entry = this.documents.find((d) => d.doc_id === docId);
+    if (this.uc.active.fileFormat === 'pdf' && entry?.type !== 'json') {
       // Show the actual PDF via iframe
       const url = this.api.getPdfUrl(docId, this.uc.activeKey);
       this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);

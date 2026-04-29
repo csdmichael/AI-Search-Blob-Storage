@@ -15,8 +15,8 @@
         </ion-card-subtitle>
       </ion-card-header>
       <ion-card-content>
-        <!-- PDF viewer (actual PDF in iframe) -->
-        <div *ngIf="pdfUrl" class="pdf-viewer">
+        <!-- PDF viewer (actual PDF in iframe, hidden for JSON documents) -->
+        <div *ngIf="pdfUrl && selectedDoc?.format !== 'json'" class="pdf-viewer">
           <iframe [src]="pdfUrl" class="pdf-iframe"></iframe>
         </div>
         <!-- JSON structured view -->

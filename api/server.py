@@ -121,6 +121,11 @@ def _is_fallback(text: str) -> bool:
     return any(phrase in lower for phrase in _FALLBACK_PHRASES)
 
 
+def _extract_expected_doc_ids(prompt: str) -> list[str]:
+    """Extract specific document IDs mentioned in the prompt."""
+    return list(dict.fromkeys(_DOC_ID_PATTERN.findall(prompt.upper())))
+
+
 def _query_agent(prompt: str, use_case: str) -> str:
     """Call the existing query_agent function with the right USE_CASE."""
     os.environ["USE_CASE"] = use_case
@@ -208,6 +213,16 @@ def batch_run(req: BatchRequest):
         elif not sources:
             passed = False
             reason = "No document citations in response"
+        elif not any(s.startswith(doc_prefix) for s in sources):
+            passed = False
+            reason = f"No {doc_prefix} citations (wrong use-case docs)"
+        else:
+            # If prompt mentions specific doc IDs, verify they appear in the response
+            expected_ids = _extract_expected_doc_ids(prompt)
+            missing = [eid for eid in expected_ids if eid not in (s.upper() for s in sources)]
+            if missing:
+                passed = False
+                reason = f"Expected doc(s) not cited: {', '.join(missing)}"
 
         results.append(BatchResultItem(
             prompt=prompt,
