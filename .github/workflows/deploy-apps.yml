@@ -49,13 +49,17 @@ jobs:
           az webapp config appsettings set \
             --name ai-search-agent-api \
             --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
-            --settings SCM_DO_BUILD_DURING_DEPLOYMENT=false
+            --settings SCM_DO_BUILD_DURING_DEPLOYMENT=false ENABLE_ORYX_BUILD=false
 
       - name: Deploy API to App Service
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: ai-search-agent-api
-          package: api-deploy.zip
+        run: |
+          az webapp deploy \
+            --name ai-search-agent-api \
+            --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+            --src-path api-deploy.zip \
+            --type zip \
+            --clean true \
+            --restart true
 
   deploy-ui:
     name: Deploy UI to App Service
@@ -106,10 +110,14 @@ jobs:
           az webapp config appsettings set \
             --name ai-search-agent-ui \
             --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
-            --settings SCM_DO_BUILD_DURING_DEPLOYMENT=false
+            --settings SCM_DO_BUILD_DURING_DEPLOYMENT=false ENABLE_ORYX_BUILD=false
 
       - name: Deploy UI to App Service
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: ai-search-agent-ui
-          package: ui-deploy.zip
+        run: |
+          az webapp deploy \
+            --name ai-search-agent-ui \
+            --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+            --src-path ui-deploy.zip \
+            --type zip \
+            --clean true \
+            --restart true
