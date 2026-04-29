@@ -26,7 +26,7 @@ jobs:
           cache: pip
 
       - name: Install runtime Python dependencies
-        run: pip install -r requirements-api.txt --target .python_packages/lib/site-packages
+        run: pip install -r requirements-api.txt --target .python_packages/lib/site-packages --platform manylinux2014_x86_64 --only-binary=:all: --python-version 3.12
 
       - name: Azure Login (OIDC)
         uses: azure/login@v2
@@ -74,7 +74,14 @@ jobs:
             --src-path api-deploy.zip \
             --type zip \
             --clean true \
-            --restart true
+            --restart true \
+            --async true
+
+      - name: Restart API App Service
+        run: |
+          az webapp restart \
+            --name ai-search-agent-api \
+            --resource-group ${{ env.AZURE_RESOURCE_GROUP }}
 
   deploy-ui:
     name: Deploy UI to App Service
