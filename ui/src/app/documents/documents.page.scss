@@ -34,6 +34,12 @@
 }
 
 // Detail view
+.back-btn {
+  --padding-start: 0;
+  margin: 0.5rem 0 0;
+  font-size: 0.95rem;
+}
+
 .doc-detail-card {
   margin: 0.5rem 0;
 }

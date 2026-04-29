@@ -75,7 +75,7 @@ jobs:
             --type zip \
             --clean true \
             --restart true \
-            --async true
+            --timeout 600
 
       - name: Restart API App Service
         run: |

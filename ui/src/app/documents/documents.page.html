@@ -2,14 +2,13 @@
   <div class="docs-container">
 
     <!-- Document Detail View -->
-    <ion-card *ngIf="selectedDoc || pdfUrl" class="doc-detail-card">
-      <ion-card-header>
-        <ion-card-title>
-          <ion-button fill="clear" size="small" (click)="closeDocument()">
-            <ion-icon name="arrow-back" slot="start"></ion-icon> Back
-          </ion-button>
-          {{ selectedDocId }}
-        </ion-card-title>
+    <div *ngIf="selectedDoc || pdfUrl">
+      <ion-button fill="clear" (click)="closeDocument()" class="back-btn">
+        <ion-icon name="arrow-back" slot="start"></ion-icon> Back to Documents
+      </ion-button>
+      <ion-card class="doc-detail-card">
+        <ion-card-header>
+          <ion-card-title>{{ selectedDocId }}</ion-card-title>
         <ion-card-subtitle *ngIf="selectedDoc?.format === 'json' && selectedDoc?.content?.title">
           {{ selectedDoc!.content.title }}
         </ion-card-subtitle>
@@ -71,6 +70,7 @@
         </ng-container>
       </ion-card-content>
     </ion-card>
+    </div>
 
     <!-- Document List View -->
     <div *ngIf="!selectedDoc && !pdfUrl">
