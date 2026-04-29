@@ -117,4 +117,8 @@ export class PromptsPage implements OnInit, OnDestroy {
     if (pct >= 70) return 'warning';
     return 'danger';
   }
+
+  openCitation(docId: string) {
+    window.open(`/documents/${docId}`, '_blank');
+  }
 }

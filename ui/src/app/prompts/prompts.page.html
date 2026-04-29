@@ -38,7 +38,7 @@
               <p class="result-meta">
                 <ion-badge color="medium">{{ r.duration_ms }}ms</ion-badge>
                 <ion-badge *ngIf="!r.passed" color="danger">{{ r.reason }}</ion-badge>
-                <ion-badge *ngFor="let src of r.sources" color="tertiary" class="src-badge">{{ src }}</ion-badge>
+                <ion-badge *ngFor="let src of r.sources" color="tertiary" class="src-badge citation-link" (click)="openCitation(src)">{{ src }}</ion-badge>
               </p>
             </ion-label>
           </ion-item>

@@ -62,6 +62,12 @@
   }
 
   .src-badge { font-size: 0.72rem; }
+
+  .citation-link {
+    cursor: pointer;
+    transition: opacity 0.15s;
+    &:hover { opacity: 0.75; }
+  }
 }
 
 .category-section {
