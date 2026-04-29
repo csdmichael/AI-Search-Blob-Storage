@@ -28,9 +28,16 @@ import config  # noqa: E402
 
 app = FastAPI(title="AI Search Agent API", version="1.0.0")
 
+_ALLOWED_ORIGINS = [
+    "https://ai-search-agent-ui.azurewebsites.net",
+    "http://ai-search-agent-ui.azurewebsites.net",
+    "http://localhost:8100",
+    "http://localhost:4200",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=_ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
