@@ -1,0 +1,8 @@
+# Runtime-only dependencies for the API App Service deployment.
+# Heavy script-only packages (matplotlib, azure-ai-evaluation, openai, etc.)
+# are excluded to keep the deployment zip small enough for Kudu.
+azure-identity
+azure-ai-agents
+fastapi
+uvicorn
+gunicorn

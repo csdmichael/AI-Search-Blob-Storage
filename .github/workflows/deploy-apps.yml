@@ -25,6 +25,9 @@ jobs:
           python-version: "3.12"
           cache: pip
 
+      - name: Install runtime Python dependencies
+        run: pip install -r requirements-api.txt --target .python_packages/lib/site-packages
+
       - name: Azure Login (OIDC)
         uses: azure/login@v2
         with:
@@ -37,15 +40,16 @@ jobs:
           zip -r api-deploy.zip \
             app.py startup.sh requirements.txt .python-version \
             api/ config/ scripts/ data/ \
+            .python_packages/ \
             -x '*/__pycache__/*' '*.pyc'
           echo "API zip size: $(du -h api-deploy.zip | cut -f1)"
 
-      - name: Enable Oryx remote build
+      - name: Disable Oryx remote build
         run: |
           az webapp config appsettings set \
             --name ai-search-agent-api \
             --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
-            --settings SCM_DO_BUILD_DURING_DEPLOYMENT=true ENABLE_ORYX_BUILD=true
+            --settings SCM_DO_BUILD_DURING_DEPLOYMENT=false ENABLE_ORYX_BUILD=false
 
       - name: Configure API startup command
         run: |
