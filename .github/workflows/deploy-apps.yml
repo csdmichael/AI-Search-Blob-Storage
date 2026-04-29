@@ -35,15 +35,6 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ env.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Create API deployment package
-        run: |
-          zip -r api-deploy.zip \
-            app.py startup.sh requirements.txt .python-version \
-            api/ config/ scripts/ data/ \
-            .python_packages/ \
-            -x '*/__pycache__/*' '*.pyc'
-          echo "API zip size: $(du -h api-deploy.zip | cut -f1)"
-
       - name: Disable Oryx remote build
         run: |
           az webapp config appsettings set \
@@ -57,6 +48,16 @@ jobs:
             --name ai-search-agent-api \
             --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
             --startup-file "startup.sh"
+
+      - name: Create API deployment package
+        run: |
+          cp requirements-api.txt requirements.txt
+          zip -r api-deploy.zip \
+            app.py startup.sh requirements.txt .python-version \
+            api/ config/ scripts/ data/ \
+            .python_packages/ \
+            -x '*/__pycache__/*' '*.pyc'
+          echo "API zip size: $(du -h api-deploy.zip | cut -f1)"
 
       - name: Deploy API to App Service
         run: |
