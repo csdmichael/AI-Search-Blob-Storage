@@ -30,8 +30,8 @@ _ALLOWED_ORIGINS = [
 ]
 
 app.add_middleware(
-    CORSMiddleware,
-    allow_origins=_ALLOWED_ORIGINS,
+    CORSMiddleware,On mobile
+    allow_origins=["https://ai-search-agent-ui.azurewebsites.net"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
