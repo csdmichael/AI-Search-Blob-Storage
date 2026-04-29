@@ -115,6 +115,21 @@ AI-Search-Blob-Storage/
 
 ---
 
+## References
+
+- [Azure AI Search documentation](https://learn.microsoft.com/azure/search/search-what-is-azure-search)
+- [Retrieval Augmented Generation (RAG) in Azure AI Search](https://learn.microsoft.com/azure/search/retrieval-augmented-generation-overview)
+- [Azure AI Search — Integrated vectorization and chunking](https://learn.microsoft.com/azure/search/vector-search-integrated-vectorization)
+- [Microsoft Foundry Agent Service overview](https://learn.microsoft.com/azure/foundry/agents/overview)
+- [Quickstart: Create a Foundry Agent](https://learn.microsoft.com/azure/foundry/quickstarts/get-started-code)
+- [Azure Blob Storage documentation](https://learn.microsoft.com/azure/storage/blobs/storage-blobs-introduction)
+- [Semantic ranking in Azure AI Search](https://learn.microsoft.com/azure/search/semantic-search-overview)
+- [Azure App Service — Deploy a containerized app](https://learn.microsoft.com/azure/app-service/tutorial-custom-container)
+- [Azure Container Registry documentation](https://learn.microsoft.com/azure/container-registry/container-registry-intro)
+- [GitHub Actions for Azure deployment](https://learn.microsoft.com/azure/developer/github/github-actions)
+
+---
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
