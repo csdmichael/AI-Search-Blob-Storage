@@ -1,0 +1,219 @@
+{
+  "use_case": "filter_design",
+  "total": 30,
+  "passed": 30,
+  "failed": 0,
+  "accuracy_pct": 100.0,
+  "results": [
+    {
+      "prompt": "What are the design parameters for Band 7 SAW filters?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 6.1,
+      "response_preview": "The design parameters for Band 7 SAW filters are as follows: - Center Frequency: 2620 MHz - Bandwidth: 70 MHz - Insertion Loss: \u2264 2.5 dB - Return Loss: \u2265 12 dB - Rejection (at 2500 MHz): \u2265 35 dB - Rej"
+    },
+    {
+      "prompt": "List all filter designs that failed acceptance criteria.",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 5.5,
+      "response_preview": "Based on the information retrieved from the filter design documents index, the following filter designs failed acceptance criteria: - FD-TC-0002: \"Acceptance Criteria: FAIL\" [FD-TC-0002.pdf\u2020filter-des"
+    },
+    {
+      "prompt": "What corrective actions are recommended for high insertion loss?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 6.2,
+      "response_preview": "The recommended corrective actions for high insertion loss, as detailed in the filter design documents, include: - \"Review photolithography process for possible line width variations.\" - \"Check for po"
+    },
+    {
+      "prompt": "What is the Q factor for FD-TC-0003?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 4.7,
+      "response_preview": "The Q factor for FD-TC-0003 is 9997 [FD-TC-0003.pdf\u2020filter-design-chunked-index]. Sources: FD-TC-0003.pdf\u2020filter-design-chunked-index"
+    },
+    {
+      "prompt": "What is the insertion loss for FD-TC-0003?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 5.6,
+      "response_preview": "The measured insertion loss for FD-TC-0003 is 3.09 dB [FD-TC-0003.pdf\u2020filter-design-chunked-index]. Sources: FD-TC-0003.pdf\u2020filter-design-chunked-index"
+    },
+    {
+      "prompt": "What is the measured insertion loss and return loss for FD-TC-0001?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 5.6,
+      "response_preview": "The measured insertion loss for FD-TC-0001 is 2.85 dB and the measured return loss is 13.2 dB [FD-TC-0001.pdf\u2020filter-design-chunked-index]. Sources: FD-TC-0001.pdf\u2020filter-design-chunked-index"
+    },
+    {
+      "prompt": "Which TC-SAW filters target Band 7 and what were their results?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 8.2,
+      "response_preview": "Based on the indexed filter design documents, the following TC-SAW filters target Band 7: 1. FD-TC-0003: - Filter Type: TC-SAW - Target Band: Band 7 - Test Results: - Insertion Loss (meas): 3.09 dB - "
+    },
+    {
+      "prompt": "What corrective actions are recommended in FD-TC-0005?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 5.4,
+      "response_preview": "The recommended corrective actions in FD-TC-0005 are: \"1. Review mask layout for possible lithography misalignment. 2. Increase process control monitoring for electrode thickness variation. 3. Impleme"
+    },
+    {
+      "prompt": "What substrates are used for FBAR filter designs?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 4.9,
+      "response_preview": "The substrates used for FBAR filter designs include AlN and ScAlN [FD-TC-0007.pdf\u2020filter-design-chunked-index]. Sources: FD-TC-0007.pdf\u2020filter-design-chunked-index"
+    },
+    {
+      "prompt": "Compare insertion loss across all filter designs that use LiNbO3 substrate.",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 7.5,
+      "response_preview": "Here is a comparison of insertion loss across all filter designs that use LiNbO3 substrate, based on the retrieved filter design documents: 1. FD-TC-0003: - Substrate: LiNbO3 - Insertion Loss (meas): "
+    },
+    {
+      "prompt": "Which filter designs have FAIL status and why?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 7.1,
+      "response_preview": "The following filter designs have a FAIL status and the reasons are as follows: 1. FD-TC-0007: - Status: FAIL - Reason: \"Insertion Loss (meas): 4.82 dB\" exceeds the \"Insertion Loss Target: <= 3.4 dB\"."
+    },
+    {
+      "prompt": "Show the acceptance criteria for duplexer isolation.",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 5.5,
+      "response_preview": "The acceptance criteria for duplexer isolation are as follows: \"Isolation: >= 40 dB\" [FD-TC-0002.pdf\u2020filter-design-chunked-index]. Sources: FD-TC-0002.pdf\u2020filter-design-chunked-index"
+    },
+    {
+      "prompt": "What package types are used for BAW filters and what are their die sizes?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 6.9,
+      "response_preview": "The package types used for BAW filters and their die sizes are as follows: - For BAW filters, the package type listed is \"1.1 x 0.9 mm2 LGA\" and the die size is \"0.85 x 0.65 mm2\" [FD-TC-0007.pdf\u2020filte"
+    },
+    {
+      "prompt": "What design tools were used for 5G NR n78 band filters?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 5.4,
+      "response_preview": "The design tools used for 5G NR n78 band filters are listed as \"Keysight ADS 2020 Update 2, Sonnet Suites 18.54, and COMSOL Multiphysics 5.5\" [FD-TC-0007.pdf\u2020filter-design-chunked-index]. Sources: FD-"
+    },
+    {
+      "prompt": "What is the Q factor for FD-TC-0010?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 5.4,
+      "response_preview": "The Q factor for FD-TC-0010 is 11200 [FD-TC-0010.pdf\u2020filter-design-chunked-index]. Sources: FD-TC-0010.pdf\u2020filter-design-chunked-index"
+    },
+    {
+      "prompt": "What does test case FD-TC-0001 cover?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 6.3,
+      "response_preview": "Test case FD-TC-0001 covers the following: - Filter Type: SAW Filter - Center Frequency: 2496 MHz - Bandwidth: 60 MHz - Application: n41 Band - Key Parameters: Insertion Loss, Return Loss, Rejection, "
+    },
+    {
+      "prompt": "What are the acceptance criteria for FD-TC-0015?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 5.5,
+      "response_preview": "The acceptance criteria for FD-TC-0015 are as follows: - Insertion Loss: \u2264 2.0 dB - Return Loss: \u2265 12 dB - Rejection (at 20 MHz offset): \u2265 35 dB - Q Factor: \u2265 8000 [FD-TC-0015.pdf\u2020filter-design-chunke"
+    },
+    {
+      "prompt": "What were the test results for FD-TC-0020?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 5.4,
+      "response_preview": "The test results for FD-TC-0020 are as follows: - Insertion Loss (meas): 2.85 dB - Return Loss (meas): 13.2 dB - Rejection (meas): 38.7 dB - Q Factor (meas): 10234 [FD-TC-0020.pdf\u2020filter-design-chunke"
+    },
+    {
+      "prompt": "What observations were noted in FD-TC-0010?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 6.0,
+      "response_preview": "The following observations were noted in FD-TC-0010: - \"The measured insertion loss is higher than the target value, primarily due to increased electrode resistance.\" - \"Return loss meets the specific"
+    },
+    {
+      "prompt": "What is the return loss for FD-TC-0005?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 5.4,
+      "response_preview": "The return loss for FD-TC-0005 is 13.2 dB [FD-TC-0005.pdf\u2020filter-design-chunked-index]. Sources: FD-TC-0005.pdf\u2020filter-design-chunked-index"
+    },
+    {
+      "prompt": "Which filter designs target n77 band and what is their rejection?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 5.4,
+      "response_preview": "The following filter designs target the n77 band and their rejection values are: 1. FD-TC-0002: - Target Band: n77 - Rejection: 38.2 dB [FD-TC-0002.pdf\u2020filter-design-chunked-index] 2. FD-TC-0005: - Ta"
+    },
+    {
+      "prompt": "What electrode materials are used in FD-TC-0003?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 4.6,
+      "response_preview": "The electrode materials used in FD-TC-0003 are AlCu and Mo [FD-TC-0003.pdf\u2020filter-design-chunked-index]. Sources: FD-TC-0003.pdf\u2020filter-design-chunked-index"
+    },
+    {
+      "prompt": "Compare Q factor across all FBAR filter designs.",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 5.5,
+      "response_preview": "- FD-TC-0003: Q Factor (meas): 9997 [FD-TC-0003.pdf\u2020filter-design-chunked-index] - FD-TC-0012: Q Factor: 11200 [FD-TC-0012.pdf\u2020filter-design-chunked-index] - FD-TC-0021: Q Factor: 10500 [FD-TC-0021.pd"
+    },
+    {
+      "prompt": "What temperature compensation method is used in FD-TC-0015?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 4.7,
+      "response_preview": "The temperature compensation method used in FD-TC-0015 is \"TC-SAW\" [FD-TC-0015.pdf\u2020filter-design-chunked-index]. Sources: FD-TC-0015.pdf\u2020filter-design-chunked-index"
+    },
+    {
+      "prompt": "Which filter designs have the highest insertion loss and why?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 8.7,
+      "response_preview": "Based on the information retrieved from the filter design documents index, the following filter designs have the highest measured insertion loss: - FD-TC-0007: Insertion Loss (meas): 4.82 dB [FD-TC-00"
+    },
+    {
+      "prompt": "What is the passband bandwidth for FD-TC-0001?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 4.9,
+      "response_preview": "The passband bandwidth for FD-TC-0001 is 100 MHz [FD-TC-0001.pdf\u2020filter-design-chunked-index]. Sources: FD-TC-0001.pdf\u2020filter-design-chunked-index"
+    },
+    {
+      "prompt": "List all filter designs that use WLP packaging.",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 5.5,
+      "response_preview": "The following filter designs use WLP packaging: - FD-TC-0003: \"Package Type: WLP\" [FD-TC-0003.pdf\u2020filter-design-chunked-index] - FD-TC-0007: \"Package Type: WLP\" [FD-TC-0007.pdf\u2020filter-design-chunked-i"
+    },
+    {
+      "prompt": "What is the status of FD-TC-0020?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 4.6,
+      "response_preview": "The status of FD-TC-0020 is \"PASS\" [FD-TC-0020.pdf\u2020filter-design-chunked-index]. Sources: FD-TC-0020.pdf\u2020filter-design-chunked-index"
+    },
+    {
+      "prompt": "Which test cases cover WiFi 6E band filter designs?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 8.0,
+      "response_preview": "The following test cases cover WiFi 6E band filter designs: - FD-TC-0012: The document includes the line \"WiFi 6E Band Filter Design Test Case\" and specifies \"Frequency Range: 5.925 GHz \u2013 7.125 GHz\" ["
+    },
+    {
+      "prompt": "What are the power handling specifications for BAW duplexer designs?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 5.4,
+      "response_preview": "The power handling specifications for BAW duplexer designs are as follows: - \"Maximum Input Power: 33 dBm\" [FD-TC-0007.pdf\u2020filter-design-chunked-index]. - \"Power Handling (CW): 30 dBm\" [FD-TC-0007.pdf"
+    }
+  ]
+}

@@ -380,17 +380,64 @@ def chunk_document_json(doc: dict, json_filename: str) -> list[dict]:
 
     This approach eliminates lossy PDF/TXT text extraction and gives the
     search index reliable access to all structured fields and sections.
-    Each chunk is augmented with a header summary of key metrics so that
-    single-chunk queries (e.g., 'Q factor for FD-TC-0010') can be answered
-    without needing multiple retrieval steps.
+
+    Chunk strategy for high-accuracy retrieval:
+    1. FULL-DOCUMENT SUMMARY chunk — serialises every top-level field and a
+       one-line synopsis of each section.  This is the primary target for
+       single-field lookups ("What is the Q factor for FD-TC-0003?").
+    2. Per-section chunks — contain the full section text, prefixed with
+       key document metadata so the agent always knows which document the
+       chunk belongs to, even when only one chunk is retrieved.
     """
     doc_number = doc.get("document_number", json_filename.replace(".json", ""))
     title = doc.get("title", "")
     meta = _meta_from_json(doc, json_filename)
     chunks = []
 
-    # ── Header chunk: key metadata + measurements for fast single-field lookups ──
+    # ── 1. Full-document summary chunk ────────────────────────────────
+    # Serialise EVERY scalar field so any lookup hits this chunk.
+    summary_lines = [
+        f"=== {doc_number} — COMPLETE DOCUMENT SUMMARY ===",
+        f"Document Number: {doc_number}",
+        f"Title: {title}",
+        f"Status: {doc.get('status', '')}",
+    ]
+
+    # Add ALL scalar fields from the JSON (skip 'sections')
+    _SKIP_KEYS = {"sections", "document_number", "title", "status"}
+    for key, val in doc.items():
+        if key in _SKIP_KEYS or isinstance(val, (dict, list)):
+            continue
+        label = key.replace("_", " ").title()
+        summary_lines.append(f"{label}: {val}")
+
+    # Add a compact section synopsis
+    sections = doc.get("sections", {})
+    if sections:
+        summary_lines.append("")
+        summary_lines.append("--- Section Summaries ---")
+        for section_key, section_text in sections.items():
+            if not section_text:
+                continue
+            section_name = _JSON_SECTION_DISPLAY.get(section_key, section_key.replace("_", " "))
+            # Keep first 300 chars of each section as synopsis
+            synopsis = str(section_text).replace("\n", " ")[:300]
+            summary_lines.append(f"[{section_name}]: {synopsis}")
+
+    summary_text = "\n".join(summary_lines)
+    # Allow up to 3x normal chunk size for the summary (it's the most important chunk)
+    summary_text = summary_text[:MAX_CHUNK_SIZE * 3]
+    chunk_id = hashlib.md5(f"{doc_number}:full-summary".encode()).hexdigest()
+    chunks.append({
+        "id": chunk_id,
+        "content": summary_text,
+        "section_name": "Full Document Summary",
+        **meta,
+    })
+
+    # ── 2. Metadata + measurements header chunk ──────────────────────
     header_lines = [
+        f"=== {doc_number} — KEY MEASUREMENTS ===",
         f"Document Number: {doc_number}",
         f"Title: {title}",
         f"Status: {doc.get('status', '')}",
@@ -401,22 +448,30 @@ def chunk_document_json(doc: dict, json_filename: str) -> list[dict]:
             val = doc.get(field, "")
             if val:
                 header_lines.append(f"{field.replace('_', ' ').title()}: {val}")
-        # Inline key measurements so they are always retrievable in a single chunk
         meas_fields = [
             ("center_frequency_mhz", "Center Frequency (MHz)"),
             ("bandwidth_3db_mhz", "Bandwidth 3dB (MHz)"),
             ("insertion_loss_measured_db", "Insertion Loss (meas, dB)"),
+            ("insertion_loss_target_db", "Insertion Loss Target (dB)"),
             ("return_loss_measured_db", "Return Loss (meas, dB)"),
+            ("return_loss_target_db", "Return Loss Target (dB)"),
             ("rejection_measured_db", "Rejection (meas, dB)"),
+            ("rejection_target_db", "Rejection Target (dB)"),
             ("isolation_measured_db", "Isolation (meas, dB)"),
+            ("isolation_target_db", "Isolation Target (dB)"),
             ("q_factor", "Q Factor"),
             ("temperature_coefficient_ppm_per_c", "Temperature Coefficient (ppm/°C)"),
             ("die_size", "Die Size"),
             ("wafer_size", "Wafer Size"),
-            ("insertion_loss_target_db", "Insertion Loss Target (dB)"),
-            ("return_loss_target_db", "Return Loss Target (dB)"),
+            ("die_yield_pct", "Die Yield (%)"),
+            ("n_resonators", "Number of Resonators"),
+            ("electrode_material", "Electrode Material"),
+            ("passivation", "Passivation"),
+            ("group_delay_variation_ns", "Group Delay Variation (ns)"),
+            ("power_handling_dbm", "Power Handling (dBm)"),
+            ("esd_tolerance_v", "ESD Tolerance (V)"),
             ("design_tool", "Design Tool"),
-            ("package_type", "Package Type"),
+            ("measurement_instrument", "Measurement Instrument"),
         ]
         for key, label in meas_fields:
             val = doc.get(key)
@@ -435,6 +490,15 @@ def chunk_document_json(doc: dict, json_filename: str) -> list[dict]:
             ("defect_density_per_cm2", "Defect Density (defects/cm²)"),
             ("wafers_tested", "Wafers Tested"),
             ("system_uptime_pct", "System Uptime (%)"),
+            ("throughput_wafers_per_hr", "Throughput (wafers/hr)"),
+            ("classification_accuracy_pct", "Classification Accuracy (%)"),
+            ("test_duration_min", "Test Duration (min)"),
+            ("inspection_type", "Inspection Type"),
+            ("software_version", "Software Version"),
+            ("recipe", "Recipe"),
+            ("illumination_mode", "Illumination Mode"),
+            ("scan_speed", "Scan Speed"),
+            ("pixel_size", "Pixel Size"),
         ]
         for key, label in meas_fields:
             val = doc.get(key)
@@ -449,20 +513,26 @@ def chunk_document_json(doc: dict, json_filename: str) -> list[dict]:
         **meta,
     })
 
-    # ── Section chunks ────────────────────────────────────────────────
-    sections = doc.get("sections", {})
+    # ── 3. Per-section chunks ─────────────────────────────────────────
+    # Each section chunk gets a rich context prefix with document identity
+    # and key measurements so the agent can ground even with a single chunk.
+    context_prefix = (
+        f"=== {doc_number} ===\n"
+        f"Document: {doc_number} | {title} | Status: {doc.get('status', '')}\n"
+    )
+
     for section_key, section_text in sections.items():
         if not section_text:
             continue
         section_name = _JSON_SECTION_DISPLAY.get(section_key, section_key.replace("_", " "))
-        context_prefix = f"Document: {doc_number} | {title}\nSection: {section_name}\n\n"
-        sub_chunks = _split_large_text(str(section_text), MAX_CHUNK_SIZE - len(context_prefix))
+        section_header = f"{context_prefix}Section: {section_name}\n\n"
+        sub_chunks = _split_large_text(str(section_text), MAX_CHUNK_SIZE - len(section_header))
         for j, sub_text in enumerate(sub_chunks):
             suffix = f":part{j+1}" if len(sub_chunks) > 1 else ""
             chunk_id = hashlib.md5(f"{doc_number}:{section_key}{suffix}".encode()).hexdigest()
             chunks.append({
                 "id": chunk_id,
-                "content": context_prefix + sub_text,
+                "content": section_header + sub_text,
                 "section_name": section_name,
                 **meta,
             })

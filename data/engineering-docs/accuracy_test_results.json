@@ -1,0 +1,219 @@
+{
+  "use_case": "engineering_docs",
+  "total": 30,
+  "passed": 28,
+  "failed": 2,
+  "accuracy_pct": 93.3,
+  "results": [
+    {
+      "prompt": "What defect types are detected by the Surfscan SP7 system?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 5.7,
+      "response_preview": "The Surfscan SP7 system detects the following defect types: particles, pattern defects, and scratches [MFG-TC-1023.txt\u2020engineering-docs-chunked-index]. Sources: MFG-TC-1023.txt"
+    },
+    {
+      "prompt": "List all test cases that failed for 3nm technology node.",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 5.6,
+      "response_preview": "- Test Case TC-3NM-002: Result - Fail [MFG-TC-1002.txt\u2020engineering-docs-chunked-index] - Test Case TC-3NM-007: Result - Fail [MFG-TC-1002.txt\u2020engineering-docs-chunked-index] Sources: MFG-TC-1002.txt\u2020e"
+    },
+    {
+      "prompt": "What are the corrective actions for high nuisance rates?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 6.7,
+      "response_preview": "Corrective actions for high nuisance rates include: - Reviewing and optimizing inspection recipes to reduce false positives, as high nuisance rates may indicate overly sensitive detection parameters ["
+    },
+    {
+      "prompt": "What is the capture rate for MFG-TC-0001?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 5.6,
+      "response_preview": "The capture rate for MFG-TC-0001 is 98.7% [MFG-TC-0001.txt\u2020engineering-docs-chunked-index]. Sources: MFG-TC-0001.txt\u2020engineering-docs-chunked-index"
+    },
+    {
+      "prompt": "Which inspection systems are used for FinFET manufacturing?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 6.3,
+      "response_preview": "The following inspection systems are used for FinFET manufacturing: - KLA-Tencor 2920 system was used for FinFET process development and defect inspection [MFG-TC-1002.txt\u2020engineering-docs-chunked-ind"
+    },
+    {
+      "prompt": "What is the scan speed and pixel size configured in MFG-TC-0010?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 5.7,
+      "response_preview": "The scan speed configured in MFG-TC-0010 is 150 mm/s, and the pixel size is 0.5 \u00b5m \u00d7 0.5 \u00b5m [MFG-TC-0010.txt\u2020engineering-docs-chunked-index]. Sources: MFG-TC-0010.txt\u2020engineering-docs-chunked-index"
+    },
+    {
+      "prompt": "Compare defect density across all test cases at Milpitas Fab A.",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 7.3,
+      "response_preview": "Test case TC-1001 at Milpitas Fab A reported a defect density of 0.45 defects/cm\u00b2 [MFG-TC-1001.txt\u2020engineering-docs-chunked-index]. Test case TC-1002 at Milpitas Fab A reported a defect density of 0.3"
+    },
+    {
+      "prompt": "Which test cases have nuisance rate above 5% and what was recommended?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 7.6,
+      "response_preview": "The following test cases have a nuisance rate above 5%: 1. Test Case: TC-2023-045 - Nuisance Rate: 7.2% - Recommendation: Review and optimize the defect classification algorithm to reduce false positi"
+    },
+    {
+      "prompt": "What corrective actions are recommended in MFG-TC-0005?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 5.9,
+      "response_preview": "The recommended corrective actions in MFG-TC-0005 are: - Review and recalibrate the inspection system to ensure alignment with the specified recipe parameters. - Increase operator training on defect c"
+    },
+    {
+      "prompt": "What is the acceptance criteria for 5nm node patterned wafer inspection?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 6.3,
+      "response_preview": "The acceptance criteria for 5nm node patterned wafer inspection are as follows: - Defect capture rate must be \u2265 95% for programmed defects larger than 30nm. - Nuisance rate must be \u2264 10% for all inspe"
+    },
+    {
+      "prompt": "Show me test results for post-CMP contamination inspection.",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 11.4,
+      "response_preview": "- For Lot 2023-07-15-22, post-CMP contamination inspection was performed using the Surfscan SP7 system with recipe \"CMP_Post_Contam_Std\". The measured defect density was 0.12 defects/cm\u00b2, with a captu"
+    },
+    {
+      "prompt": "What observations were noted in MFG-TC-0022?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 6.7,
+      "response_preview": "The observations noted in MFG-TC-0022 include: - The inspection system detected a higher than expected nuisance rate during the initial scan, specifically 0.45 defects/cm\u00b2, which exceeded the acceptan"
+    },
+    {
+      "prompt": "Which test cases cover overlay metrology?",
+      "status": "FAIL",
+      "reason": "No doc ID citation",
+      "elapsed_s": 8.4,
+      "response_preview": "The following test cases cover overlay metrology: - Test Case TC-102: Overlay Metrology System Qualification. Objective: To verify the accuracy and repeatability of the overlay metrology tool for 28nm"
+    },
+    {
+      "prompt": "What is the status of MFG-TC-0085?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 6.0,
+      "response_preview": "The status of MFG-TC-0085 is \"Pass\" as indicated in the test case summary table. The test case met all acceptance criteria and no corrective actions were required [MFG-TC-0085.txt\u2020engineering-docs-chu"
+    },
+    {
+      "prompt": "List all test cases that use the Archer 700 system.",
+      "status": "FAIL",
+      "reason": "No doc ID citation",
+      "elapsed_s": 6.6,
+      "response_preview": "- Test Case TC-102: This test case uses the Archer 700 system for defect inspection on 300mm wafers at the Metal 1 process step. The objective is to evaluate capture rate and nuisance rate for sub-50n"
+    },
+    {
+      "prompt": "What does test case MFG-TC-0028 cover?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 6.5,
+      "response_preview": "Test case MFG-TC-0028 covers the following: - Objective: To validate the defect capture rate and nuisance rate of the inspection system for 28nm logic wafers at the post-metal etch process step. - Pro"
+    },
+    {
+      "prompt": "What are the acceptance criteria for MFG-TC-0091?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 5.6,
+      "response_preview": "The acceptance criteria for MFG-TC-0091 are as follows: - Defect capture rate must be \u2265 95% - Nuisance rate must be \u2264 2% - No critical defects missed in the sample lot - All wafers must pass visual in"
+    },
+    {
+      "prompt": "What were the results of test case MFG-TC-0072?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 5.9,
+      "response_preview": "Test case MFG-TC-0072 reported the following results: - Objective: Evaluate the defect capture rate and nuisance rate for the new inspection recipe on 300mm wafers at the 5nm technology node. - Captur"
+    },
+    {
+      "prompt": "What corrective actions are recommended in MFG-TC-0059?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 5.5,
+      "response_preview": "The recommended corrective actions in MFG-TC-0059 are: - Adjust the inspection recipe parameters to reduce nuisance defect capture. - Recalibrate the optical system to improve focus accuracy. - Implem"
+    },
+    {
+      "prompt": "Which inspection system is used in MFG-TC-0081 and what defects does it target?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 5.7,
+      "response_preview": "The inspection system used in MFG-TC-0081 is the KLA 2365. This system targets particle defects and pattern defects on the wafer surface [MFG-TC-0081.txt\u2020engineering-docs-chunked-index]. Sources: MFG-"
+    },
+    {
+      "prompt": "What observations were noted in MFG-TC-0002?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 6.3,
+      "response_preview": "The observations noted in MFG-TC-0002 include: - The inspection system detected a total of 120 defects during the initial scan. - Of these, 15 were classified as nuisance defects, resulting in a nuisa"
+    },
+    {
+      "prompt": "What does test case MFG-TC-0039 cover?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 6.2,
+      "response_preview": "Test case MFG-TC-0039 covers the following: - Objective: To validate the defect capture rate and nuisance rate of the inspection system for 28nm logic wafers at the post-metal etch process step. - Pro"
+    },
+    {
+      "prompt": "What were the results of test case MFG-TC-0038?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 6.2,
+      "response_preview": "Test case MFG-TC-0038 reported the following results: - Objective: Evaluate the defect capture rate and nuisance rate for the new inspection recipe on 300mm wafers at the 5nm technology node. - Captur"
+    },
+    {
+      "prompt": "What are the acceptance criteria for MFG-TC-0022?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 5.4,
+      "response_preview": "The acceptance criteria for MFG-TC-0022 are as follows: - Defect capture rate must be \u2265 95% - Nuisance rate must be \u2264 2% - No critical defects missed during inspection - All wafers must pass visual re"
+    },
+    {
+      "prompt": "What corrective actions are recommended in MFG-TC-0082?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 5.3,
+      "response_preview": "The recommended corrective actions in MFG-TC-0082 are: - Review and recalibrate the inspection system to address the identified drift in defect capture rate. - Update the defect classification recipe "
+    },
+    {
+      "prompt": "What does test case MFG-TC-0062 cover?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 6.6,
+      "response_preview": "Test case MFG-TC-0062 covers the following: - Objective: To verify the defect capture rate and nuisance rate of the inspection system for 28nm logic wafers at the post-metal etch process step. - Proce"
+    },
+    {
+      "prompt": "Which inspection system is used in MFG-TC-0096 and what defects does it target?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 5.4,
+      "response_preview": "The inspection system used in MFG-TC-0096 is the KLA-Tencor 2365. This system targets particle defects and pattern defects on the wafer surface during the post-etch inspection process [MFG-TC-0096.txt"
+    },
+    {
+      "prompt": "What were the results of test case MFG-TC-0033?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 6.3,
+      "response_preview": "Test case MFG-TC-0033 reported the following results: - Objective: Evaluate the defect capture rate and nuisance rate for the new inspection recipe on 300mm wafers at the 5nm technology node. - Captur"
+    },
+    {
+      "prompt": "What observations were noted in MFG-TC-0041?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 6.4,
+      "response_preview": "The observations noted in MFG-TC-0041 include: - The inspection system detected a higher than expected nuisance rate during the initial scan, specifically 0.35/cm\u00b2, which exceeded the acceptance thres"
+    },
+    {
+      "prompt": "What does test case MFG-TC-0094 cover?",
+      "status": "PASS",
+      "reason": "OK",
+      "elapsed_s": 6.5,
+      "response_preview": "Test case MFG-TC-0094 covers the following: - Objective: To verify the defect capture rate and nuisance rate of the inspection system for 28nm logic wafers at the post-metal etch process step. - Proce"
+    }
+  ]
+}
