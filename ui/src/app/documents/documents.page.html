@@ -1,13 +1,15 @@
 <ion-content>
-  <div class="docs-container">
+  <!-- Fixed back button pinned at top -->
+  <div *ngIf="selectedDoc || pdfUrl" class="back-bar" slot="fixed">
+    <ion-button fill="solid" color="primary" (click)="closeDocument()" class="back-btn">
+      <ion-icon name="arrow-back" slot="start"></ion-icon> Back to Documents
+    </ion-button>
+  </div>
+
+  <div class="docs-container" [class.detail-view]="selectedDoc || pdfUrl">
 
     <!-- Document Detail View -->
     <div *ngIf="selectedDoc || pdfUrl">
-      <div class="back-bar">
-        <ion-button fill="solid" color="primary" (click)="closeDocument()" class="back-btn">
-          <ion-icon name="arrow-back" slot="start"></ion-icon> Back to Documents
-        </ion-button>
-      </div>
       <ion-card class="doc-detail-card">
         <ion-card-header>
           <ion-card-title>{{ selectedDocId }}</ion-card-title>
