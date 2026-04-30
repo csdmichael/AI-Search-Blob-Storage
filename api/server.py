@@ -272,3 +272,66 @@ def submit_feedback(req: FeedbackRequest):
 @app.get("/api/feedback")
 def get_feedback(use_case: str = "engineering_docs"):
     return _load_feedback(use_case)
+
+
+# ── Document browser endpoints ──────────────────────────────────────
+
+@app.get("/api/documents")
+def list_documents(use_case: str = "engineering_docs"):
+    """List all documents for a use case with metadata."""
+    if use_case not in ("engineering_docs", "filter_design"):
+        raise HTTPException(status_code=400, detail=f"Invalid use_case: {use_case}")
+    data_dir = config.uc_data_dir(use_case)
+    doc_cfg = config.uc_document_config(use_case)
+    prefix = doc_cfg["document_prefix"]
+    docs = []
+    for f in sorted(os.listdir(data_dir)):
+        if not f.startswith(prefix):
+            continue
+        path = os.path.join(data_dir, f)
+        ext = os.path.splitext(f)[1].lower()
+        doc_id = os.path.splitext(f)[0]
+        entry = {"filename": f, "doc_id": doc_id, "type": ext.lstrip("."), "size_kb": round(os.path.getsize(path) / 1024, 1)}
+        if ext == ".json":
+            try:
+                with open(path, "r", encoding="utf-8") as fh:
+                    meta = json.load(fh)
+                entry["title"] = meta.get("title", "")
+                entry["status"] = meta.get("status", "")
+                entry["document_number"] = meta.get("document_number", doc_id)
+            except Exception:
+                pass
+        docs.append(entry)
+    return {"use_case": use_case, "total": len(docs), "documents": docs}
+
+
+@app.get("/api/documents/{doc_id}")
+def get_document(doc_id: str, use_case: str = "engineering_docs"):
+    """Get document content by ID."""
+    if use_case not in ("engineering_docs", "filter_design"):
+        raise HTTPException(status_code=400, detail=f"Invalid use_case: {use_case}")
+    data_dir = config.uc_data_dir(use_case)
+    json_path = os.path.join(data_dir, f"{doc_id}.json")
+    if os.path.exists(json_path):
+        with open(json_path, "r", encoding="utf-8") as f:
+            return {"format": "json", "doc_id": doc_id, "content": json.load(f)}
+    txt_path = os.path.join(data_dir, f"{doc_id}.txt")
+    if os.path.exists(txt_path):
+        with open(txt_path, "r", encoding="utf-8") as f:
+            return {"format": "text", "doc_id": doc_id, "content": f.read()}
+    raise HTTPException(status_code=404, detail=f"Document {doc_id} not found")
+
+
+from fastapi.responses import FileResponse  # noqa: E402
+
+
+@app.get("/api/documents/{doc_id}/pdf")
+def get_document_pdf(doc_id: str, use_case: str = "engineering_docs"):
+    """Serve the raw PDF file for in-browser viewing."""
+    if use_case not in ("engineering_docs", "filter_design"):
+        raise HTTPException(status_code=400, detail=f"Invalid use_case: {use_case}")
+    data_dir = config.uc_data_dir(use_case)
+    pdf_path = os.path.join(data_dir, f"{doc_id}.pdf")
+    if os.path.exists(pdf_path):
+        return FileResponse(pdf_path, media_type="application/pdf", filename=f"{doc_id}.pdf")
+    raise HTTPException(status_code=404, detail=f"PDF {doc_id}.pdf not found")
