@@ -9,7 +9,7 @@
 
 ## Architecture
 
-![Tax Exemption Forms — Architecture Diagram](../../../use-cases/tax-pdf-forms/architecture.png)
+![Architecture](architecture.png)
 
 ### Components
 
