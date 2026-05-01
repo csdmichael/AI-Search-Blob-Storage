@@ -20,6 +20,19 @@
   font-size: 0.82rem;
 }
 
+.error-card {
+  margin: 0 1rem 0.75rem;
+
+  ion-card-title {
+    font-size: 0.95rem;
+  }
+
+  ion-card-content {
+    font-size: 0.82rem;
+    white-space: pre-wrap;
+  }
+}
+
 .doc-meta {
   display: flex;
   align-items: center;

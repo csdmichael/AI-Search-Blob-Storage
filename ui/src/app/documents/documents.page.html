@@ -89,6 +89,15 @@
         {{ filteredDocs.length }} documents
       </ion-text>
 
+      <ion-card *ngIf="loadError" class="error-card" color="danger">
+        <ion-card-header>
+          <ion-card-title>Unable to load documents</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          {{ loadError }}
+        </ion-card-content>
+      </ion-card>
+
       <ion-list>
         <ion-item *ngFor="let doc of filteredDocs" (click)="openDocument(doc.doc_id)" button detail>
           <ion-icon [name]="getTypeIcon(doc.type)" slot="start" color="primary"></ion-icon>

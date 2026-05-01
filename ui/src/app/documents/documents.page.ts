@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Subscription } from 'rxjs';
 import { ApiService, DocumentEntry, DocumentDetail } from '../services/api.service';
 import { UseCaseService } from '../services/use-case.service';
@@ -18,6 +19,7 @@ export class DocumentsPage implements OnInit, OnDestroy {
   filterType = 'all';
   availableTypes: string[] = [];
   isLoading = false;
+  loadError = '';
 
   // Detail view
   selectedDoc: DocumentDetail | null = null;
@@ -53,6 +55,7 @@ export class DocumentsPage implements OnInit, OnDestroy {
 
   loadDocuments() {
     this.isLoading = true;
+    this.loadError = '';
     this.api.listDocuments(this.uc.activeKey).subscribe({
       next: (res) => {
         this.documents = res.documents;
@@ -63,7 +66,13 @@ export class DocumentsPage implements OnInit, OnDestroy {
         this.isLoading = false;
         if (this.selectedDocId) { this.openDocument(this.selectedDocId); }
       },
-      error: () => { this.isLoading = false; },
+      error: (err: HttpErrorResponse) => {
+        this.documents = [];
+        this.filteredDocs = [];
+        this.availableTypes = [];
+        this.loadError = this.extractApiError(err);
+        this.isLoading = false;
+      },
     });
   }
 
@@ -147,5 +156,22 @@ export class DocumentsPage implements OnInit, OnDestroy {
 
   formatKey(key: string): string {
     return key.replace(/_/g, ' ');
+  }
+
+  private extractApiError(err: HttpErrorResponse): string {
+    const apiDetail = typeof err?.error?.detail === 'string' ? err.error.detail : '';
+    if (apiDetail) {
+      return apiDetail;
+    }
+
+    if (typeof err?.error === 'string' && err.error.trim()) {
+      return err.error;
+    }
+
+    if (err?.status) {
+      return `Document API request failed (${err.status} ${err.statusText || 'Error'}).`;
+    }
+
+    return 'Document API request failed. Please check API connectivity and configuration.';
   }
 }

@@ -175,21 +175,79 @@ def _feedback_file(use_case: str) -> str:
 # ── Cosmos DB helpers ───────────────────────────────────────────────
 
 _cosmosdb_container = None
+_cosmosdb_endpoint = ""
+
+
+def _normalize_cosmos_endpoint(endpoint: str, account_name: str) -> str:
+    """Normalize endpoint value and enforce TLS-valid Cosmos hostname."""
+    normalized = endpoint.strip()
+    if not normalized:
+        return ""
+
+    if not normalized.startswith("http"):
+        normalized = f"https://{normalized}"
+
+    normalized = normalized.rstrip("/") + "/"
+    normalized = normalized.replace(
+        f"{account_name}.privatelink.documents.azure.com",
+        f"{account_name}.documents.azure.com",
+    )
+    return normalized
+
+
+def _get_cosmosdb_endpoints() -> list[str]:
+    """Build an ordered list of Cosmos DB endpoints to try."""
+    cosmosdb_cfg = config.cosmosdb_config()
+    account_name = cosmosdb_cfg["account_name"]
+
+    env_endpoint = os.environ.get("COSMOSDB_ENDPOINT", "").strip()
+    env_private = os.environ.get("COSMOSDB_PRIVATE_ENDPOINT", "").strip()
+    cfg_endpoint = (cosmosdb_cfg.get("endpoint") or "").strip()
+    cfg_private = (
+        cosmosdb_cfg.get("private_endpoint")
+        or cosmosdb_cfg.get("endpoint_private")
+        or ""
+    ).strip()
+
+    default_endpoint = f"https://{account_name}.documents.azure.com:443/"
+
+    endpoints: list[str] = []
+    for endpoint in (env_private, cfg_private, env_endpoint, cfg_endpoint, default_endpoint):
+        normalized = _normalize_cosmos_endpoint(endpoint, account_name)
+        if normalized and normalized not in endpoints:
+            endpoints.append(normalized)
+
+    return endpoints
 
 
 def _get_cosmosdb_container():
     """Lazily create and cache a Cosmos DB container client."""
-    global _cosmosdb_container
+    global _cosmosdb_container, _cosmosdb_endpoint
     if _cosmosdb_container is None:
         from azure.cosmos import CosmosClient
         from azure.identity import DefaultAzureCredential
 
         credential = DefaultAzureCredential()
         cosmosdb_cfg = config.cosmosdb_config()
-        endpoint = f"https://{cosmosdb_cfg['account_name']}.documents.azure.com:443/"
-        client = CosmosClient(endpoint, credential=credential)
-        database = client.get_database_client(cosmosdb_cfg["database_name"])
-        _cosmosdb_container = database.get_container_client(cosmosdb_cfg["container_name"])
+
+        errors: list[str] = []
+        for endpoint in _get_cosmosdb_endpoints():
+            try:
+                client = CosmosClient(endpoint, credential=credential)
+                database = client.get_database_client(cosmosdb_cfg["database_name"])
+                container = database.get_container_client(cosmosdb_cfg["container_name"])
+                # Validate connectivity so endpoint fallback works deterministically.
+                container.read()
+                _cosmosdb_container = container
+                _cosmosdb_endpoint = endpoint
+                break
+            except Exception as exc:
+                errors.append(f"{endpoint} -> {exc}")
+
+        if _cosmosdb_container is None:
+            attempted = "; ".join(errors) if errors else "No eligible Cosmos DB endpoint configured"
+            raise RuntimeError(f"Unable to connect to Cosmos DB. Attempts: {attempted}")
+
     return _cosmosdb_container
 
 
