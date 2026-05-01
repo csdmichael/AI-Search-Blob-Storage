@@ -16,7 +16,13 @@
       <ion-card-content>
         <!-- PDF viewer -->
         <div *ngIf="pdfUrl" class="pdf-viewer">
-          <iframe [src]="pdfUrl" class="pdf-iframe"></iframe>
+          <object *ngIf="viewerType === 'pdf'" [data]="pdfUrl" type="application/pdf" class="pdf-iframe">
+            <p>
+              This document could not be embedded in the current browser.
+              <a [href]="pdfUrl" target="_blank" rel="noopener noreferrer">Open it in a new tab</a>.
+            </p>
+          </object>
+          <iframe *ngIf="viewerType === 'office'" [src]="pdfUrl" class="pdf-iframe"></iframe>
         </div>
         <!-- JSON structured view -->
         <ng-container *ngIf="selectedDoc">

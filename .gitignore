@@ -6,6 +6,8 @@ __pycache__/
 # Deployment artifacts
 *.zip
 .python_packages/
+acr-build-context/
+ui-build-tmp/
 api-logs*/
 ui-logs*/
 *-publish-profile.xml

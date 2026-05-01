@@ -9,6 +9,7 @@ import time
 import json
 import re
 from datetime import datetime, timezone
+from urllib.parse import urlsplit, urlunsplit
 
 # Ensure the project root is on sys.path for config and scripts imports
 _PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -457,15 +458,42 @@ def _get_blob_container_client(container_name: str):
     return blob_service.get_container_client(container_name)
 
 
-def _stream_blob_file(doc_id: str, use_case: str, extension: str):
+def _stream_blob_url(blob_url: str, file_name: str):
+    """Stream a file directly from its blob URL using managed identity."""
+    from azure.identity import DefaultAzureCredential
+    from azure.storage.blob import BlobClient
+
+    parsed = urlsplit(blob_url)
+    unsigned_blob_url = urlunsplit((parsed.scheme, parsed.netloc, parsed.path, "", ""))
+    blob_client = BlobClient.from_blob_url(blob_url=unsigned_blob_url, credential=DefaultAzureCredential())
+    stream = blob_client.download_blob()
+    props = stream.properties
+    media_type = props.content_settings.content_type or "application/octet-stream"
+    return StreamingResponse(
+        stream.chunks(),
+        media_type=media_type,
+        headers={"Content-Disposition": f'inline; filename="{file_name}"'},
+    )
+
+
+def _stream_blob_file(doc_id: str, use_case: str, extension: str, blob_url: str | None = None, file_name: str | None = None):
     """Stream a file from Blob Storage for Cosmos DB use cases.
 
-    Tries the use-case blob container first, then falls back to the
-    shared 'tax-forms' container used by the ingestion pipeline.
+    Prefer the exact blobUrl stored in Cosmos DB. Fall back to container
+    plus filename lookups for older records.
     """
     from azure.core.exceptions import ResourceNotFoundError
 
-    file_name = f"{doc_id}.{extension}"
+    file_name = file_name or f"{doc_id}.{extension}"
+    last_error: Exception | None = None
+    if blob_url:
+        try:
+            return _stream_blob_url(blob_url, file_name)
+        except ResourceNotFoundError:
+            pass
+        except Exception as exc:
+            last_error = exc
+
     containers_to_try = [config.container_name(use_case), "tax-forms"]
     seen: set[str] = set()
 
@@ -486,8 +514,12 @@ def _stream_blob_file(doc_id: str, use_case: str, extension: str):
             )
         except ResourceNotFoundError:
             continue
-        except Exception:
+        except Exception as exc:
+            last_error = exc
             continue
+
+    if last_error is not None:
+        raise last_error
     return None
 
 
@@ -499,14 +531,32 @@ def get_document_pdf(doc_id: str, use_case: str = "engineering_docs"):
 
     # Cosmos DB use cases: stream from Blob Storage
     if config.is_cosmosdb_use_case(use_case):
+        try:
+            doc = _get_cosmosdb_document(doc_id)
+        except Exception as exc:
+            raise HTTPException(status_code=502, detail=f"Cosmos DB query failed: {exc}")
+
+        if not doc:
+            raise HTTPException(status_code=404, detail=f"Document {doc_id} not found in Cosmos DB")
+
         doc_cfg = config.uc_document_config(use_case)
         extension = doc_cfg.get("file_format", "pdf")
-        response = _stream_blob_file(doc_id, use_case, extension)
+        file_name = doc.get("fileName") or f"{doc_id}.{extension}"
+        try:
+            response = _stream_blob_file(
+                doc_id,
+                use_case,
+                extension,
+                blob_url=doc.get("blobUrl"),
+                file_name=file_name,
+            )
+        except Exception as exc:
+            raise HTTPException(status_code=502, detail=f"Blob Storage access failed: {exc}")
         if response:
             return response
         raise HTTPException(
             status_code=404,
-            detail=f"File {doc_id}.{extension} not found in Blob Storage",
+            detail=f"File {file_name} not found in Blob Storage",
         )
 
     # Blob storage use cases: serve from local filesystem

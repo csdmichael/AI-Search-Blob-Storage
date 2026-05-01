@@ -50,6 +50,8 @@
 - Azure Cosmos DB with `taxform` database and `documents` container containing PDF form data
 - Managed identity with **Cosmos DB Built-in Data Contributor** role (`00000000-0000-0000-0000-000000000002`) on the Cosmos DB account — required for both the **App Service** and **AI Search** managed identities
 - AI Search service managed identity also needs the same **Cosmos DB Built-in Data Contributor** role
+- API App Service managed identity also needs **Storage Blob Data Reader** on storage account `aistoragemyaacoub` so document originals can be streamed from Blob Storage
+- If the storage account uses a private endpoint with `publicNetworkAccess` disabled, the API App Service must be integrated with the same VNet and an App Service delegated subnet so it can resolve and reach `privatelink.blob.core.windows.net`
 
 ### Setup Commands
 
@@ -120,6 +122,25 @@ az cosmosdb sql role assignment create \
   --role-definition-id 00000000-0000-0000-0000-000000000002 \
   --scope "/" \
   --principal-id $APP_PRINCIPAL_ID
+
+# Assign Storage Blob Data Reader to App Service
+az role assignment create \
+  --assignee-object-id $APP_PRINCIPAL_ID \
+  --assignee-principal-type ServicePrincipal \
+  --role "Storage Blob Data Reader" \
+  --scope "/subscriptions/86b37969-9445-49cf-b03f-d8866235171c/resourceGroups/ai-myaacoub/providers/Microsoft.Storage/storageAccounts/aistoragemyaacoub"
+
+# If Blob Storage is private-endpoint only, integrate the API App Service with the app subnet
+az webapp vnet-integration add \
+  --name ai-search-agent-api \
+  --resource-group ai-myaacoub \
+  --vnet vnet-salespoc-westus2 \
+  --subnet snet-appservice
+
+az webapp config appsettings set \
+  --name ai-search-agent-api \
+  --resource-group ai-myaacoub \
+  --settings WEBSITE_VNET_ROUTE_ALL=1
 ```
 
 ---

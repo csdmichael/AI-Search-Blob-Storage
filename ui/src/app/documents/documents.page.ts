@@ -25,6 +25,7 @@ export class DocumentsPage implements OnInit, OnDestroy {
   selectedDoc: DocumentDetail | null = null;
   selectedDocId = '';
   pdfUrl: SafeResourceUrl | null = null;
+  viewerType: 'pdf' | 'office' | null = null;
   jsonTab: 'parsed' | 'raw' = 'parsed';
 
   private ucSub!: Subscription;
@@ -46,6 +47,7 @@ export class DocumentsPage implements OnInit, OnDestroy {
     this.ucSub = this.uc.active$.subscribe(() => {
       this.selectedDoc = null;
       this.pdfUrl = null;
+      this.viewerType = null;
       this.filterType = 'all';
       this.loadDocuments();
     });
@@ -96,15 +98,22 @@ export class DocumentsPage implements OnInit, OnDestroy {
   openDocument(docId: string) {
     this.selectedDocId = docId;
     this.pdfUrl = null;
+    this.viewerType = null;
     this.selectedDoc = null;
     this.jsonTab = 'parsed';
 
     const entry = this.documents.find((d) => d.doc_id === docId);
 
     // Show PDF/PPTX viewer for binary documents
-    if (entry?.type === 'pdf' || entry?.type === 'pptx' || entry?.type === 'ppt') {
+    if (entry?.type === 'pdf') {
       const url = this.api.getPdfUrl(docId, this.uc.activeKey);
+      this.viewerType = 'pdf';
       this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+    } else if (entry?.type === 'pptx' || entry?.type === 'ppt') {
+      const fileUrl = this.api.getPdfUrl(docId, this.uc.activeKey);
+      const viewerUrl = this.getOfficeViewerUrl(fileUrl) ?? fileUrl;
+      this.viewerType = this.getOfficeViewerUrl(fileUrl) ? 'office' : 'pdf';
+      this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(viewerUrl);
     }
 
     // Also load JSON/text metadata
@@ -118,6 +127,19 @@ export class DocumentsPage implements OnInit, OnDestroy {
     this.selectedDoc = null;
     this.selectedDocId = '';
     this.pdfUrl = null;
+    this.viewerType = null;
+  }
+
+  private getOfficeViewerUrl(fileUrl: string): string | null {
+    try {
+      const parsed = new URL(fileUrl);
+      if (parsed.protocol !== 'https:' || parsed.hostname === 'localhost' || parsed.hostname === '127.0.0.1') {
+        return null;
+      }
+      return `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(fileUrl)}`;
+    } catch {
+      return null;
+    }
   }
 
   getStatusColor(status: string): string {
