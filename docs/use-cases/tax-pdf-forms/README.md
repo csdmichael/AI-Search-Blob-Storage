@@ -22,6 +22,13 @@
 | **Managed Identity** | `DefaultAzureCredential` | All authentication uses managed identity — no keys or secrets |
 | **Private VNET** | Existing VNET | Cosmos DB accessed via private endpoints |
 
+### Deployed Web App URLs
+
+| App | URL | Description |
+|-----|-----|-------------|
+| **API** | https://ai-search-agent-api.azurewebsites.net | FastAPI backend — proxies chat, batch, feedback, and prompt endpoints |
+| **UI** | https://ai-search-agent-ui.azurewebsites.net | Ionic Angular chat UI — Copilot-style interface with use-case tabs |
+
 ---
 
 ## What This Use Case Demonstrates
@@ -41,19 +48,27 @@
 - **Azure CLI** installed and logged in (`az login`)
 - **Python 3.10+** with `pip install -r requirements.txt`
 - Azure Cosmos DB with `taxform` database and `documents` container containing PDF form data
-- Managed identity with **Cosmos DB Account Reader** role on the Cosmos DB account
-- AI Search service with managed identity having **Cosmos DB Account Reader** role
+- Managed identity with **Cosmos DB Built-in Data Contributor** role (`00000000-0000-0000-0000-000000000002`) on the Cosmos DB account — required for both the **App Service** and **AI Search** managed identities
+- AI Search service managed identity also needs the same **Cosmos DB Built-in Data Contributor** role
 
 ### Setup Commands
 
 ```bash
-# 1. Assign managed identity roles for Cosmos DB access
+# 1a. Assign Cosmos DB Data Contributor to AI Search managed identity
 az cosmosdb sql role assignment create \
   --account-name cosmos-ai-poc \
   --resource-group ai-myaacoub \
-  --role-definition-name "Cosmos DB Built-in Data Reader" \
-  --scope "/dbs/taxform/colls/documents" \
+  --role-definition-id "00000000-0000-0000-0000-000000000002" \
+  --scope "/" \
   --principal-id <AI_SEARCH_MANAGED_IDENTITY_OBJECT_ID>
+
+# 1b. Assign Cosmos DB Data Contributor to App Service managed identity
+az cosmosdb sql role assignment create \
+  --account-name cosmos-ai-poc \
+  --resource-group ai-myaacoub \
+  --role-definition-id "00000000-0000-0000-0000-000000000002" \
+  --scope "/" \
+  --principal-id <APP_SERVICE_MANAGED_IDENTITY_OBJECT_ID>
 
 # 2. Set the use case
 export USE_CASE=tax_pdf_forms          # Linux/Mac
@@ -75,6 +90,8 @@ python scripts/ranking_feedback.py
 
 ### Managed Identity Setup
 
+> **Important**: Both the AI Search service and the API App Service need **Cosmos DB Built-in Data Contributor** (`00000000-0000-0000-0000-000000000002`) role. The Data Reader role (`...0001`) is insufficient — the API requires `readMetadata` which is only in the Data Contributor role.
+
 ```bash
 # Get the AI Search service principal ID
 SEARCH_PRINCIPAL_ID=$(az search service show \
@@ -82,13 +99,27 @@ SEARCH_PRINCIPAL_ID=$(az search service show \
   --resource-group ai-myaacoub \
   --query identity.principalId -o tsv)
 
-# Assign Cosmos DB Built-in Data Reader role
+# Assign Cosmos DB Built-in Data Contributor to AI Search
 az cosmosdb sql role assignment create \
   --account-name cosmos-ai-poc \
   --resource-group ai-myaacoub \
-  --role-definition-id 00000000-0000-0000-0000-000000000001 \
+  --role-definition-id 00000000-0000-0000-0000-000000000002 \
   --scope "/" \
   --principal-id $SEARCH_PRINCIPAL_ID
+
+# Get the App Service managed identity principal ID
+APP_PRINCIPAL_ID=$(az webapp identity show \
+  --name ai-search-agent-api \
+  --resource-group ai-myaacoub \
+  --query principalId -o tsv)
+
+# Assign Cosmos DB Built-in Data Contributor to App Service
+az cosmosdb sql role assignment create \
+  --account-name cosmos-ai-poc \
+  --resource-group ai-myaacoub \
+  --role-definition-id 00000000-0000-0000-0000-000000000002 \
+  --scope "/" \
+  --principal-id $APP_PRINCIPAL_ID
 ```
 
 ---
