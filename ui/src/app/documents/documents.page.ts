@@ -26,7 +26,7 @@ export class DocumentsPage implements OnInit, OnDestroy {
   selectedDocId = '';
   pdfUrl: SafeResourceUrl | null = null;
   originalText: string | null = null;
-  viewerType: 'pdf' | 'office' | 'google' | 'text' | null = null;
+  viewerType: 'pdf' | 'office' | 'text' | null = null;
   jsonTab: 'parsed' | 'raw' = 'parsed';
 
   private readonly originalTypeByUseCase: Record<string, string> = {
@@ -117,9 +117,8 @@ export class DocumentsPage implements OnInit, OnDestroy {
 
     if (originalType === 'pdf') {
       const fileUrl = this.api.getDocumentFileUrl(docId, this.uc.activeKey);
-      const viewerUrl = this.getGooglePdfViewerUrl(fileUrl) ?? fileUrl;
-      this.viewerType = this.getGooglePdfViewerUrl(fileUrl) ? 'google' : 'pdf';
-      this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(viewerUrl);
+      this.viewerType = 'pdf';
+      this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(fileUrl);
     } else if (originalType === 'pptx' || originalType === 'ppt') {
       const fileUrl = this.api.getDocumentFileUrl(docId, this.uc.activeKey);
       const officeViewerUrl = this.getOfficeViewerUrl(fileUrl);
@@ -160,18 +159,6 @@ export class DocumentsPage implements OnInit, OnDestroy {
         return null;
       }
       return `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(fileUrl)}`;
-    } catch {
-      return null;
-    }
-  }
-
-  private getGooglePdfViewerUrl(fileUrl: string): string | null {
-    try {
-      const parsed = new URL(fileUrl);
-      if (parsed.protocol !== 'https:' || parsed.hostname === 'localhost' || parsed.hostname === '127.0.0.1') {
-        return null;
-      }
-      return `https://docs.google.com/gview?embedded=1&url=${encodeURIComponent(fileUrl)}`;
     } catch {
       return null;
     }

@@ -22,7 +22,6 @@
               <a [href]="pdfUrl" target="_blank" rel="noopener noreferrer">Open it in a new tab</a>.
             </p>
           </object>
-          <iframe *ngIf="viewerType === 'google'" [src]="pdfUrl" class="pdf-iframe"></iframe>
           <iframe *ngIf="viewerType === 'office'" [src]="pdfUrl" class="pdf-iframe"></iframe>
         </div>
         <pre *ngIf="viewerType === 'text' && originalText" class="text-view">{{ originalText }}</pre>
