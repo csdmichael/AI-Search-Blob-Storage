@@ -9,7 +9,7 @@
 
 ## Architecture
 
-![Engineering Design Presentations — Architecture Diagram](../../../use-cases/eng-design-ppt/architecture.png)
+![Engineering Design Presentations — Architecture Diagram](architecture.png)
 
 ### Components
 
