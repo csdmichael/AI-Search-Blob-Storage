@@ -169,6 +169,17 @@ def _query_agent(prompt: str, use_case: str) -> str:
     return result or ""
 
 
+def _query_agent_with_retry(prompt: str, use_case: str, max_retries: int = 3) -> tuple[str, int]:
+    """Retry on empty or fallback responses to stabilize batch accuracy."""
+    for attempt in range(1, max_retries + 1):
+        result = _query_agent(prompt, use_case)
+        if result.strip() and not _is_fallback(result):
+            return result, attempt
+        if attempt < max_retries:
+            time.sleep(0.5)
+    return result, max_retries
+
+
 def _feedback_file(use_case: str) -> str:
     return os.path.join(config.uc_data_dir(use_case), "feedback_log.json")
 
@@ -359,7 +370,7 @@ def batch_run(req: BatchRequest):
 
     for prompt in req.prompts:
         start = time.time()
-        response_text = _query_agent(prompt, req.use_case)
+        response_text, _attempts = _query_agent_with_retry(prompt, req.use_case)
         duration = int((time.time() - start) * 1000)
         sources = _extract_sources(response_text)
 

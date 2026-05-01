@@ -119,6 +119,8 @@ export class PromptsPage implements OnInit, OnDestroy {
   }
 
   openCitation(docId: string) {
-    window.open(`/documents/${docId}`, '_blank');
+    const encodedDocId = encodeURIComponent(docId);
+    const encodedUseCase = encodeURIComponent(this.uc.activeKey);
+    window.open(`/documents/${encodedDocId}?use_case=${encodedUseCase}`, '_blank', 'noopener,noreferrer');
   }
 }

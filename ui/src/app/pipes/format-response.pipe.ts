@@ -5,8 +5,10 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 export class FormatResponsePipe implements PipeTransform {
   constructor(private sanitizer: DomSanitizer) {}
 
-  transform(text: string): SafeHtml {
+  transform(text: string, useCase?: string): SafeHtml {
     if (!text) return '';
+
+    const useCaseQuery = useCase ? `?use_case=${encodeURIComponent(useCase)}` : '';
 
     let html = text
       // Escape HTML
@@ -19,10 +21,9 @@ export class FormatResponsePipe implements PipeTransform {
       .replace(
         /\[([^\[\]†]+?)†([^\[\]]+?)\]/g,
         (_match: string, source: string, _index: string) => {
-          // Strip file extension from source for doc_id routing
           const docId = source.replace(/\.(txt|json|pdf|pptx?)$/i, '');
           const encodedDocId = encodeURIComponent(docId);
-          return `<a class="citation" href="/documents/${encodedDocId}" title="View ${source}">${source}</a>`;
+          return `<a class="citation" href="/documents/${encodedDocId}${useCaseQuery}" title="View ${source}" target="_blank" rel="noopener noreferrer">${source}</a>`;
         },
       )
       // Line breaks

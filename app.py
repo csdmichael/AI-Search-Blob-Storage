@@ -88,7 +88,8 @@ class FeedbackRequest(BaseModel):
 
 # ── Helpers ─────────────────────────────────────────────────────────
 
-_DOC_ID_PATTERN = re.compile(r"((?:MFG|FD)-TC-\d{4}|tax_exemption_\w+\.pdf|filter_design_\w+\.pptx?)")
+_ANNOTATION_PATTERN = re.compile(r"\[([^\[\]†]+?)†([^\[\]]+?)\]")
+_PREFIX_DOC_PATTERN = re.compile(r"\b((?:MFG|FD)-TC-\d{4})\b")
 _VALID_USE_CASES = set(config.VALID_USE_CASES)
 _FALLBACK_PHRASES = [
     "could not find relevant information",
@@ -98,10 +99,25 @@ _FALLBACK_PHRASES = [
 ]
 
 def _extract_sources(text: str) -> list[str]:
-    return list(dict.fromkeys(_DOC_ID_PATTERN.findall(text)))
+    sources: list[str] = []
+
+    for match in _ANNOTATION_PATTERN.finditer(text):
+        source = match.group(1).strip()
+        doc_id = re.sub(r"\.(txt|json|pdf|pptx?)$", "", source, flags=re.IGNORECASE)
+        sources.append(doc_id)
+
+    for match in _PREFIX_DOC_PATTERN.finditer(text):
+        source = match.group(1)
+        if source not in sources:
+            sources.append(source)
+
+    return list(dict.fromkeys(sources))
 
 def _is_fallback(text: str) -> bool:
     return any(p in text.lower() for p in _FALLBACK_PHRASES)
+
+def _extract_expected_doc_ids(prompt: str) -> list[str]:
+    return list(dict.fromkeys(m.upper() for m in _PREFIX_DOC_PATTERN.findall(prompt)))
 
 def _query_agent(prompt: str, use_case: str) -> str:
     os.environ["USE_CASE"] = use_case
@@ -297,10 +313,11 @@ def chat(req: ChatRequest):
 def batch_run(req: BatchRequest):
     if req.use_case not in _VALID_USE_CASES:
         raise HTTPException(status_code=400, detail=f"Invalid use_case: {req.use_case}")
+    doc_prefix = config.uc_document_config(req.use_case)["document_prefix"]
     results: list[BatchResultItem] = []
     for prompt in req.prompts:
         start = time.time()
-        response_text = _query_agent(prompt, req.use_case)
+        response_text, _attempts = _query_agent_with_retry(prompt, req.use_case)
         duration = int((time.time() - start) * 1000)
         sources = _extract_sources(response_text)
         passed, reason = True, "OK"
@@ -310,6 +327,13 @@ def batch_run(req: BatchRequest):
             passed, reason = False, "Agent returned fallback / not-found"
         elif not sources:
             passed, reason = False, "No document citations in response"
+        elif not config.is_cosmosdb_use_case(req.use_case) and not any(s.startswith(doc_prefix) for s in sources):
+            passed, reason = False, f"No {doc_prefix} citations (wrong use-case docs)"
+        else:
+            expected_ids = _extract_expected_doc_ids(prompt)
+            missing = [expected_id for expected_id in expected_ids if expected_id not in (source.upper() for source in sources)]
+            if missing:
+                passed, reason = False, f"Expected doc(s) not cited: {', '.join(missing)}"
         results.append(BatchResultItem(
             prompt=prompt, response=response_text, duration_ms=duration,
             sources=sources, passed=passed, reason=reason,
