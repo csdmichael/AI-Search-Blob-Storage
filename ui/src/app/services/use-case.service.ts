@@ -11,6 +11,8 @@ export interface UseCaseInfo {
 const USE_CASES: UseCaseInfo[] = [
   { key: 'filter_design', label: 'Filter Design', docPrefix: 'FD-TC', fileFormat: 'pdf' },
   { key: 'engineering_docs', label: 'Engineering Docs', docPrefix: 'MFG-TC', fileFormat: 'txt' },
+  { key: 'tax_pdf_forms', label: 'Tax PDF Forms', docPrefix: 'TAX', fileFormat: 'pdf' },
+  { key: 'eng_design_ppt', label: 'Eng Design PPT', docPrefix: 'ENG', fileFormat: 'pptx' },
 ];
 
 @Injectable({ providedIn: 'root' })

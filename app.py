@@ -87,7 +87,8 @@ class FeedbackRequest(BaseModel):
 
 # ── Helpers ─────────────────────────────────────────────────────────
 
-_DOC_ID_PATTERN = re.compile(r"((?:MFG|FD)-TC-\d{4})")
+_DOC_ID_PATTERN = re.compile(r"((?:MFG|FD)-TC-\d{4}|tax_exemption_\w+\.pdf|filter_design_\w+\.pptx?)")
+_VALID_USE_CASES = set(config.VALID_USE_CASES)
 _FALLBACK_PHRASES = [
     "could not find relevant information",
     "no relevant information",
@@ -146,7 +147,7 @@ def get_prompts(use_case: str = "engineering_docs"):
 
 @app.post("/api/chat", response_model=ChatResponse)
 def chat(req: ChatRequest):
-    if req.use_case not in ("engineering_docs", "filter_design"):
+    if req.use_case not in _VALID_USE_CASES:
         raise HTTPException(status_code=400, detail=f"Invalid use_case: {req.use_case}")
     start = time.time()
     response_text, attempts = _query_agent_with_retry(req.prompt, req.use_case)
@@ -159,7 +160,7 @@ def chat(req: ChatRequest):
 
 @app.post("/api/batch", response_model=BatchResponse)
 def batch_run(req: BatchRequest):
-    if req.use_case not in ("engineering_docs", "filter_design"):
+    if req.use_case not in _VALID_USE_CASES:
         raise HTTPException(status_code=400, detail=f"Invalid use_case: {req.use_case}")
     results: list[BatchResultItem] = []
     for prompt in req.prompts:
@@ -209,7 +210,7 @@ def get_feedback(use_case: str = "engineering_docs"):
 @app.get("/api/documents")
 def list_documents(use_case: str = "engineering_docs"):
     """List all documents for a use case with metadata."""
-    if use_case not in ("engineering_docs", "filter_design"):
+    if use_case not in _VALID_USE_CASES:
         raise HTTPException(status_code=400, detail=f"Invalid use_case: {use_case}")
     data_dir = config.uc_data_dir(use_case)
     doc_cfg = config.uc_document_config(use_case)
@@ -239,7 +240,7 @@ def list_documents(use_case: str = "engineering_docs"):
 @app.get("/api/documents/{doc_id}")
 def get_document(doc_id: str, use_case: str = "engineering_docs"):
     """Get document content by ID (returns JSON structured data or text)."""
-    if use_case not in ("engineering_docs", "filter_design"):
+    if use_case not in _VALID_USE_CASES:
         raise HTTPException(status_code=400, detail=f"Invalid use_case: {use_case}")
     data_dir = config.uc_data_dir(use_case)
     # Try JSON first (structured), then txt/pdf
@@ -259,7 +260,7 @@ from fastapi.responses import FileResponse  # noqa: E402
 @app.get("/api/documents/{doc_id}/pdf")
 def get_document_pdf(doc_id: str, use_case: str = "engineering_docs"):
     """Serve the raw PDF file for in-browser viewing."""
-    if use_case not in ("engineering_docs", "filter_design"):
+    if use_case not in _VALID_USE_CASES:
         raise HTTPException(status_code=400, detail=f"Invalid use_case: {use_case}")
     data_dir = config.uc_data_dir(use_case)
     pdf_path = os.path.join(data_dir, f"{doc_id}.pdf")

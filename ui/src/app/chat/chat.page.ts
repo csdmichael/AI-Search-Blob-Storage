@@ -27,6 +27,8 @@ export class ChatPage implements OnInit, OnDestroy {
   conversations: Record<string, ChatMessage[]> = {
     engineering_docs: [],
     filter_design: [],
+    tax_pdf_forms: [],
+    eng_design_ppt: [],
   };
 
   inputText = '';
@@ -134,12 +136,13 @@ export class ChatPage implements OnInit, OnDestroy {
       if (saved) {
         const parsed = JSON.parse(saved);
         for (const key of Object.keys(parsed)) {
-          if (this.conversations[key]) {
-            this.conversations[key] = parsed[key].map((m: any) => ({
-              ...m,
-              timestamp: new Date(m.timestamp),
-            }));
+          if (!(key in this.conversations)) {
+            this.conversations[key] = [];
           }
+          this.conversations[key] = parsed[key].map((m: any) => ({
+            ...m,
+            timestamp: new Date(m.timestamp),
+          }));
         }
       }
     } catch { /* corrupted — ignore */ }

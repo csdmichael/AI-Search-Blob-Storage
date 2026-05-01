@@ -10,6 +10,8 @@ Each use case has its own **README, architecture diagram, and demo script** read
 |----------|--------|-----------|-------|------|
 | **Manufacturing Inspection** | [`docs/use-cases/engineering-docs/`](docs/use-cases/engineering-docs/) | AI Search best practices + **Fine-tuning & evaluation** | `Eng-Docs-Search-Agent` | 100 `.txt` + 100 `.json` (MFG-TC-XXXX) |
 | **RF Filter Design** | [`docs/use-cases/filter-design/`](docs/use-cases/filter-design/) | AI Search best practices + **Ranking & feedback loop** (90%→95%) | `Filter-Design-Agent` | 100 `.pdf` + 100 `.json` (FD-TC-XXXX) |
+| **Tax Exemption PDF Forms** | [`docs/use-cases/tax-pdf-forms/`](docs/use-cases/tax-pdf-forms/) | **Cosmos DB** → AI Search + section-level chunking | `Tax-PDF-Forms-Agent` | 388 PDFs from Cosmos DB (`taxforms/documents`) |
+| **Engineering Design PPT** | [`docs/use-cases/eng-design-ppt/`](docs/use-cases/eng-design-ppt/) | **Cosmos DB** → AI Search + slide-level chunking | `Eng-Design-PPT-Agent` | 100 PPTs from Cosmos DB (`taxforms/documents`) |
 
 > **Solution Engineers**: Go directly to the use case folder for a self-contained README with architecture, demo script, sample prompts, best practices, and setup instructions.
 
@@ -51,11 +53,17 @@ export USE_CASE=engineering_docs
 
 # Filter design
 export USE_CASE=filter_design
+
+# Tax Exemption PDF Forms (Cosmos DB)
+export USE_CASE=tax_pdf_forms
+
+# Engineering Design PPT (Cosmos DB)
+export USE_CASE=eng_design_ppt
 ```
 
 On Windows PowerShell:
 ```powershell
-$env:USE_CASE = "filter_design"
+$env:USE_CASE = "filter_design"     # or tax_pdf_forms, eng_design_ppt
 ```
 
 ---
