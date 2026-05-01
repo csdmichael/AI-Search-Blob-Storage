@@ -108,7 +108,18 @@ export class ApiService {
     return this.http.get<DocumentDetail>(`${this.base}/documents/${docId}`, { params: { use_case: useCase } });
   }
 
+  getDocumentFileText(docId: string, useCase: string): Observable<string> {
+    return this.http.get(`${this.base}/documents/${docId}/file`, {
+      params: { use_case: useCase },
+      responseType: 'text',
+    });
+  }
+
+  getDocumentFileUrl(docId: string, useCase: string): string {
+    return `${this.base}/documents/${docId}/file?use_case=${useCase}`;
+  }
+
   getPdfUrl(docId: string, useCase: string): string {
-    return `${this.base}/documents/${docId}/pdf?use_case=${useCase}`;
+    return this.getDocumentFileUrl(docId, useCase);
   }
 }

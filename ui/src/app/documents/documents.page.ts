@@ -25,8 +25,16 @@ export class DocumentsPage implements OnInit, OnDestroy {
   selectedDoc: DocumentDetail | null = null;
   selectedDocId = '';
   pdfUrl: SafeResourceUrl | null = null;
-  viewerType: 'pdf' | 'office' | null = null;
+  originalText: string | null = null;
+  viewerType: 'pdf' | 'office' | 'google' | 'text' | null = null;
   jsonTab: 'parsed' | 'raw' = 'parsed';
+
+  private readonly originalTypeByUseCase: Record<string, string> = {
+    engineering_docs: 'txt',
+    filter_design: 'pdf',
+    tax_pdf_forms: 'pdf',
+    eng_design_ppt: 'pptx',
+  };
 
   private ucSub!: Subscription;
 
@@ -47,6 +55,7 @@ export class DocumentsPage implements OnInit, OnDestroy {
     this.ucSub = this.uc.active$.subscribe(() => {
       this.selectedDoc = null;
       this.pdfUrl = null;
+      this.originalText = null;
       this.viewerType = null;
       this.filterType = 'all';
       this.loadDocuments();
@@ -98,22 +107,31 @@ export class DocumentsPage implements OnInit, OnDestroy {
   openDocument(docId: string) {
     this.selectedDocId = docId;
     this.pdfUrl = null;
+    this.originalText = null;
     this.viewerType = null;
     this.selectedDoc = null;
     this.jsonTab = 'parsed';
 
     const entry = this.documents.find((d) => d.doc_id === docId);
+    const originalType = this.getOriginalDocumentType(entry);
 
-    // Show PDF/PPTX viewer for binary documents
-    if (entry?.type === 'pdf') {
-      const url = this.api.getPdfUrl(docId, this.uc.activeKey);
-      this.viewerType = 'pdf';
-      this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-    } else if (entry?.type === 'pptx' || entry?.type === 'ppt') {
-      const fileUrl = this.api.getPdfUrl(docId, this.uc.activeKey);
-      const viewerUrl = this.getOfficeViewerUrl(fileUrl) ?? fileUrl;
-      this.viewerType = this.getOfficeViewerUrl(fileUrl) ? 'office' : 'pdf';
+    if (originalType === 'pdf') {
+      const fileUrl = this.api.getDocumentFileUrl(docId, this.uc.activeKey);
+      const viewerUrl = this.getGooglePdfViewerUrl(fileUrl) ?? fileUrl;
+      this.viewerType = this.getGooglePdfViewerUrl(fileUrl) ? 'google' : 'pdf';
       this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(viewerUrl);
+    } else if (originalType === 'pptx' || originalType === 'ppt') {
+      const fileUrl = this.api.getDocumentFileUrl(docId, this.uc.activeKey);
+      const officeViewerUrl = this.getOfficeViewerUrl(fileUrl);
+      const viewerUrl = officeViewerUrl ?? fileUrl;
+      this.viewerType = officeViewerUrl ? 'office' : 'pdf';
+      this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(viewerUrl);
+    } else if (originalType === 'txt') {
+      this.viewerType = 'text';
+      this.api.getDocumentFileText(docId, this.uc.activeKey).subscribe({
+        next: (content) => { this.originalText = content; },
+        error: () => { this.originalText = 'Unable to load original text document.'; },
+      });
     }
 
     // Also load JSON/text metadata
@@ -127,7 +145,12 @@ export class DocumentsPage implements OnInit, OnDestroy {
     this.selectedDoc = null;
     this.selectedDocId = '';
     this.pdfUrl = null;
+    this.originalText = null;
     this.viewerType = null;
+  }
+
+  private getOriginalDocumentType(entry?: DocumentEntry): string | null {
+    return this.originalTypeByUseCase[this.uc.activeKey] || entry?.type || null;
   }
 
   private getOfficeViewerUrl(fileUrl: string): string | null {
@@ -137,6 +160,18 @@ export class DocumentsPage implements OnInit, OnDestroy {
         return null;
       }
       return `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(fileUrl)}`;
+    } catch {
+      return null;
+    }
+  }
+
+  private getGooglePdfViewerUrl(fileUrl: string): string | null {
+    try {
+      const parsed = new URL(fileUrl);
+      if (parsed.protocol !== 'https:' || parsed.hostname === 'localhost' || parsed.hostname === '127.0.0.1') {
+        return null;
+      }
+      return `https://docs.google.com/gview?embedded=1&url=${encodeURIComponent(fileUrl)}`;
     } catch {
       return null;
     }

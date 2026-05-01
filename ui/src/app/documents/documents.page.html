@@ -2,7 +2,7 @@
   <div class="docs-container">
 
     <!-- Document Detail View -->
-    <div *ngIf="selectedDoc || pdfUrl">
+    <div *ngIf="selectedDoc || pdfUrl || originalText">
       <ion-button fill="solid" color="primary" (click)="closeDocument()" class="back-btn">
         <ion-icon name="arrow-back" slot="start"></ion-icon> Back to Documents
       </ion-button>
@@ -22,8 +22,10 @@
               <a [href]="pdfUrl" target="_blank" rel="noopener noreferrer">Open it in a new tab</a>.
             </p>
           </object>
+          <iframe *ngIf="viewerType === 'google'" [src]="pdfUrl" class="pdf-iframe"></iframe>
           <iframe *ngIf="viewerType === 'office'" [src]="pdfUrl" class="pdf-iframe"></iframe>
         </div>
+        <pre *ngIf="viewerType === 'text' && originalText" class="text-view">{{ originalText }}</pre>
         <!-- JSON structured view -->
         <ng-container *ngIf="selectedDoc">
         <div *ngIf="selectedDoc.format === 'json'" class="json-view">
@@ -89,7 +91,7 @@
     </div>
 
     <!-- Document List View -->
-    <div *ngIf="!selectedDoc && !pdfUrl">
+    <div *ngIf="!selectedDoc && !pdfUrl && !originalText">
       <!-- Search & filter bar -->
       <ion-toolbar class="filter-bar">
         <ion-searchbar [(ngModel)]="searchText" (ionInput)="applyFilter()" placeholder="Search documents..." debounce="300"></ion-searchbar>

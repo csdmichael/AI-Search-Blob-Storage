@@ -536,6 +536,14 @@ def get_document(doc_id: str, use_case: str = "engineering_docs"):
 from fastapi.responses import FileResponse, StreamingResponse  # noqa: E402
 
 
+_MEDIA_TYPES = {
+    "pdf": "application/pdf",
+    "txt": "text/plain; charset=utf-8",
+    "ppt": "application/vnd.ms-powerpoint",
+    "pptx": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+}
+
+
 def _get_blob_container_client(container_name: str):
     """Get a blob container client using managed identity."""
     from azure.storage.blob import BlobServiceClient
@@ -608,11 +616,13 @@ def _stream_blob_file(doc_id: str, use_case: str, extension: str, blob_url: str 
     return None
 
 
-@app.get("/api/documents/{doc_id:path}/pdf")
-def get_document_pdf(doc_id: str, use_case: str = "engineering_docs"):
-    """Serve the raw PDF/PPTX file for in-browser viewing."""
+def _get_document_file_response(doc_id: str, use_case: str):
+    """Serve the original document file for in-browser viewing."""
     if use_case not in _VALID_USE_CASES:
         raise HTTPException(status_code=400, detail=f"Invalid use_case: {use_case}")
+
+    doc_cfg = config.uc_document_config(use_case)
+    extension = doc_cfg.get("file_format", "pdf")
 
     # Cosmos DB use cases: stream from Blob Storage
     if config.is_cosmosdb_use_case(use_case):
@@ -624,8 +634,6 @@ def get_document_pdf(doc_id: str, use_case: str = "engineering_docs"):
         if not doc:
             raise HTTPException(status_code=404, detail=f"Document {doc_id} not found in Cosmos DB")
 
-        doc_cfg = config.uc_document_config(use_case)
-        extension = doc_cfg.get("file_format", "pdf")
         file_name = doc.get("fileName") or f"{doc_id}.{extension}"
         try:
             response = _stream_blob_file(
@@ -646,7 +654,18 @@ def get_document_pdf(doc_id: str, use_case: str = "engineering_docs"):
 
     # Blob storage use cases: serve from local filesystem
     data_dir = config.uc_data_dir(use_case)
-    pdf_path = os.path.join(data_dir, f"{doc_id}.pdf")
-    if os.path.exists(pdf_path):
-        return FileResponse(pdf_path, media_type="application/pdf", filename=f"{doc_id}.pdf")
-    raise HTTPException(status_code=404, detail=f"PDF {doc_id}.pdf not found")
+    file_path = os.path.join(data_dir, f"{doc_id}.{extension}")
+    if os.path.exists(file_path):
+        media_type = _MEDIA_TYPES.get(extension, "application/octet-stream")
+        return FileResponse(file_path, media_type=media_type, filename=f"{doc_id}.{extension}")
+    raise HTTPException(status_code=404, detail=f"File {doc_id}.{extension} not found")
+
+
+@app.get("/api/documents/{doc_id:path}/file")
+def get_document_file(doc_id: str, use_case: str = "engineering_docs"):
+    return _get_document_file_response(doc_id, use_case)
+
+
+@app.get("/api/documents/{doc_id:path}/pdf")
+def get_document_pdf(doc_id: str, use_case: str = "engineering_docs"):
+    return _get_document_file_response(doc_id, use_case)
