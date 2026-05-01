@@ -256,7 +256,7 @@ def chunk_cosmosdb_document(doc: dict) -> list[dict]:
                 "section_name": section_name,
                 "document_number": doc_id,
                 "source_file": file_name,
-                "file_type": "pdf",
+                "file_type": os.path.splitext(file_name)[1].lstrip(".").lower() or "pdf",
                 "category": state_name,
                 "status": status,
             }
@@ -282,7 +282,7 @@ def chunk_cosmosdb_document(doc: dict) -> list[dict]:
                 "section_name": "Full Document",
                 "document_number": doc_id,
                 "source_file": file_name,
-                "file_type": "pdf",
+                "file_type": os.path.splitext(file_name)[1].lstrip(".").lower() or "pdf",
                 "category": state_name,
                 "status": status,
             }
