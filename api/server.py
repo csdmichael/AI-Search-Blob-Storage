@@ -109,7 +109,10 @@ class FeedbackEntry(BaseModel):
 
 # ── Helpers ─────────────────────────────────────────────────────────
 
-_DOC_ID_PATTERN = re.compile(r"((?:MFG|FD)-TC-\d{4}|tax_exemption_\w+\.pdf|filter_design_\w+\.pptx?)")
+# Matches [source†index] citations from Foundry agent responses
+_ANNOTATION_PATTERN = re.compile(r"\[([^\[\]\u2020]+?)\u2020([^\[\]]+?)\]")
+# Legacy prefix-based doc ID patterns (blob storage use cases)
+_PREFIX_DOC_PATTERN = re.compile(r"\b((?:MFG|FD)-TC-\d{4})\b")
 _VALID_USE_CASES = set(config.VALID_USE_CASES)
 _FALLBACK_PHRASES = [
     "could not find relevant information",
@@ -120,8 +123,23 @@ _FALLBACK_PHRASES = [
 
 
 def _extract_sources(text: str) -> list[str]:
-    """Pull document IDs from agent response text."""
-    return list(dict.fromkeys(_DOC_ID_PATTERN.findall(text)))
+    """Pull document IDs from agent response text.
+
+    Extracts from [source†index] annotations (all use cases) and
+    standalone MFG-TC / FD-TC prefixed IDs.
+    """
+    sources: list[str] = []
+    # Extract from [source†index] annotations
+    for m in _ANNOTATION_PATTERN.finditer(text):
+        src = m.group(1).strip()
+        # Remove file extension for consistent doc_id
+        doc_id = re.sub(r"\.(txt|json|pdf|pptx?)$", "", src, flags=re.IGNORECASE)
+        sources.append(doc_id)
+    # Also extract standalone prefix-based doc IDs
+    for m in _PREFIX_DOC_PATTERN.finditer(text):
+        if m.group(1) not in sources:
+            sources.append(m.group(1))
+    return list(dict.fromkeys(sources))
 
 
 def _is_fallback(text: str) -> bool:
@@ -131,7 +149,7 @@ def _is_fallback(text: str) -> bool:
 
 def _extract_expected_doc_ids(prompt: str) -> list[str]:
     """Extract specific document IDs mentioned in the prompt."""
-    return list(dict.fromkeys(_DOC_ID_PATTERN.findall(prompt.upper())))
+    return list(dict.fromkeys(m.upper() for m in _PREFIX_DOC_PATTERN.findall(prompt)))
 
 
 def _query_agent(prompt: str, use_case: str) -> str:
@@ -152,6 +170,83 @@ def _query_agent(prompt: str, use_case: str) -> str:
 
 def _feedback_file(use_case: str) -> str:
     return os.path.join(config.uc_data_dir(use_case), "feedback_log.json")
+
+
+# ── Cosmos DB helpers ───────────────────────────────────────────────
+
+_cosmosdb_container = None
+
+
+def _get_cosmosdb_container():
+    """Lazily create and cache a Cosmos DB container client."""
+    global _cosmosdb_container
+    if _cosmosdb_container is None:
+        from azure.cosmos import CosmosClient
+        from azure.identity import DefaultAzureCredential
+
+        credential = DefaultAzureCredential()
+        cosmosdb_cfg = config.cosmosdb_config()
+        endpoint = f"https://{cosmosdb_cfg['account_name']}.documents.azure.com:443/"
+        client = CosmosClient(endpoint, credential=credential)
+        database = client.get_database_client(cosmosdb_cfg["database_name"])
+        _cosmosdb_container = database.get_container_client(cosmosdb_cfg["container_name"])
+    return _cosmosdb_container
+
+
+def _list_cosmosdb_documents(use_case: str) -> list[dict]:
+    """Fetch document list from Cosmos DB for a use case."""
+    container = _get_cosmosdb_container()
+    doc_cfg = config.uc_document_config(use_case)
+    file_filter = doc_cfg.get("cosmosdb_filter", "")
+
+    if file_filter:
+        query = f"SELECT c.id, c.fileName, c.state, c.stateName, c.status, c.overallConfidence, c.confidenceCategory FROM c WHERE CONTAINS(LOWER(c.fileName), '.{file_filter}')"
+    else:
+        query = "SELECT c.id, c.fileName, c.state, c.stateName, c.status, c.overallConfidence, c.confidenceCategory FROM c"
+
+    items = list(container.query_items(query=query, enable_cross_partition_query=True))
+    docs = []
+    for item in sorted(items, key=lambda x: x.get("fileName", "")):
+        file_name = item.get("fileName", "")
+        doc_id = os.path.splitext(file_name)[0]
+        ext = os.path.splitext(file_name)[1].lstrip(".").lower()
+        entry = {
+            "filename": file_name,
+            "doc_id": doc_id,
+            "type": ext or doc_cfg.get("file_format", ""),
+            "size_kb": 0,
+            "title": file_name,
+            "status": item.get("status", ""),
+            "document_number": doc_id,
+            "state": item.get("stateName", item.get("state", "")),
+            "confidence": item.get("confidenceCategory", ""),
+        }
+        docs.append(entry)
+    return docs
+
+
+def _get_cosmosdb_document(doc_id: str, use_case: str) -> dict | None:
+    """Fetch a single document from Cosmos DB by fileName (without extension)."""
+    container = _get_cosmosdb_container()
+    doc_cfg = config.uc_document_config(use_case)
+    file_filter = doc_cfg.get("cosmosdb_filter", "")
+
+    # Try matching fileName starting with doc_id
+    query = "SELECT * FROM c WHERE STARTSWITH(c.fileName, @docId)"
+    parameters = [{"name": "@docId", "value": doc_id}]
+    items = list(container.query_items(
+        query=query, parameters=parameters, enable_cross_partition_query=True
+    ))
+
+    if items:
+        return items[0]
+
+    # Fallback: try matching Cosmos DB id directly
+    query = "SELECT * FROM c WHERE c.id = @docId"
+    items = list(container.query_items(
+        query=query, parameters=parameters, enable_cross_partition_query=True
+    ))
+    return items[0] if items else None
 
 
 def _load_feedback(use_case: str) -> list[dict]:
@@ -221,7 +316,7 @@ def batch_run(req: BatchRequest):
         elif not sources:
             passed = False
             reason = "No document citations in response"
-        elif not any(s.startswith(doc_prefix) for s in sources):
+        elif not config.is_cosmosdb_use_case(req.use_case) and not any(s.startswith(doc_prefix) for s in sources):
             passed = False
             reason = f"No {doc_prefix} citations (wrong use-case docs)"
         else:
@@ -282,6 +377,13 @@ def list_documents(use_case: str = "engineering_docs"):
     """List all documents for a use case with metadata."""
     if use_case not in _VALID_USE_CASES:
         raise HTTPException(status_code=400, detail=f"Invalid use_case: {use_case}")
+
+    # Cosmos DB use cases: fetch document list from Cosmos DB
+    if config.is_cosmosdb_use_case(use_case):
+        docs = _list_cosmosdb_documents(use_case)
+        return {"use_case": use_case, "total": len(docs), "documents": docs}
+
+    # Blob storage use cases: read from local filesystem
     data_dir = config.uc_data_dir(use_case)
     doc_cfg = config.uc_document_config(use_case)
     prefix = doc_cfg["document_prefix"]
@@ -306,11 +408,39 @@ def list_documents(use_case: str = "engineering_docs"):
     return {"use_case": use_case, "total": len(docs), "documents": docs}
 
 
-@app.get("/api/documents/{doc_id}")
+@app.get("/api/documents/{doc_id:path}")
 def get_document(doc_id: str, use_case: str = "engineering_docs"):
     """Get document content by ID."""
     if use_case not in _VALID_USE_CASES:
         raise HTTPException(status_code=400, detail=f"Invalid use_case: {use_case}")
+
+    # Cosmos DB use cases: fetch from Cosmos DB
+    if config.is_cosmosdb_use_case(use_case):
+        doc = _get_cosmosdb_document(doc_id, use_case)
+        if not doc:
+            raise HTTPException(status_code=404, detail=f"Document {doc_id} not found in Cosmos DB")
+        # Format sections for display
+        sections = {}
+        for section in doc.get("sections", []):
+            sec_name = section.get("sectionName", "Unknown Section")
+            fields = section.get("fields", [])
+            field_text = "\n".join(
+                f"{f.get('fieldName', '')}: {f.get('correctedValue') or f.get('extractedValue', '')}"
+                for f in fields if f.get("fieldName")
+            )
+            sections[sec_name] = field_text
+        content = {
+            "title": doc.get("fileName", doc_id),
+            "status": doc.get("status", ""),
+            "state": doc.get("state", ""),
+            "stateName": doc.get("stateName", ""),
+            "overallConfidence": doc.get("overallConfidence", 0),
+            "confidenceCategory": doc.get("confidenceCategory", ""),
+            "sections": sections,
+        }
+        return {"format": "json", "doc_id": doc_id, "content": content}
+
+    # Blob storage use cases: read from local filesystem
     data_dir = config.uc_data_dir(use_case)
     json_path = os.path.join(data_dir, f"{doc_id}.json")
     if os.path.exists(json_path):
@@ -326,7 +456,7 @@ def get_document(doc_id: str, use_case: str = "engineering_docs"):
 from fastapi.responses import FileResponse  # noqa: E402
 
 
-@app.get("/api/documents/{doc_id}/pdf")
+@app.get("/api/documents/{doc_id:path}/pdf")
 def get_document_pdf(doc_id: str, use_case: str = "engineering_docs"):
     """Serve the raw PDF file for in-browser viewing."""
     if use_case not in _VALID_USE_CASES:

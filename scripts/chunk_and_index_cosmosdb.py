@@ -188,6 +188,38 @@ def chunk_cosmosdb_document(doc: dict) -> list[dict]:
 
     chunks = []
 
+    # Chunk 0: Full-document summary for cross-section queries
+    summary_lines = [f"=== {file_name} — COMPLETE DOCUMENT SUMMARY ==="]
+    summary_lines.append(f"State: {state_name} ({state})")
+    summary_lines.append(f"Status: {status}")
+    summary_lines.append(f"Overall Confidence: {overall_confidence} ({confidence_category})")
+    summary_lines.append("")
+    for section in sections:
+        sec_name = section.get("sectionName", "Unknown")
+        summary_lines.append(f"--- {sec_name} ---")
+        for field in section.get("fields", []):
+            fn = field.get("fieldName", "")
+            val = field.get("correctedValue") or field.get("extractedValue", "")
+            if fn and val:
+                summary_lines.append(f"  {fn}: {val}")
+    summary_text = "\n".join(summary_lines)
+    if len(summary_text) <= MAX_CHUNK_SIZE:
+        chunk_id = hashlib.md5(f"{doc_id}:summary".encode()).hexdigest()
+        summary_chunk = {
+            "id": chunk_id,
+            "content": f"Document: {file_name} | State: {state_name}\n\n{summary_text}",
+            "title": file_name,
+            "section_name": "Full Document Summary",
+            "document_number": doc_id,
+            "source_file": file_name,
+            "file_type": os.path.splitext(file_name)[1].lstrip(".").lower() or "pdf",
+            "category": state_name,
+            "status": status,
+        }
+        summary_chunk.update(common_meta)
+        chunks.append(summary_chunk)
+
+    # Per-section chunks
     for section in sections:
         section_name = section.get("sectionName", "Unknown Section")
         fields = section.get("fields", [])

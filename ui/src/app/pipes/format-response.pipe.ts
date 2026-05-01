@@ -15,10 +15,15 @@ export class FormatResponsePipe implements PipeTransform {
       .replace(/>/g, '&gt;')
       // Bold **text**
       .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-      // Citations [doc†index] — make clickable links to document viewer
+      // Citations [source†index] — make clickable links to document viewer
       .replace(
-        /\[((?:MFG|FD)-TC-\d{4})[^\]]*?†([^\]]+?)\]/g,
-        '<a class="citation" href="/documents/$1" title="View $1">$1</a>',
+        /\[([^\[\]†]+?)†([^\[\]]+?)\]/g,
+        (_match: string, source: string, _index: string) => {
+          // Strip file extension from source for doc_id routing
+          const docId = source.replace(/\.(txt|json|pdf|pptx?)$/i, '');
+          const encodedDocId = encodeURIComponent(docId);
+          return `<a class="citation" href="/documents/${encodedDocId}" title="View ${source}">${source}</a>`;
+        },
       )
       // Line breaks
       .replace(/\n/g, '<br>');

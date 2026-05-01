@@ -3,12 +3,14 @@ Retest agent grounding accuracy using prompts from use-case demo scripts.
 
 Rules used for this grounded test:
 - Prompt list is parsed from use-cases/<use-case>/DEMO_SCRIPT.md table.
+- For Cosmos DB use cases without DEMO_SCRIPT.md, uses agent prompts from prompts_config.json.
 - Agent must provide a non-empty answer.
 - Agent must not return the configured "not found" fallback.
-- Agent must include at least one use-case document ID in the response.
+- Agent must include at least one document citation in the response.
+- For blob storage use cases, citation must contain a use-case document ID.
 - For prompts that mention a specific document ID, the same ID must appear in response.
 
-Set USE_CASE env var to select: engineering_docs (default) or filter_design.
+Set USE_CASE env var to select: engineering_docs, filter_design, tax_pdf_forms, eng_design_ppt.
 """
 
 import os
@@ -22,6 +24,9 @@ import config
 from azure.identity import DefaultAzureCredential
 from scripts.create_agent import query_agent
 
+# Universal annotation pattern: [source†index]
+_ANNOTATION_PATTERN = re.compile(r"\[([^\[\]†]+?)†([^\[\]]+?)\]")
+
 
 @dataclass
 class CaseResult:
@@ -31,12 +36,15 @@ class CaseResult:
     response_preview: str
 
 
-def _demo_script_path(use_case: str) -> str:
+def _demo_script_path(use_case: str) -> str | None:
     mapping = {
         "engineering_docs": os.path.join("use-cases", "engineering-docs", "DEMO_SCRIPT.md"),
         "filter_design": os.path.join("use-cases", "filter-design", "DEMO_SCRIPT.md"),
+        "tax_pdf_forms": os.path.join("use-cases", "tax-pdf-forms", "DEMO_SCRIPT.md"),
+        "eng_design_ppt": os.path.join("use-cases", "eng-design-ppt", "DEMO_SCRIPT.md"),
     }
-    return os.path.join(config.PROJECT_ROOT, mapping[use_case])
+    path = os.path.join(config.PROJECT_ROOT, mapping[use_case])
+    return path if os.path.exists(path) else None
 
 
 def _parse_prompts(markdown_path: str) -> list[str]:
@@ -49,24 +57,37 @@ def _parse_prompts(markdown_path: str) -> list[str]:
     return prompts
 
 
+def _load_prompts_from_config(use_case: str) -> list[str]:
+    """Fallback: load agent prompts from prompts_config.json."""
+    prompts_cfg = config.prompts_config()["use_cases"][use_case]
+    return [p["text"] for p in prompts_cfg.get("agent", [])]
+
+
 def _fallback_detected(response: str) -> bool:
     text = response.lower()
-    return (
-        "could not find relevant information in the engineering documents index" in text
-        or "could not find relevant information in the filter design documents index" in text
-        or "no results found in the document index" in text
-    )
+    fallback_phrases = [
+        "could not find relevant information",
+        "no results found in the document index",
+        "no relevant information",
+        "i don't have",
+        "not found in",
+    ]
+    return any(p in text for p in fallback_phrases)
 
 
 def _expected_patterns(use_case: str):
     if use_case == "engineering_docs":
         return re.compile(r"\bMFG-TC-\d{4}\b"), re.compile(r"\bMFG-TC-\d{4}\b", re.IGNORECASE)
-    return re.compile(r"\bFD-TC-\d{4}\b"), re.compile(r"\bFD-TC-\d{4}\b", re.IGNORECASE)
+    if use_case == "filter_design":
+        return re.compile(r"\bFD-TC-\d{4}\b"), re.compile(r"\bFD-TC-\d{4}\b", re.IGNORECASE)
+    # Cosmos DB use cases: no prefix-based doc ID pattern
+    return None, None
 
 
 def evaluate_prompts(use_case: str, prompts: list[str]) -> list[CaseResult]:
     credential = DefaultAzureCredential()
     expected_in_answer, expected_in_prompt = _expected_patterns(use_case)
+    is_cosmosdb = config.is_cosmosdb_use_case(use_case)
 
     results: list[CaseResult] = []
     for prompt in prompts:
@@ -81,16 +102,24 @@ def evaluate_prompts(use_case: str, prompts: list[str]) -> list[CaseResult]:
             results.append(CaseResult(prompt, False, "fallback/not-found response", response_compact[:220]))
             continue
 
-        if not expected_in_answer.search(response_compact):
-            results.append(CaseResult(prompt, False, "no use-case document ID in answer", response_compact[:220]))
-            continue
-
-        specific = expected_in_prompt.search(prompt)
-        if specific:
-            specific_id = specific.group(0).upper()
-            if specific_id not in response_compact.upper():
-                results.append(CaseResult(prompt, False, f"specific doc ID missing in answer: {specific_id}", response_compact[:220]))
+        if is_cosmosdb:
+            # For Cosmos DB use cases, check for any [source†index] annotation
+            if not _ANNOTATION_PATTERN.search(response_compact):
+                results.append(CaseResult(prompt, False, "no document citation in answer", response_compact[:220]))
                 continue
+        else:
+            # For blob storage use cases, check for prefix-based doc ID
+            if expected_in_answer and not expected_in_answer.search(response_compact):
+                results.append(CaseResult(prompt, False, "no use-case document ID in answer", response_compact[:220]))
+                continue
+
+            if expected_in_prompt:
+                specific = expected_in_prompt.search(prompt)
+                if specific:
+                    specific_id = specific.group(0).upper()
+                    if specific_id not in response_compact.upper():
+                        results.append(CaseResult(prompt, False, f"specific doc ID missing in answer: {specific_id}", response_compact[:220]))
+                        continue
 
         results.append(CaseResult(prompt, True, "ok", response_compact[:220]))
 
@@ -101,13 +130,19 @@ def main():
     use_case = config.get_use_case()
     demo_path = _demo_script_path(use_case)
 
-    prompts = _parse_prompts(demo_path)
+    if demo_path:
+        prompts = _parse_prompts(demo_path)
+        source_label = f"Demo script: {demo_path}"
+    else:
+        prompts = _load_prompts_from_config(use_case)
+        source_label = "Agent prompts from prompts_config.json"
+
     if not prompts:
-        print(f"No prompts found in demo script: {demo_path}")
+        print(f"No prompts found for use case: {use_case}")
         return 1
 
     print(f"Use case: {use_case}")
-    print(f"Demo script: {demo_path}")
+    print(f"Source: {source_label}")
     print(f"Prompts parsed: {len(prompts)}")
     print("-" * 80)
 

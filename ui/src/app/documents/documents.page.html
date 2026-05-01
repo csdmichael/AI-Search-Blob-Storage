@@ -30,10 +30,10 @@
           <div *ngIf="jsonTab === 'parsed'">
           <ion-grid>
             <ion-row>
-              <ion-col size="6" size-md="4" *ngFor="let key of ['status','filter_type','frequency_band','substrate_material','product_line','target_defect','process_step','technology_node','design_center','fab_location']">
+              <ion-col size="6" size-md="4" *ngFor="let key of ['status','filter_type','frequency_band','substrate_material','product_line','target_defect','process_step','technology_node','design_center','fab_location','state','stateName','overallConfidence','confidenceCategory']">
                 <div class="meta-field" *ngIf="selectedDoc.content[key]">
                   <span class="meta-label">{{ formatKey(key) | titlecase }}</span>
-                  <ion-badge [color]="key === 'status' ? getStatusColor(selectedDoc.content[key]) : 'light'">
+                  <ion-badge [color]="key === 'status' ? getStatusColor(selectedDoc.content[key]) : (key === 'confidenceCategory' ? getConfidenceColor(selectedDoc.content[key]) : 'light')">
                     {{ selectedDoc.content[key] }}
                   </ion-badge>
                 </div>
@@ -97,7 +97,9 @@
             <p *ngIf="doc.title">{{ doc.title }}</p>
             <p class="doc-meta">
               <ion-badge [color]="getStatusColor(doc.status || '')" *ngIf="doc.status">{{ doc.status }}</ion-badge>
-              <span>{{ doc.type | uppercase }} · {{ doc.size_kb }} KB</span>
+              <ion-badge color="tertiary" *ngIf="doc.state">{{ doc.state }}</ion-badge>
+              <ion-badge color="light" *ngIf="doc.confidence">{{ doc.confidence }}</ion-badge>
+              <span>{{ doc.type | uppercase }}<span *ngIf="doc.size_kb"> · {{ doc.size_kb }} KB</span></span>
             </p>
           </ion-label>
         </ion-item>

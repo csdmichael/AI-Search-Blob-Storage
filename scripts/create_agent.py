@@ -56,6 +56,19 @@ if _use_case == "filter_design":
         "Resolve common telecom terminology variants when matching intent, including n78 = Band 78 = Band 7 context where applicable in the corpus. "
         "If relevant chunks are present, provide the best grounded answer instead of generic fallback text."
     )
+elif _use_case in ("tax_pdf_forms", "eng_design_ppt"):
+    DEFAULT_QUERY_TYPE = AzureAISearchQueryType.SEMANTIC
+    QUERY_TYPE_LABEL = "semantic"
+    AGENT_INSTRUCTIONS += (
+        "\n\nGROUNDING POLICY: "
+        "Always answer strictly from azure_ai_search retrieved chunks. "
+        "Each chunk starts with 'Document: <fileName>' — use that fileName for citations. "
+        "If relevant chunks are present, provide the best grounded answer instead of generic fallback text. "
+        "When multiple chunks reference the same document, synthesize information across them. "
+        "For field values, copy the EXACT text from the retrieved chunk content. "
+        "When queried about a specific state or jurisdiction, prioritize chunks matching that state. "
+        "If chunks contain relevant information, do NOT return a generic not-found response."
+    )
 else:
     DEFAULT_QUERY_TYPE = AzureAISearchQueryType.SEMANTIC
     QUERY_TYPE_LABEL = "semantic"
@@ -133,6 +146,15 @@ def query_agent(prompt: str, credential=None):
             "If chunks for the requested document exist, do not answer with a generic not-found response. "
             "Copy exact numeric values and units from retrieved text, and keep section semantics consistent. "
             "Treat notation variants as equivalent when searching intent (e.g., n78, Band 78, and Band 7 context). "
+            f"\n\nUser question: {prompt}"
+        )
+    elif _use_case in ("tax_pdf_forms", "eng_design_ppt"):
+        wrapped_prompt = (
+            "Use azure_ai_search results as the only source of truth. "
+            "Each chunk starts with 'Document: <fileName>' — use that fileName for citations. "
+            "If relevant chunks are present, provide the best grounded answer. Do NOT return a generic not-found response. "
+            "When synthesizing across multiple chunks, combine information and cite all referenced documents. "
+            "Copy exact field values from retrieved text. "
             f"\n\nUser question: {prompt}"
         )
 

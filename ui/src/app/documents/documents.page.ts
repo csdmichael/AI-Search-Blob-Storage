@@ -77,7 +77,8 @@ export class DocumentsPage implements OnInit, OnDestroy {
       docs = docs.filter((d) =>
         d.filename.toLowerCase().includes(q) ||
         (d.title || '').toLowerCase().includes(q) ||
-        (d.status || '').toLowerCase().includes(q)
+        (d.status || '').toLowerCase().includes(q) ||
+        (d.state || '').toLowerCase().includes(q)
       );
     }
     this.filteredDocs = docs;
@@ -116,6 +117,16 @@ export class DocumentsPage implements OnInit, OnDestroy {
     if (s === 'PASS') return 'success';
     if (s === 'FAIL') return 'danger';
     if (s.includes('CONDITIONAL')) return 'warning';
+    if (s === 'EXTRACTED') return 'success';
+    return 'medium';
+  }
+
+  getConfidenceColor(confidence: string): string {
+    if (!confidence) return 'medium';
+    const c = confidence.toUpperCase();
+    if (c === 'HIGH') return 'success';
+    if (c === 'MEDIUM') return 'warning';
+    if (c === 'LOW') return 'danger';
     return 'medium';
   }
 

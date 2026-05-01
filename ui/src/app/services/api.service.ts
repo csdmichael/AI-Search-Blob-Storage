@@ -58,6 +58,8 @@ export interface DocumentEntry {
   title?: string;
   status?: string;
   document_number?: string;
+  state?: string;
+  confidence?: string;
 }
 
 export interface DocumentListResponse {
