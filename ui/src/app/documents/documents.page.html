@@ -57,7 +57,17 @@
           <!-- Sections -->
           <div *ngFor="let secKey of getSectionKeys(selectedDoc.content)">
             <ion-item-divider color="light" class="section-divider">{{ getSectionLabel(secKey) }}</ion-item-divider>
-            <div class="section-content">{{ selectedDoc.content.sections[secKey] }}</div>
+            <div class="section-content" *ngIf="selectedDoc.content.sections[secKey]">{{ selectedDoc.content.sections[secKey] }}</div>
+            <!-- Image descriptions for this section -->
+            <div *ngIf="selectedDoc.content.sectionImages && selectedDoc.content.sectionImages[secKey]" class="image-descriptions">
+              <div *ngFor="let img of selectedDoc.content.sectionImages[secKey]" class="image-desc-card">
+                <ion-icon name="image-outline" color="primary"></ion-icon>
+                <div>
+                  <strong>{{ img.figureName }}</strong>
+                  <p *ngIf="img.description">{{ img.description }}</p>
+                </div>
+              </div>
+            </div>
           </div>
           </div>
 

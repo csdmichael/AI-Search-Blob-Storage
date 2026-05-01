@@ -101,8 +101,8 @@ export class DocumentsPage implements OnInit, OnDestroy {
 
     const entry = this.documents.find((d) => d.doc_id === docId);
 
-    // Show PDF viewer for PDF documents
-    if (entry?.type === 'pdf') {
+    // Show PDF/PPTX viewer for binary documents
+    if (entry?.type === 'pdf' || entry?.type === 'pptx' || entry?.type === 'ppt') {
       const url = this.api.getPdfUrl(docId, this.uc.activeKey);
       this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
     }

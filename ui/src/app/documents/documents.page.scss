@@ -87,6 +87,38 @@
   color: var(--ion-text-color);
 }
 
+.image-descriptions {
+  padding: 0 1rem 0.5rem;
+}
+
+.image-desc-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0.5rem;
+  background: var(--ion-color-light);
+  border-radius: 8px;
+  border-left: 3px solid var(--ion-color-primary);
+
+  ion-icon {
+    font-size: 1.25rem;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  strong {
+    display: block;
+    font-size: 0.82rem;
+  }
+
+  p {
+    margin: 2px 0 0;
+    font-size: 0.78rem;
+    color: var(--ion-color-medium);
+  }
+}
+
 .metric-card {
   background: var(--ion-color-light);
   border-radius: 8px;

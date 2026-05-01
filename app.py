@@ -398,6 +398,7 @@ def get_document(doc_id: str, use_case: str = "engineering_docs"):
             raise HTTPException(status_code=404, detail=f"Document {doc_id} not found in Cosmos DB")
 
         sections = {}
+        section_images: dict[str, list[dict]] = {}
         for section in doc.get("sections", []):
             sec_name = section.get("sectionName", "Unknown Section")
             fields = section.get("fields", [])
@@ -406,8 +407,14 @@ def get_document(doc_id: str, use_case: str = "engineering_docs"):
                 for f in fields if f.get("fieldName")
             )
             sections[sec_name] = field_text
+            imgs = section.get("imageDescriptions", [])
+            if imgs:
+                section_images[sec_name] = [
+                    {"figureName": img.get("figureName", ""), "description": img.get("description", "")}
+                    for img in imgs
+                ]
 
-        content = {
+        content: dict = {
             "title": doc.get("fileName", doc_id),
             "status": doc.get("status", ""),
             "state": doc.get("state", ""),
@@ -416,6 +423,8 @@ def get_document(doc_id: str, use_case: str = "engineering_docs"):
             "confidenceCategory": doc.get("confidenceCategory", ""),
             "sections": sections,
         }
+        if section_images:
+            content["sectionImages"] = section_images
         return {"format": "json", "doc_id": doc_id, "content": content}
 
     data_dir = config.uc_data_dir(use_case)
@@ -431,13 +440,76 @@ def get_document(doc_id: str, use_case: str = "engineering_docs"):
     raise HTTPException(status_code=404, detail=f"Document {doc_id} not found")
 
 
-from fastapi.responses import FileResponse  # noqa: E402
+from fastapi.responses import FileResponse, StreamingResponse  # noqa: E402
+
+
+_blob_container_client = None
+
+
+def _get_blob_container_client(container_name: str):
+    """Get a blob container client using managed identity."""
+    from azure.storage.blob import BlobServiceClient
+    from azure.identity import DefaultAzureCredential
+
+    credential = DefaultAzureCredential()
+    storage_url = config.storage_url()
+    blob_service = BlobServiceClient(account_url=storage_url, credential=credential)
+    return blob_service.get_container_client(container_name)
+
+
+def _stream_blob_file(doc_id: str, use_case: str, extension: str):
+    """Stream a file from Blob Storage for Cosmos DB use cases.
+
+    Tries the use-case blob container first, then falls back to the
+    shared 'tax-forms' container used by the ingestion pipeline.
+    """
+    from azure.core.exceptions import ResourceNotFoundError
+
+    file_name = f"{doc_id}.{extension}"
+    containers_to_try = [config.container_name(use_case), "tax-forms"]
+    seen: set[str] = set()
+
+    for cname in containers_to_try:
+        if cname in seen:
+            continue
+        seen.add(cname)
+        try:
+            container_client = _get_blob_container_client(cname)
+            blob_client = container_client.get_blob_client(file_name)
+            stream = blob_client.download_blob()
+            props = stream.properties
+            media_type = props.content_settings.content_type or "application/octet-stream"
+            return StreamingResponse(
+                stream.chunks(),
+                media_type=media_type,
+                headers={"Content-Disposition": f'inline; filename="{file_name}"'},
+            )
+        except ResourceNotFoundError:
+            continue
+        except Exception:
+            continue
+    return None
+
 
 @app.get("/api/documents/{doc_id}/pdf")
 def get_document_pdf(doc_id: str, use_case: str = "engineering_docs"):
-    """Serve the raw PDF file for in-browser viewing."""
+    """Serve the raw PDF/PPTX file for in-browser viewing."""
     if use_case not in _VALID_USE_CASES:
         raise HTTPException(status_code=400, detail=f"Invalid use_case: {use_case}")
+
+    # Cosmos DB use cases: stream from Blob Storage
+    if config.is_cosmosdb_use_case(use_case):
+        doc_cfg = config.uc_document_config(use_case)
+        extension = doc_cfg.get("file_format", "pdf")
+        response = _stream_blob_file(doc_id, use_case, extension)
+        if response:
+            return response
+        raise HTTPException(
+            status_code=404,
+            detail=f"File {doc_id}.{extension} not found in Blob Storage",
+        )
+
+    # Blob storage use cases: serve from local filesystem
     data_dir = config.uc_data_dir(use_case)
     pdf_path = os.path.join(data_dir, f"{doc_id}.pdf")
     if os.path.exists(pdf_path):
