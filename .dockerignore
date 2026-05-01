@@ -17,6 +17,8 @@ api-logs*/
 *.tar.gz
 node_modules/
 www/
+.python_packages/
+__pycache__/
 
 # Publish profiles (secrets)
 *-publish-profile.xml

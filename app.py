@@ -137,6 +137,82 @@ def _save_feedback(use_case: str, entries: list[dict]):
         json.dump(entries, f, indent=2)
 
 
+# ── Cosmos DB helpers ───────────────────────────────────────────────
+
+_cosmosdb_container = None
+
+
+def _get_cosmosdb_container():
+    """Lazily create and cache a Cosmos DB container client."""
+    global _cosmosdb_container
+    if _cosmosdb_container is None:
+        from azure.cosmos import CosmosClient
+        from azure.identity import DefaultAzureCredential
+
+        credential = DefaultAzureCredential()
+        cosmosdb_cfg = config.cosmosdb_config()
+        endpoint = f"https://{cosmosdb_cfg['account_name']}.documents.azure.com:443/"
+        client = CosmosClient(endpoint, credential=credential)
+        database = client.get_database_client(cosmosdb_cfg["database_name"])
+        _cosmosdb_container = database.get_container_client(cosmosdb_cfg["container_name"])
+    return _cosmosdb_container
+
+
+def _list_cosmosdb_documents(use_case: str) -> list[dict]:
+    """Fetch document list from Cosmos DB for a use case."""
+    container = _get_cosmosdb_container()
+    doc_cfg = config.uc_document_config(use_case)
+    file_filter = doc_cfg.get("cosmosdb_filter", "")
+
+    if file_filter:
+        query = f"SELECT c.id, c.fileName, c.state, c.stateName, c.status, c.overallConfidence, c.confidenceCategory FROM c WHERE CONTAINS(LOWER(c.fileName), '.{file_filter}')"
+    else:
+        query = "SELECT c.id, c.fileName, c.state, c.stateName, c.status, c.overallConfidence, c.confidenceCategory FROM c"
+
+    items = list(container.query_items(query=query, enable_cross_partition_query=True))
+    docs = []
+    for item in sorted(items, key=lambda x: x.get("fileName", "")):
+        file_name = item.get("fileName", "")
+        doc_id = os.path.splitext(file_name)[0]
+        ext = os.path.splitext(file_name)[1].lstrip(".").lower()
+        docs.append({
+            "filename": file_name,
+            "doc_id": doc_id,
+            "type": ext or doc_cfg.get("file_format", ""),
+            "size_kb": 0,
+            "title": file_name,
+            "status": item.get("status", ""),
+            "document_number": doc_id,
+            "state": item.get("stateName", item.get("state", "")),
+            "confidence": item.get("confidenceCategory", ""),
+        })
+    return docs
+
+
+def _get_cosmosdb_document(doc_id: str) -> dict | None:
+    """Fetch a single document from Cosmos DB by fileName (without extension)."""
+    container = _get_cosmosdb_container()
+
+    query = "SELECT * FROM c WHERE STARTSWITH(c.fileName, @docId)"
+    parameters = [{"name": "@docId", "value": doc_id}]
+    items = list(container.query_items(
+        query=query,
+        parameters=parameters,
+        enable_cross_partition_query=True,
+    ))
+
+    if items:
+        return items[0]
+
+    query = "SELECT * FROM c WHERE c.id = @docId"
+    items = list(container.query_items(
+        query=query,
+        parameters=parameters,
+        enable_cross_partition_query=True,
+    ))
+    return items[0] if items else None
+
+
 # ── Endpoints ───────────────────────────────────────────────────────
 
 @app.get("/api/prompts")
@@ -212,6 +288,17 @@ def list_documents(use_case: str = "engineering_docs"):
     """List all documents for a use case with metadata."""
     if use_case not in _VALID_USE_CASES:
         raise HTTPException(status_code=400, detail=f"Invalid use_case: {use_case}")
+
+    if config.is_cosmosdb_use_case(use_case):
+        try:
+            docs = _list_cosmosdb_documents(use_case)
+            return {"use_case": use_case, "total": len(docs), "documents": docs}
+        except Exception as exc:
+            raise HTTPException(
+                status_code=502,
+                detail=f"Cosmos DB query failed for {use_case}: {exc}",
+            )
+
     data_dir = config.uc_data_dir(use_case)
     doc_cfg = config.uc_document_config(use_case)
     prefix = doc_cfg["document_prefix"]
@@ -242,6 +329,37 @@ def get_document(doc_id: str, use_case: str = "engineering_docs"):
     """Get document content by ID (returns JSON structured data or text)."""
     if use_case not in _VALID_USE_CASES:
         raise HTTPException(status_code=400, detail=f"Invalid use_case: {use_case}")
+
+    if config.is_cosmosdb_use_case(use_case):
+        try:
+            doc = _get_cosmosdb_document(doc_id)
+        except Exception as exc:
+            raise HTTPException(status_code=502, detail=f"Cosmos DB query failed: {exc}")
+
+        if not doc:
+            raise HTTPException(status_code=404, detail=f"Document {doc_id} not found in Cosmos DB")
+
+        sections = {}
+        for section in doc.get("sections", []):
+            sec_name = section.get("sectionName", "Unknown Section")
+            fields = section.get("fields", [])
+            field_text = "\n".join(
+                f"{f.get('fieldName', '')}: {f.get('correctedValue') or f.get('extractedValue', '')}"
+                for f in fields if f.get("fieldName")
+            )
+            sections[sec_name] = field_text
+
+        content = {
+            "title": doc.get("fileName", doc_id),
+            "status": doc.get("status", ""),
+            "state": doc.get("state", ""),
+            "stateName": doc.get("stateName", ""),
+            "overallConfidence": doc.get("overallConfidence", 0),
+            "confidenceCategory": doc.get("confidenceCategory", ""),
+            "sections": sections,
+        }
+        return {"format": "json", "doc_id": doc_id, "content": content}
+
     data_dir = config.uc_data_dir(use_case)
     # Try JSON first (structured), then txt/pdf
     json_path = os.path.join(data_dir, f"{doc_id}.json")
