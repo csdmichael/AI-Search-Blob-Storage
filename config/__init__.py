@@ -18,7 +18,7 @@ DATA_DIR = os.path.join(PROJECT_ROOT, "data")
 DOCS_DIR = os.path.join(PROJECT_ROOT, "docs")
 
 DEFAULT_USE_CASE = "engineering_docs"
-VALID_USE_CASES = ("engineering_docs", "filter_design")
+VALID_USE_CASES = ("engineering_docs", "filter_design", "tax_pdf_forms", "eng_design_ppt")
 
 
 def _load(filename: str) -> dict:
@@ -97,7 +97,12 @@ def uc_data_dir(use_case: str | None = None) -> str:
     return os.path.join(DATA_DIR, doc_cfg["data_subfolder"])
 
 
-_UC_FOLDER_MAP = {"engineering_docs": "engineering-docs", "filter_design": "filter-design"}
+_UC_FOLDER_MAP = {
+    "engineering_docs": "engineering-docs",
+    "filter_design": "filter-design",
+    "tax_pdf_forms": "tax-pdf-forms",
+    "eng_design_ppt": "eng-design-ppt",
+}
 
 
 def uc_docs_dir(use_case: str | None = None) -> str:
@@ -131,3 +136,33 @@ def project_endpoint() -> str:
 def container_name(use_case: str | None = None) -> str:
     uc = use_case or get_use_case()
     return storage_config()["containers"][uc]
+
+
+# ── Cosmos DB helpers ──────────────────────────────────────────────
+
+def cosmosdb_config() -> dict:
+    """Return Cosmos DB config from azure_resources."""
+    return azure_resources()["cosmosdb"]
+
+
+def cosmosdb_account_name() -> str:
+    return cosmosdb_config()["account_name"]
+
+
+def cosmosdb_resource_id() -> str:
+    return cosmosdb_config()["resource_id"]
+
+
+def cosmosdb_database_name() -> str:
+    return cosmosdb_config()["database_name"]
+
+
+def cosmosdb_container_name() -> str:
+    return cosmosdb_config()["container_name"]
+
+
+def is_cosmosdb_use_case(use_case: str | None = None) -> bool:
+    """Check if the use case sources data from Cosmos DB."""
+    uc = use_case or get_use_case()
+    doc_cfg = uc_document_config(uc)
+    return doc_cfg.get("data_source") == "cosmosdb"

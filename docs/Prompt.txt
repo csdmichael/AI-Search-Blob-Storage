@@ -40,3 +40,14 @@ Fine-tune Foundry model by training it on samples of Skyworks docs
 Implement ranking and feedback loop for agent to make it perform at 95% accuracy instead of 90% which SkyWorks team is already at.
 Remove Skyworks and KLA from file names and all files to make these POCs reusable. USe business terms instead. Retest everything to ensure the renaming didn't break anything.
 Create a config folder and add different config files based on module. One for Agents instructions, settings. One for Azure Resource Ids, etc. Don't hard-code anything.
+
+Tax PDF Forms Use Case and Engineering Design PPT Use Case
+=========================================================
+Using same Azure resources, build these 2 use case for Tax Exemption PDF Forms and Engineering Design PPT files stored in Cosmos DB - container taxform -> documents. Filter pdfs for 1st use case and ppt for 2nd use case.
+- Cosmos DB: /subscriptions/86b37969-9445-49cf-b03f-d8866235171c/resourceGroups/ai-myaacoub/providers/Microsoft.DocumentDb/databaseAccounts/cosmos-ai-poc
+Create AI search indexes for 2 use cases (including chunking, scoring profile, other AI Search best practices for very high accuracy) on data from cosmos db 
+Leverage private VNET and private endpoint that exist for cosmos db
+Create 2 new Foundry agents for 2 use cases and make ai search index as a Tool for each use case. Instruct the agent to not make up any answers and only use ai search index as its only tool / knowledge source. Disable web search.
+Implement ranking and feedback loop for agent to make it perform at 95% accuracy
+Add readme files for 2 use cases
+

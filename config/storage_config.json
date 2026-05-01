@@ -1,7 +1,9 @@
 {
   "containers": {
     "engineering_docs": "engineering-docs",
-    "filter_design": "filter-design-docs"
+    "filter_design": "filter-design-docs",
+    "tax_pdf_forms": "tax-pdf-forms",
+    "eng_design_ppt": "eng-design-ppt"
   },
   "upload": {
     "overwrite": true

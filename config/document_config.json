@@ -15,6 +15,26 @@
       "file_format": "pdf",
       "classification": "CONFIDENTIAL - Internal Use Only",
       "domain": "RF Filter Design"
+    },
+    "tax_pdf_forms": {
+      "document_prefix": "TAX",
+      "total_documents": 0,
+      "data_subfolder": "tax-pdf-forms",
+      "file_format": "pdf",
+      "classification": "CONFIDENTIAL - Internal Use Only",
+      "domain": "Tax Exemption Forms",
+      "data_source": "cosmosdb",
+      "cosmosdb_filter": "pdf"
+    },
+    "eng_design_ppt": {
+      "document_prefix": "ENG",
+      "total_documents": 0,
+      "data_subfolder": "eng-design-ppt",
+      "file_format": "pptx",
+      "classification": "CONFIDENTIAL - Internal Use Only",
+      "domain": "Engineering Design Presentations",
+      "data_source": "cosmosdb",
+      "cosmosdb_filter": "ppt"
     }
   },
   "architecture_diagram": {

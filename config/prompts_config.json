@@ -195,6 +195,82 @@
         {"text": "Which test cases cover WiFi 6E band filter designs?", "category": "agent"},
         {"text": "What are the power handling specifications for BAW duplexer designs?", "category": "agent"}
       ]
+    },
+    "tax_pdf_forms": {
+      "keyword": [
+        {"text": "tax exemption certificate form", "category": "keyword"},
+        {"text": "sales tax exemption", "category": "keyword"},
+        {"text": "property tax exemption application", "category": "keyword"},
+        {"text": "501(c)(3) nonprofit exemption", "category": "keyword"},
+        {"text": "resale certificate", "category": "keyword"},
+        {"text": "withholding tax form W-4", "category": "keyword"},
+        {"text": "state tax exemption filing deadline", "category": "keyword"},
+        {"text": "exempt organization certificate number", "category": "keyword"},
+        {"text": "agricultural exemption form", "category": "keyword"},
+        {"text": "multi-state tax exemption", "category": "keyword"}
+      ],
+      "semantic": [
+        {"text": "What forms are required for sales tax exemption?", "category": "semantic"},
+        {"text": "How do I file for a nonprofit tax exemption certificate?", "category": "semantic"},
+        {"text": "What are the deadlines for property tax exemption applications?", "category": "semantic"},
+        {"text": "Which states accept multi-jurisdiction exemption certificates?", "category": "semantic"},
+        {"text": "What documentation is needed for a resale certificate?", "category": "semantic"},
+        {"text": "How are agricultural tax exemptions categorized?", "category": "semantic"},
+        {"text": "What is the renewal process for tax exemption certificates?", "category": "semantic"},
+        {"text": "Which exemption forms require notarization?", "category": "semantic"},
+        {"text": "What are the eligibility criteria for 501(c)(3) tax exemption?", "category": "semantic"},
+        {"text": "How do withholding tax forms differ by state?", "category": "semantic"}
+      ],
+      "agent": [
+        {"text": "What tax exemption forms are available for nonprofits?", "category": "agent"},
+        {"text": "What is the filing deadline for sales tax exemption in Texas?", "category": "agent"},
+        {"text": "List all forms required for property tax exemption.", "category": "agent"},
+        {"text": "What are the eligibility requirements for agricultural exemption?", "category": "agent"},
+        {"text": "Which states accept the Streamlined Sales Tax exemption certificate?", "category": "agent"},
+        {"text": "What documentation is needed to apply for a resale certificate?", "category": "agent"},
+        {"text": "How do I renew an expiring tax exemption certificate?", "category": "agent"},
+        {"text": "What are the penalties for expired exemption certificates?", "category": "agent"},
+        {"text": "Which forms need to be filed for multi-state tax exemption?", "category": "agent"},
+        {"text": "What is the approval workflow for tax exemption applications?", "category": "agent"}
+      ]
+    },
+    "eng_design_ppt": {
+      "keyword": [
+        {"text": "engineering design review presentation", "category": "keyword"},
+        {"text": "system architecture diagram", "category": "keyword"},
+        {"text": "design specification requirements", "category": "keyword"},
+        {"text": "project milestone timeline", "category": "keyword"},
+        {"text": "trade-off analysis comparison", "category": "keyword"},
+        {"text": "mechanical design tolerance", "category": "keyword"},
+        {"text": "electrical schematic diagram", "category": "keyword"},
+        {"text": "thermal analysis simulation", "category": "keyword"},
+        {"text": "material selection criteria", "category": "keyword"},
+        {"text": "manufacturing process flow", "category": "keyword"}
+      ],
+      "semantic": [
+        {"text": "What are the key design specifications in the latest engineering review?", "category": "semantic"},
+        {"text": "Which presentations cover system architecture decisions?", "category": "semantic"},
+        {"text": "What trade-off analyses were performed for material selection?", "category": "semantic"},
+        {"text": "How are thermal constraints addressed in the design?", "category": "semantic"},
+        {"text": "What project milestones are documented in the presentations?", "category": "semantic"},
+        {"text": "Which design reviews identified critical risks?", "category": "semantic"},
+        {"text": "What manufacturing process changes were proposed?", "category": "semantic"},
+        {"text": "How do tolerance requirements affect design decisions?", "category": "semantic"},
+        {"text": "What testing methodologies are described in the presentations?", "category": "semantic"},
+        {"text": "Which presentations discuss reliability and durability testing?", "category": "semantic"}
+      ],
+      "agent": [
+        {"text": "What are the key design specifications in the latest engineering review?", "category": "agent"},
+        {"text": "Which presentations cover system architecture decisions?", "category": "agent"},
+        {"text": "List all design reviews that identified critical risks.", "category": "agent"},
+        {"text": "What trade-off analyses were performed for material selection?", "category": "agent"},
+        {"text": "What project milestones are documented in the presentations?", "category": "agent"},
+        {"text": "What testing methodologies are described in the presentations?", "category": "agent"},
+        {"text": "How are thermal constraints addressed in the design?", "category": "agent"},
+        {"text": "What manufacturing process changes were proposed?", "category": "agent"},
+        {"text": "Which presentations discuss tolerance and fit requirements?", "category": "agent"},
+        {"text": "What reliability testing results are documented?", "category": "agent"}
+      ]
     }
   }
 }

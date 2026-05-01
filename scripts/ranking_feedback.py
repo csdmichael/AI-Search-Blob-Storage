@@ -288,6 +288,20 @@ def generate_synthetic_feedback(search_client: SearchClient, n_queries: int = 30
             "5G NR", "Band 7", "duplexer", "temperature", "substrate",
             "Q factor", "WiFi", "resonator", "passband", "LiNbO3",
         ]
+    elif use_case == "tax_pdf_forms":
+        sample_terms = [
+            "tax exemption", "sales tax", "property tax", "certificate",
+            "nonprofit", "501(c)(3)", "resale", "filing deadline", "exemption form",
+            "withholding", "jurisdiction", "renewal", "agricultural", "multi-state",
+            "compliance",
+        ]
+    elif use_case == "eng_design_ppt":
+        sample_terms = [
+            "design review", "architecture", "specification", "milestone",
+            "trade-off", "thermal analysis", "tolerance", "schematic",
+            "material selection", "process flow", "reliability", "simulation",
+            "prototype", "testing", "project status",
+        ]
     else:
         sample_terms = [
             "Surfscan", "defect", "FinFET", "wafer inspection", "3nm",
@@ -357,6 +371,32 @@ def main():
             "What is the Q factor for Band 7 SAW filters?",
             "List corrective actions for high insertion loss designs.",
             "What design tools are used for 5G NR filter simulation?",
+        ]
+    elif use_case == "tax_pdf_forms":
+        eval_queries = [
+            "What forms are required for sales tax exemption?",
+            "How do I file for a nonprofit tax exemption certificate?",
+            "What are the deadlines for property tax exemption applications?",
+            "Which states accept multi-jurisdiction exemption certificates?",
+            "What documentation is needed for a resale certificate?",
+            "How are agricultural tax exemptions categorized?",
+            "What is the renewal process for tax exemption certificates?",
+            "Which exemption forms require notarization?",
+            "What are the eligibility criteria for 501(c)(3) tax exemption?",
+            "What penalties apply for expired exemption certificates?",
+        ]
+    elif use_case == "eng_design_ppt":
+        eval_queries = [
+            "What are the key design specifications in the latest engineering review?",
+            "Which presentations cover system architecture decisions?",
+            "What trade-off analyses were performed for material selection?",
+            "How are thermal constraints addressed in the design?",
+            "What project milestones are documented in the presentations?",
+            "Which design reviews identified critical risks?",
+            "What manufacturing process changes were proposed?",
+            "How do tolerance requirements affect design decisions?",
+            "What testing methodologies are described in the presentations?",
+            "What reliability testing results are documented?",
         ]
     else:
         eval_queries = [

@@ -29,6 +29,40 @@
         "name": "filter-design-indexer",
         "data_source_name": "filter-design-blob-datasource"
       }
+    },
+    "tax_pdf_forms": {
+      "standard_index": {
+        "name": "tax-pdf-forms-index",
+        "semantic_config_name": "tax-pdf-semantic-config"
+      },
+      "chunked_index": {
+        "name": "tax-pdf-forms-chunked-index",
+        "semantic_config_name": "tax-pdf-chunked-semantic-config",
+        "scoring_profile_name": "boost-title-formtype"
+      },
+      "indexer": {
+        "name": "tax-pdf-forms-indexer",
+        "data_source_name": "tax-pdf-cosmosdb-datasource",
+        "data_source_type": "cosmosdb",
+        "query": "SELECT * FROM c WHERE c._attachments IS NOT NULL AND CONTAINS(LOWER(c.file_name), '.pdf')"
+      }
+    },
+    "eng_design_ppt": {
+      "standard_index": {
+        "name": "eng-design-ppt-index",
+        "semantic_config_name": "eng-design-ppt-semantic-config"
+      },
+      "chunked_index": {
+        "name": "eng-design-ppt-chunked-index",
+        "semantic_config_name": "eng-ppt-chunked-semantic-config",
+        "scoring_profile_name": "boost-title-designtype"
+      },
+      "indexer": {
+        "name": "eng-design-ppt-indexer",
+        "data_source_name": "eng-design-ppt-cosmosdb-datasource",
+        "data_source_type": "cosmosdb",
+        "query": "SELECT * FROM c WHERE c._attachments IS NOT NULL AND CONTAINS(LOWER(c.file_name), '.ppt')"
+      }
     }
   },
   "schedule": {
