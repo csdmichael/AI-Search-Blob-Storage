@@ -5,6 +5,7 @@
 cryptography<43
 azure-identity
 azure-ai-agents
+azure-cosmos
 fastapi
 uvicorn
 gunicorn

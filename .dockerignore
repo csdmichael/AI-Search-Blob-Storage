@@ -28,4 +28,11 @@ www/
 # Docs (not needed at runtime)
 docs/
 README.md
+use-cases/
+*.png
+
+# Fine-tuning data (not needed at runtime)
+data/fine_tuning_*.jsonl
+data/evaluation_metrics.json
+data/manifest.json
 LICENSE

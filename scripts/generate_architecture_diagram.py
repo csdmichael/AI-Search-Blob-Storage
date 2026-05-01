@@ -303,17 +303,26 @@ def _generate_single_uc_diagram(use_case: str):
     ax.text(4.5, 7.05, "Private VNET", fontsize=11, fontweight="bold",
             color="#0078D4", style="italic")
 
-    # Blob Storage
-    draw_azure_icon_box(ax, 0.8, 4.5, 3.2, 1.2,
-                        "Azure Blob Storage",
-                        f"{_res['storage']['account_name']} / {container}",
-                        "#0078D4", "BS")
+    # Blob Storage (or Cosmos DB for cosmosdb use cases)
+    is_cosmosdb = config.is_cosmosdb_use_case(use_case)
+    if is_cosmosdb:
+        cosmosdb_cfg = config.cosmosdb_config()
+        draw_azure_icon_box(ax, 0.8, 4.5, 3.2, 1.2,
+                            "Azure Cosmos DB",
+                            f"{cosmosdb_cfg['account_name']} / {cosmosdb_cfg['database_name']}",
+                            "#00A4EF", "CD")
+    else:
+        draw_azure_icon_box(ax, 0.8, 4.5, 3.2, 1.2,
+                            "Azure Blob Storage",
+                            f"{_res['storage']['account_name']} / {container}",
+                            "#0078D4", "BS")
 
-    # Private Endpoint: Blob
+    # Private Endpoint: Blob / Cosmos DB
+    pe_label = "PE: Cosmos DB" if is_cosmosdb else "Private Endpoint"
     pe1 = FancyBboxPatch((1.5, 3.3), 1.8, 0.6, boxstyle="round,pad=0.04",
                          facecolor="#50B0E0", edgecolor="#0078D4", linewidth=1, alpha=0.85)
     ax.add_patch(pe1)
-    ax.text(2.4, 3.6, "Private Endpoint", ha="center", va="center",
+    ax.text(2.4, 3.6, pe_label, ha="center", va="center",
             fontsize=7, fontweight="bold", color="white")
 
     draw_arrow(ax, (2.4, 3.9), (2.4, 4.5), "Private Link", "#0078D4")
@@ -323,7 +332,7 @@ def _generate_single_uc_diagram(use_case: str):
                         "Azure AI Search", index_name,
                         "#6B2FA0", "AS")
 
-    draw_arrow(ax, (4.5, 5.1), (4.0, 5.1), "Indexer", "#6B2FA0")
+    draw_arrow(ax, (4.5, 5.1), (4.0, 5.1), "CosmosDB Indexer" if is_cosmosdb else "Indexer", "#6B2FA0")
 
     # Private Endpoint: Search
     pe2 = FancyBboxPatch((5.2, 3.3), 1.8, 0.6, boxstyle="round,pad=0.04",
@@ -399,6 +408,16 @@ def _generate_single_uc_diagram(use_case: str):
         ax.text(10.75, 1.75, "90% → 95% accuracy", ha="center", va="center",
                 fontsize=7, color="#555555")
         draw_arrow(ax, (9.5, 2.0), (7.7, 5.0), "Boost scores", "#2980B9")
+    elif use_case in ("tax_pdf_forms", "eng_design_ppt"):
+        cb = FancyBboxPatch((9.5, 1.5), 2.5, 1.0, boxstyle="round,pad=0.05",
+                            facecolor="#FFF3E0", edgecolor="#E65100", linewidth=1.2, alpha=0.85)
+        ax.add_patch(cb)
+        ax.text(10.75, 2.05, "Cosmos DB Pipeline", ha="center", va="center",
+                fontsize=8, fontweight="bold", color="#BF360C")
+        doc_count = "388 PDFs" if use_case == "tax_pdf_forms" else "100 PPTXs"
+        ax.text(10.75, 1.75, f"Chunk & Index ({doc_count})", ha="center", va="center",
+                fontsize=7, color="#555555")
+        draw_arrow(ax, (9.5, 2.0), (7.7, 5.0), "Section chunks", "#E65100")
     else:
         ft = FancyBboxPatch((9.5, 1.5), 2.5, 1.0, boxstyle="round,pad=0.05",
                             facecolor="#E8F5E9", edgecolor="#388E3C", linewidth=1.2, alpha=0.85)
@@ -412,6 +431,7 @@ def _generate_single_uc_diagram(use_case: str):
     # Legend
     legend_items = [
         mpatches.Patch(facecolor="#0078D4", edgecolor="#333", label="Azure Blob Storage"),
+        mpatches.Patch(facecolor="#00A4EF", edgecolor="#333", label="Azure Cosmos DB"),
         mpatches.Patch(facecolor="#6B2FA0", edgecolor="#333", label="Azure AI Search"),
         mpatches.Patch(facecolor="#107C10", edgecolor="#333", label="AI Foundry Agent"),
         mpatches.Patch(facecolor="#FF8C00", edgecolor="#333", label="Managed Identity"),
@@ -421,10 +441,12 @@ def _generate_single_uc_diagram(use_case: str):
               framealpha=0.9, edgecolor="#CCCCCC")
 
     # Determine output path
-    uc_folder = os.path.join(config.PROJECT_ROOT, "use-cases",
-                             uc_doc["data_subfolder"].replace("-docs", "").replace("engineering", "engineering-docs"))
-    # Map use case key to folder name
-    folder_map = {"engineering_docs": "engineering-docs", "filter_design": "filter-design"}
+    folder_map = {
+        "engineering_docs": "engineering-docs",
+        "filter_design": "filter-design",
+        "tax_pdf_forms": "tax-pdf-forms",
+        "eng_design_ppt": "eng-design-ppt",
+    }
     uc_folder = os.path.join(config.PROJECT_ROOT, "use-cases", folder_map[use_case])
     os.makedirs(uc_folder, exist_ok=True)
 

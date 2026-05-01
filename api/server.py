@@ -380,8 +380,14 @@ def list_documents(use_case: str = "engineering_docs"):
 
     # Cosmos DB use cases: fetch document list from Cosmos DB
     if config.is_cosmosdb_use_case(use_case):
-        docs = _list_cosmosdb_documents(use_case)
-        return {"use_case": use_case, "total": len(docs), "documents": docs}
+        try:
+            docs = _list_cosmosdb_documents(use_case)
+            return {"use_case": use_case, "total": len(docs), "documents": docs}
+        except Exception as exc:
+            raise HTTPException(
+                status_code=502,
+                detail=f"Cosmos DB query failed for {use_case}: {exc}",
+            )
 
     # Blob storage use cases: read from local filesystem
     data_dir = config.uc_data_dir(use_case)
@@ -416,7 +422,13 @@ def get_document(doc_id: str, use_case: str = "engineering_docs"):
 
     # Cosmos DB use cases: fetch from Cosmos DB
     if config.is_cosmosdb_use_case(use_case):
-        doc = _get_cosmosdb_document(doc_id, use_case)
+        try:
+            doc = _get_cosmosdb_document(doc_id, use_case)
+        except Exception as exc:
+            raise HTTPException(
+                status_code=502,
+                detail=f"Cosmos DB query failed: {exc}",
+            )
         if not doc:
             raise HTTPException(status_code=404, detail=f"Document {doc_id} not found in Cosmos DB")
         # Format sections for display
