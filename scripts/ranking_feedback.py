@@ -57,6 +57,7 @@ def load_feedback() -> list[dict]:
 
 def save_feedback(entries: list[dict]):
     """Persist feedback entries."""
+    os.makedirs(os.path.dirname(FEEDBACK_FILE), exist_ok=True)
     with open(FEEDBACK_FILE, "w", encoding="utf-8") as f:
         json.dump(entries, f, indent=2)
 
@@ -156,7 +157,9 @@ def evaluate_agent_accuracy(project_client: AIProjectClient, search_client: Sear
     results = []
     search_hits = 0
     agent_citations = 0
-    doc_pattern = re.compile(re.escape(DOC_PREFIX) + r"-\d{4}")
+    doc_pattern = re.compile(re.escape(DOC_PREFIX) + r"[-_]\S+")
+    # Also detect common citation patterns: any .pdf/.pptx/.txt file reference
+    file_citation_pattern = re.compile(r"\b\S+\.(?:pdf|pptx?|txt)\b", re.IGNORECASE)
 
     for i, query in enumerate(queries):
         print(f"  [{i+1}/{len(queries)}] {query[:60]}...")
@@ -183,7 +186,7 @@ def evaluate_agent_accuracy(project_client: AIProjectClient, search_client: Sear
                     for msg in messages:
                         if msg.role == "assistant" and msg.text_messages:
                             agent_response = msg.text_messages[-1].text.value
-                            if doc_pattern.search(agent_response):
+                            if doc_pattern.search(agent_response) or file_citation_pattern.search(agent_response):
                                 agent_cite = True
                                 agent_citations += 1
                             break

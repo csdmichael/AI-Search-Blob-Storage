@@ -1,0 +1,218 @@
+[
+  {
+    "timestamp": "2026-05-01T02:16:50.521404",
+    "query": "design review simulation",
+    "document_id": "filter_design_butterworth_hp_08.pptx",
+    "relevant": false,
+    "search_score": 0.2817,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:16:50.534802",
+    "query": "design review simulation",
+    "document_id": "filter_design_butterworth_hp_10.pptx",
+    "relevant": false,
+    "search_score": 0.2817,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:16:50.552264",
+    "query": "design review simulation",
+    "document_id": "filter_design_butterworth_lp_08.pptx",
+    "relevant": false,
+    "search_score": 0.2817,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:16:50.592232",
+    "query": "trade-off milestone",
+    "document_id": "filter_design_butterworth_hp_08.pptx",
+    "relevant": false,
+    "search_score": 0.0934,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:16:50.606397",
+    "query": "trade-off milestone",
+    "document_id": "filter_design_butterworth_hp_10.pptx",
+    "relevant": false,
+    "search_score": 0.0934,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:16:50.618819",
+    "query": "trade-off milestone",
+    "document_id": "filter_design_butterworth_lp_08.pptx",
+    "relevant": false,
+    "search_score": 0.0934,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:16:50.980226",
+    "query": "tolerance design review",
+    "document_id": "filter_design_butterworth_hp_08.pptx",
+    "relevant": false,
+    "search_score": 0.2817,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:16:50.991762",
+    "query": "tolerance design review",
+    "document_id": "filter_design_butterworth_hp_10.pptx",
+    "relevant": false,
+    "search_score": 0.2817,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:16:51.003458",
+    "query": "tolerance design review",
+    "document_id": "filter_design_butterworth_lp_08.pptx",
+    "relevant": false,
+    "search_score": 0.2817,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:16:51.050980",
+    "query": "design review architecture",
+    "document_id": "filter_design_butterworth_hp_08.pptx",
+    "relevant": false,
+    "search_score": 0.2817,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:16:51.062687",
+    "query": "design review architecture",
+    "document_id": "filter_design_butterworth_hp_10.pptx",
+    "relevant": false,
+    "search_score": 0.2817,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:16:51.073915",
+    "query": "design review architecture",
+    "document_id": "filter_design_butterworth_lp_08.pptx",
+    "relevant": false,
+    "search_score": 0.2817,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:16:51.256624",
+    "query": "design review material selection",
+    "document_id": "filter_design_butterworth_hp_08.pptx",
+    "relevant": false,
+    "search_score": 0.2817,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:16:51.268389",
+    "query": "design review material selection",
+    "document_id": "filter_design_butterworth_hp_10.pptx",
+    "relevant": false,
+    "search_score": 0.2817,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:16:51.279651",
+    "query": "design review material selection",
+    "document_id": "filter_design_butterworth_lp_08.pptx",
+    "relevant": false,
+    "search_score": 0.2817,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:16:51.536452",
+    "query": "process flow trade-off",
+    "document_id": "filter_design_butterworth_hp_08.pptx",
+    "relevant": false,
+    "search_score": 0.0934,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:16:51.550164",
+    "query": "process flow trade-off",
+    "document_id": "filter_design_butterworth_hp_10.pptx",
+    "relevant": false,
+    "search_score": 0.0934,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:16:51.562257",
+    "query": "process flow trade-off",
+    "document_id": "filter_design_butterworth_lp_08.pptx",
+    "relevant": false,
+    "search_score": 0.0934,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:16:51.649513",
+    "query": "design review prototype",
+    "document_id": "filter_design_butterworth_hp_08.pptx",
+    "relevant": false,
+    "search_score": 0.2817,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:16:51.664726",
+    "query": "design review prototype",
+    "document_id": "filter_design_butterworth_hp_10.pptx",
+    "relevant": false,
+    "search_score": 0.2817,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:16:51.678305",
+    "query": "design review prototype",
+    "document_id": "filter_design_butterworth_lp_08.pptx",
+    "relevant": false,
+    "search_score": 0.2817,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:16:51.815353",
+    "query": "thermal analysis trade-off",
+    "document_id": "filter_design_butterworth_hp_08.pptx",
+    "relevant": false,
+    "search_score": 0.0934,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:16:51.828011",
+    "query": "thermal analysis trade-off",
+    "document_id": "filter_design_butterworth_hp_10.pptx",
+    "relevant": false,
+    "search_score": 0.0934,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:16:51.841316",
+    "query": "thermal analysis trade-off",
+    "document_id": "filter_design_butterworth_lp_08.pptx",
+    "relevant": false,
+    "search_score": 0.0934,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:16:52.383907",
+    "query": "trade-off prototype",
+    "document_id": "filter_design_butterworth_hp_08.pptx",
+    "relevant": false,
+    "search_score": 0.0934,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:16:52.397077",
+    "query": "trade-off prototype",
+    "document_id": "filter_design_butterworth_hp_10.pptx",
+    "relevant": false,
+    "search_score": 0.0934,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:16:52.409915",
+    "query": "trade-off prototype",
+    "document_id": "filter_design_butterworth_lp_08.pptx",
+    "relevant": false,
+    "search_score": 0.0934,
+    "notes": ""
+  }
+]

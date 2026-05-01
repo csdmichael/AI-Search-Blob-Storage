@@ -1,0 +1,674 @@
+[
+  {
+    "timestamp": "2026-05-01T02:15:39.752471",
+    "query": "jurisdiction sales tax",
+    "document_id": "lq_tax_exemption_IN_001_yellow.pdf",
+    "relevant": true,
+    "search_score": 6.7812,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:39.765189",
+    "query": "jurisdiction sales tax",
+    "document_id": "tax_exemption_IA_001.pdf",
+    "relevant": false,
+    "search_score": 4.3188,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:39.776187",
+    "query": "jurisdiction sales tax",
+    "document_id": "tax_exemption_MI_001.pdf",
+    "relevant": false,
+    "search_score": 4.3188,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:39.812823",
+    "query": "tax exemption renewal",
+    "document_id": "lq_tax_exemption_ID_002_red.pdf",
+    "relevant": true,
+    "search_score": 7.7056,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:39.824794",
+    "query": "tax exemption renewal",
+    "document_id": "lq_tax_exemption_MA_001_blue.pdf",
+    "relevant": true,
+    "search_score": 7.7056,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:39.838112",
+    "query": "tax exemption renewal",
+    "document_id": "lq_tax_exemption_MI_001_yellow.pdf",
+    "relevant": true,
+    "search_score": 7.7056,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:39.897973",
+    "query": "nonprofit certificate",
+    "document_id": "tax_exemption_CO_001.pdf",
+    "relevant": false,
+    "search_score": 3.5258,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:39.909573",
+    "query": "nonprofit certificate",
+    "document_id": "tax_exemption_HI_002.pdf",
+    "relevant": false,
+    "search_score": 3.5258,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:39.921514",
+    "query": "nonprofit certificate",
+    "document_id": "tax_exemption_NC_002.pdf",
+    "relevant": false,
+    "search_score": 3.5258,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:39.967740",
+    "query": "certificate property tax",
+    "document_id": "tax_exemption_ME_001.pdf",
+    "relevant": true,
+    "search_score": 9.7418,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:39.981214",
+    "query": "certificate property tax",
+    "document_id": "lq_tax_exemption_VT_002_green.pdf",
+    "relevant": true,
+    "search_score": 9.7418,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:39.993452",
+    "query": "certificate property tax",
+    "document_id": "tax_exemption_ND_001.pdf",
+    "relevant": true,
+    "search_score": 9.5026,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:40.055045",
+    "query": "renewal sales tax",
+    "document_id": "lq_tax_exemption_IN_001_yellow.pdf",
+    "relevant": true,
+    "search_score": 6.7812,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:40.066671",
+    "query": "renewal sales tax",
+    "document_id": "tax_exemption_IA_001.pdf",
+    "relevant": false,
+    "search_score": 4.3188,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:40.077635",
+    "query": "renewal sales tax",
+    "document_id": "tax_exemption_MI_001.pdf",
+    "relevant": false,
+    "search_score": 4.3188,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:40.203270",
+    "query": "compliance exemption form",
+    "document_id": "lq_tax_exemption_HI_002_green.pdf",
+    "relevant": true,
+    "search_score": 7.7445,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:40.214355",
+    "query": "compliance exemption form",
+    "document_id": "lq_tax_exemption_ID_002_red.pdf",
+    "relevant": true,
+    "search_score": 7.6987,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:40.225995",
+    "query": "compliance exemption form",
+    "document_id": "lq_tax_exemption_MA_001_blue.pdf",
+    "relevant": true,
+    "search_score": 7.6987,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:40.283094",
+    "query": "sales tax withholding",
+    "document_id": "lq_tax_exemption_IN_001_yellow.pdf",
+    "relevant": true,
+    "search_score": 6.7812,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:40.294818",
+    "query": "sales tax withholding",
+    "document_id": "tax_exemption_IA_001.pdf",
+    "relevant": false,
+    "search_score": 4.3188,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:40.307517",
+    "query": "sales tax withholding",
+    "document_id": "tax_exemption_MI_001.pdf",
+    "relevant": false,
+    "search_score": 4.3188,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:40.392546",
+    "query": "resale tax exemption",
+    "document_id": "lq_tax_exemption_ID_002_red.pdf",
+    "relevant": true,
+    "search_score": 7.7056,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:40.404964",
+    "query": "resale tax exemption",
+    "document_id": "lq_tax_exemption_MA_001_blue.pdf",
+    "relevant": true,
+    "search_score": 7.7056,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:40.417231",
+    "query": "resale tax exemption",
+    "document_id": "lq_tax_exemption_MI_001_yellow.pdf",
+    "relevant": true,
+    "search_score": 7.7056,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:40.451278",
+    "query": "tax exemption sales tax",
+    "document_id": "lq_tax_exemption_IN_001_yellow.pdf",
+    "relevant": true,
+    "search_score": 12.6738,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:40.463543",
+    "query": "tax exemption sales tax",
+    "document_id": "lq_tax_exemption_AL_001_blue.pdf",
+    "relevant": true,
+    "search_score": 11.7178,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:40.475914",
+    "query": "tax exemption sales tax",
+    "document_id": "lq_tax_exemption_AR_002_red.pdf",
+    "relevant": true,
+    "search_score": 11.7178,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:40.532272",
+    "query": "certificate certificate",
+    "document_id": "tax_exemption_DE_002.pdf",
+    "relevant": true,
+    "search_score": 5.9673,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:40.544922",
+    "query": "certificate certificate",
+    "document_id": "tax_exemption_LA_002.pdf",
+    "relevant": true,
+    "search_score": 5.9673,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:40.557427",
+    "query": "certificate certificate",
+    "document_id": "tax_exemption_MD_001.pdf",
+    "relevant": true,
+    "search_score": 5.9673,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:40.594849",
+    "query": "exemption form withholding",
+    "document_id": "lq_tax_exemption_ID_002_red.pdf",
+    "relevant": true,
+    "search_score": 7.6987,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:40.607193",
+    "query": "exemption form withholding",
+    "document_id": "lq_tax_exemption_MA_001_blue.pdf",
+    "relevant": true,
+    "search_score": 7.6987,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:40.619996",
+    "query": "exemption form withholding",
+    "document_id": "lq_tax_exemption_MI_001_yellow.pdf",
+    "relevant": true,
+    "search_score": 7.6987,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:40.665391",
+    "query": "tax exemption exemption form",
+    "document_id": "lq_tax_exemption_ID_002_red.pdf",
+    "relevant": true,
+    "search_score": 15.4043,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:40.677756",
+    "query": "tax exemption exemption form",
+    "document_id": "lq_tax_exemption_MA_001_blue.pdf",
+    "relevant": true,
+    "search_score": 15.4043,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:40.692140",
+    "query": "tax exemption exemption form",
+    "document_id": "lq_tax_exemption_MI_001_yellow.pdf",
+    "relevant": true,
+    "search_score": 15.4043,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:40.736649",
+    "query": "certificate renewal",
+    "document_id": "tax_exemption_DE_002.pdf",
+    "relevant": false,
+    "search_score": 2.9837,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:40.750908",
+    "query": "certificate renewal",
+    "document_id": "tax_exemption_LA_002.pdf",
+    "relevant": false,
+    "search_score": 2.9837,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:40.763918",
+    "query": "certificate renewal",
+    "document_id": "tax_exemption_MD_001.pdf",
+    "relevant": false,
+    "search_score": 2.9837,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:40.883167",
+    "query": "exemption form resale",
+    "document_id": "lq_tax_exemption_ID_002_red.pdf",
+    "relevant": true,
+    "search_score": 7.6987,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:40.895048",
+    "query": "exemption form resale",
+    "document_id": "lq_tax_exemption_MA_001_blue.pdf",
+    "relevant": true,
+    "search_score": 7.6987,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:40.906817",
+    "query": "exemption form resale",
+    "document_id": "lq_tax_exemption_MI_001_yellow.pdf",
+    "relevant": true,
+    "search_score": 7.6987,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:40.950594",
+    "query": "certificate filing deadline",
+    "document_id": "tax_exemption_DE_002.pdf",
+    "relevant": false,
+    "search_score": 2.9837,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:40.964293",
+    "query": "certificate filing deadline",
+    "document_id": "tax_exemption_LA_002.pdf",
+    "relevant": false,
+    "search_score": 2.9837,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:40.976142",
+    "query": "certificate filing deadline",
+    "document_id": "tax_exemption_MD_001.pdf",
+    "relevant": false,
+    "search_score": 2.9837,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:41.043002",
+    "query": "withholding nonprofit",
+    "document_id": "tax_exemption_CO_001.pdf",
+    "relevant": false,
+    "search_score": 3.5258,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:41.055404",
+    "query": "withholding nonprofit",
+    "document_id": "tax_exemption_HI_002.pdf",
+    "relevant": false,
+    "search_score": 3.5258,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:41.067974",
+    "query": "withholding nonprofit",
+    "document_id": "tax_exemption_NC_002.pdf",
+    "relevant": false,
+    "search_score": 3.5258,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:41.123553",
+    "query": "agricultural multi-state",
+    "document_id": "tax_exemption_CO_001.pdf",
+    "relevant": false,
+    "search_score": 2.7709,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:41.136202",
+    "query": "agricultural multi-state",
+    "document_id": "tax_exemption_HI_002.pdf",
+    "relevant": false,
+    "search_score": 2.7709,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:41.147234",
+    "query": "agricultural multi-state",
+    "document_id": "tax_exemption_NC_002.pdf",
+    "relevant": false,
+    "search_score": 2.7709,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:41.189171",
+    "query": "tax exemption agricultural",
+    "document_id": "lq_tax_exemption_ID_002_red.pdf",
+    "relevant": true,
+    "search_score": 7.7056,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:41.201921",
+    "query": "tax exemption agricultural",
+    "document_id": "lq_tax_exemption_MA_001_blue.pdf",
+    "relevant": true,
+    "search_score": 7.7056,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:41.213021",
+    "query": "tax exemption agricultural",
+    "document_id": "lq_tax_exemption_MI_001_yellow.pdf",
+    "relevant": true,
+    "search_score": 7.7056,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:41.283438",
+    "query": "agricultural property tax",
+    "document_id": "tax_exemption_ME_001.pdf",
+    "relevant": true,
+    "search_score": 9.7418,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:41.295462",
+    "query": "agricultural property tax",
+    "document_id": "lq_tax_exemption_VT_002_green.pdf",
+    "relevant": true,
+    "search_score": 9.7418,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:41.308537",
+    "query": "agricultural property tax",
+    "document_id": "tax_exemption_ND_001.pdf",
+    "relevant": true,
+    "search_score": 9.5026,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:41.353721",
+    "query": "renewal resale",
+    "document_id": "tax_exemption_CO_001.pdf",
+    "relevant": false,
+    "search_score": 2.7654,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:41.365842",
+    "query": "renewal resale",
+    "document_id": "tax_exemption_HI_002.pdf",
+    "relevant": false,
+    "search_score": 2.7654,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:41.377354",
+    "query": "renewal resale",
+    "document_id": "tax_exemption_NC_002.pdf",
+    "relevant": false,
+    "search_score": 2.7654,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:41.433582",
+    "query": "501(c)(3) nonprofit",
+    "document_id": "tax_exemption_CO_001.pdf",
+    "relevant": false,
+    "search_score": 3.5258,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:41.452532",
+    "query": "501(c)(3) nonprofit",
+    "document_id": "tax_exemption_HI_002.pdf",
+    "relevant": false,
+    "search_score": 3.5258,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:41.471806",
+    "query": "501(c)(3) nonprofit",
+    "document_id": "tax_exemption_NC_002.pdf",
+    "relevant": false,
+    "search_score": 3.5258,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:41.518666",
+    "query": "property tax certificate",
+    "document_id": "tax_exemption_ME_001.pdf",
+    "relevant": true,
+    "search_score": 9.7418,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:41.532246",
+    "query": "property tax certificate",
+    "document_id": "lq_tax_exemption_VT_002_green.pdf",
+    "relevant": true,
+    "search_score": 9.7418,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:41.544323",
+    "query": "property tax certificate",
+    "document_id": "tax_exemption_ND_001.pdf",
+    "relevant": true,
+    "search_score": 9.5026,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:41.582235",
+    "query": "agricultural 501(c)(3)",
+    "document_id": "tax_exemption_AZ_001.pdf",
+    "relevant": false,
+    "search_score": 3.3955,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:41.593495",
+    "query": "agricultural 501(c)(3)",
+    "document_id": "tax_exemption_IA_001.pdf",
+    "relevant": false,
+    "search_score": 3.3955,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:41.607634",
+    "query": "agricultural 501(c)(3)",
+    "document_id": "tax_exemption_NM_001.pdf",
+    "relevant": false,
+    "search_score": 3.3955,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:41.664808",
+    "query": "sales tax sales tax",
+    "document_id": "lq_tax_exemption_IN_001_yellow.pdf",
+    "relevant": true,
+    "search_score": 13.5623,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:41.676798",
+    "query": "sales tax sales tax",
+    "document_id": "tax_exemption_IA_001.pdf",
+    "relevant": true,
+    "search_score": 8.6377,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:41.689643",
+    "query": "sales tax sales tax",
+    "document_id": "tax_exemption_MI_001.pdf",
+    "relevant": true,
+    "search_score": 8.6377,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:41.735865",
+    "query": "resale sales tax",
+    "document_id": "lq_tax_exemption_IN_001_yellow.pdf",
+    "relevant": true,
+    "search_score": 6.7812,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:41.748845",
+    "query": "resale sales tax",
+    "document_id": "tax_exemption_IA_001.pdf",
+    "relevant": false,
+    "search_score": 4.3188,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:41.760738",
+    "query": "resale sales tax",
+    "document_id": "tax_exemption_MI_001.pdf",
+    "relevant": false,
+    "search_score": 4.3188,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:41.811012",
+    "query": "501(c)(3) multi-state",
+    "document_id": "tax_exemption_AZ_001.pdf",
+    "relevant": false,
+    "search_score": 3.4002,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:41.824025",
+    "query": "501(c)(3) multi-state",
+    "document_id": "tax_exemption_IA_001.pdf",
+    "relevant": false,
+    "search_score": 3.4002,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:41.838292",
+    "query": "501(c)(3) multi-state",
+    "document_id": "tax_exemption_NM_001.pdf",
+    "relevant": false,
+    "search_score": 3.4002,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:41.897559",
+    "query": "501(c)(3) withholding",
+    "document_id": "tax_exemption_AZ_001.pdf",
+    "relevant": false,
+    "search_score": 3.3955,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:41.910369",
+    "query": "501(c)(3) withholding",
+    "document_id": "tax_exemption_IA_001.pdf",
+    "relevant": false,
+    "search_score": 3.3955,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:41.923188",
+    "query": "501(c)(3) withholding",
+    "document_id": "tax_exemption_NM_001.pdf",
+    "relevant": false,
+    "search_score": 3.3955,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:41.978669",
+    "query": "nonprofit agricultural",
+    "document_id": "tax_exemption_CO_001.pdf",
+    "relevant": true,
+    "search_score": 6.2912,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:41.992727",
+    "query": "nonprofit agricultural",
+    "document_id": "tax_exemption_HI_002.pdf",
+    "relevant": true,
+    "search_score": 6.2912,
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-05-01T02:15:42.007131",
+    "query": "nonprofit agricultural",
+    "document_id": "tax_exemption_NC_002.pdf",
+    "relevant": true,
+    "search_score": 6.2912,
+    "notes": ""
+  }
+]

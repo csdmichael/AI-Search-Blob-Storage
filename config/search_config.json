@@ -44,7 +44,7 @@
         "name": "tax-pdf-forms-indexer",
         "data_source_name": "tax-pdf-cosmosdb-datasource",
         "data_source_type": "cosmosdb",
-        "query": "SELECT * FROM c WHERE c._attachments IS NOT NULL AND CONTAINS(LOWER(c.file_name), '.pdf')"
+        "query": "SELECT * FROM c WHERE CONTAINS(LOWER(c.fileName), '.pdf')"
       }
     },
     "eng_design_ppt": {
@@ -61,7 +61,7 @@
         "name": "eng-design-ppt-indexer",
         "data_source_name": "eng-design-ppt-cosmosdb-datasource",
         "data_source_type": "cosmosdb",
-        "query": "SELECT * FROM c WHERE c._attachments IS NOT NULL AND CONTAINS(LOWER(c.file_name), '.ppt')"
+        "query": "SELECT * FROM c WHERE CONTAINS(LOWER(c.fileName), '.ppt')"
       }
     }
   },

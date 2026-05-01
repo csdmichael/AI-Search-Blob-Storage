@@ -65,41 +65,37 @@ def create_chunked_index(index_client: SearchIndexClient):
 
     if USE_CASE == "tax_pdf_forms":
         extra_fields = [
-            SearchableField(name="form_type", type=SearchFieldDataType.String, filterable=True, facetable=True),
-            SearchableField(name="jurisdiction", type=SearchFieldDataType.String, filterable=True, facetable=True),
-            SearchableField(name="exemption_type", type=SearchFieldDataType.String, filterable=True, facetable=True),
-            SimpleField(name="filing_deadline", type=SearchFieldDataType.String, filterable=True),
-            SimpleField(name="effective_date", type=SearchFieldDataType.String, filterable=True),
+            SearchableField(name="state", type=SearchFieldDataType.String, filterable=True, facetable=True),
+            SearchableField(name="stateName", type=SearchFieldDataType.String, filterable=True, facetable=True),
+            SimpleField(name="overallConfidence", type=SearchFieldDataType.Double, filterable=True, sortable=True),
+            SimpleField(name="confidenceCategory", type=SearchFieldDataType.String, filterable=True, facetable=True),
         ]
         scoring_weights = {
             "title": 3.0,
-            "form_type": 2.5,
+            "stateName": 2.5,
             "section_name": 2.0,
             "content": 1.0,
-            "jurisdiction": 2.0,
         }
         keyword_fields = [
-            SemanticField(field_name="form_type"),
-            SemanticField(field_name="jurisdiction"),
+            SemanticField(field_name="stateName"),
+            SemanticField(field_name="section_name"),
         ]
     else:  # eng_design_ppt
         extra_fields = [
-            SearchableField(name="design_type", type=SearchFieldDataType.String, filterable=True, facetable=True),
-            SearchableField(name="project_name", type=SearchFieldDataType.String, filterable=True),
-            SearchableField(name="author", type=SearchFieldDataType.String, filterable=True),
-            SimpleField(name="revision", type=SearchFieldDataType.String, filterable=True),
-            SimpleField(name="slide_count", type=SearchFieldDataType.Int32, filterable=True),
+            SearchableField(name="state", type=SearchFieldDataType.String, filterable=True, facetable=True),
+            SearchableField(name="stateName", type=SearchFieldDataType.String, filterable=True, facetable=True),
+            SimpleField(name="overallConfidence", type=SearchFieldDataType.Double, filterable=True, sortable=True),
+            SimpleField(name="confidenceCategory", type=SearchFieldDataType.String, filterable=True, facetable=True),
         ]
         scoring_weights = {
             "title": 3.0,
-            "design_type": 2.5,
             "section_name": 2.0,
             "content": 1.0,
-            "project_name": 2.0,
+            "stateName": 2.0,
         }
         keyword_fields = [
-            SemanticField(field_name="design_type"),
-            SemanticField(field_name="project_name"),
+            SemanticField(field_name="stateName"),
+            SemanticField(field_name="section_name"),
         ]
 
     fields = [
@@ -152,7 +148,7 @@ def fetch_documents_from_cosmosdb(credential) -> list[dict]:
 
     # Query with filter for the appropriate file type
     if FILE_FILTER:
-        query = f"SELECT * FROM c WHERE CONTAINS(LOWER(c.file_name), '.{FILE_FILTER}')"
+        query = f"SELECT * FROM c WHERE CONTAINS(LOWER(c.fileName), '.{FILE_FILTER}')"
         print(f"  Querying Cosmos DB with filter: .{FILE_FILTER} files")
     else:
         query = "SELECT * FROM c"
@@ -164,62 +160,57 @@ def fetch_documents_from_cosmosdb(credential) -> list[dict]:
 
 
 def chunk_cosmosdb_document(doc: dict) -> list[dict]:
-    """Split a Cosmos DB document into section-level chunks with metadata."""
+    """Split a Cosmos DB document into section-level chunks with metadata.
+
+    The actual Cosmos DB documents have this structure:
+    - fileName, state, stateName, status, overallConfidence, confidenceCategory
+    - sections: [{sectionName, sectionIndex, fields: [{fieldName, extractedValue, ...}]}]
+    """
     doc_id = doc.get("id", "")
-    file_name = doc.get("file_name", "")
-    title = doc.get("title", file_name)
-    content = doc.get("content", "")
-    category = doc.get("category", "")
+    file_name = doc.get("fileName", "")
+    state = doc.get("state", "")
+    state_name = doc.get("stateName", "")
     status = doc.get("status", "")
-    file_type = doc.get("file_type", FILE_FILTER)
-
-    if not content:
-        return []
-
-    # Extract use-case-specific metadata
-    if USE_CASE == "tax_pdf_forms":
-        extra_meta = {
-            "form_type": doc.get("form_type", ""),
-            "jurisdiction": doc.get("jurisdiction", ""),
-            "exemption_type": doc.get("exemption_type", ""),
-            "filing_deadline": doc.get("filing_deadline", ""),
-            "effective_date": doc.get("effective_date", ""),
-        }
-    else:
-        extra_meta = {
-            "design_type": doc.get("design_type", ""),
-            "project_name": doc.get("project_name", ""),
-            "author": doc.get("author", ""),
-            "revision": doc.get("revision", ""),
-            "slide_count": doc.get("slide_count", 0),
-        }
-
-    # Try to split by sections (look for numbered headers or slide titles)
-    sections = _extract_sections(content)
+    overall_confidence = doc.get("overallConfidence", 0.0)
+    confidence_category = doc.get("confidenceCategory", "")
+    sections = doc.get("sections", [])
 
     if not sections:
-        # No sections found — index as a single chunk
-        chunk_id = hashlib.md5(f"{doc_id}:full".encode()).hexdigest()
-        chunk = {
-            "id": chunk_id,
-            "content": content[:MAX_CHUNK_SIZE * 3],
-            "title": title,
-            "section_name": "Full Document",
-            "document_number": doc_id,
-            "source_file": file_name,
-            "file_type": file_type,
-            "category": category,
-            "status": status,
-        }
-        chunk.update(extra_meta)
-        return [chunk]
+        return []
+
+    # Common metadata for all chunks from this document
+    common_meta = {
+        "state": state,
+        "stateName": state_name,
+        "overallConfidence": overall_confidence,
+        "confidenceCategory": confidence_category,
+    }
 
     chunks = []
-    for section_name, section_text in sections:
-        if not section_text.strip():
+
+    for section in sections:
+        section_name = section.get("sectionName", "Unknown Section")
+        fields = section.get("fields", [])
+
+        if not fields:
             continue
 
-        context_prefix = f"Document: {doc_id} | {title}\nSection: {section_name}\n\n"
+        # Flatten fields into readable text content
+        field_lines = []
+        for field in fields:
+            field_name = field.get("fieldName", "")
+            extracted = field.get("extractedValue", "")
+            corrected = field.get("correctedValue")
+            value = corrected if corrected else extracted
+            if field_name and value:
+                field_lines.append(f"{field_name}: {value}")
+
+        if not field_lines:
+            continue
+
+        section_text = "\n".join(field_lines)
+        context_prefix = f"Document: {file_name} | State: {state_name}\nSection: {section_name}\n\n"
+
         sub_chunks = _split_large_text(section_text, MAX_CHUNK_SIZE - len(context_prefix))
 
         for j, sub_text in enumerate(sub_chunks):
@@ -229,50 +220,44 @@ def chunk_cosmosdb_document(doc: dict) -> list[dict]:
             chunk = {
                 "id": chunk_id,
                 "content": context_prefix + sub_text,
-                "title": title,
+                "title": file_name,
                 "section_name": section_name,
                 "document_number": doc_id,
                 "source_file": file_name,
-                "file_type": file_type,
-                "category": category,
+                "file_type": "pdf",
+                "category": state_name,
                 "status": status,
             }
-            chunk.update(extra_meta)
+            chunk.update(common_meta)
+            chunks.append(chunk)
+
+    # If no section chunks were created, create a single chunk from all fields
+    if not chunks:
+        all_fields_text = []
+        for section in sections:
+            for field in section.get("fields", []):
+                fn = field.get("fieldName", "")
+                val = field.get("correctedValue") or field.get("extractedValue", "")
+                if fn and val:
+                    all_fields_text.append(f"{fn}: {val}")
+
+        if all_fields_text:
+            chunk_id = hashlib.md5(f"{doc_id}:full".encode()).hexdigest()
+            chunk = {
+                "id": chunk_id,
+                "content": f"Document: {file_name} | State: {state_name}\n\n" + "\n".join(all_fields_text),
+                "title": file_name,
+                "section_name": "Full Document",
+                "document_number": doc_id,
+                "source_file": file_name,
+                "file_type": "pdf",
+                "category": state_name,
+                "status": status,
+            }
+            chunk.update(common_meta)
             chunks.append(chunk)
 
     return chunks
-
-
-def _extract_sections(content: str) -> list[tuple[str, str]]:
-    """Extract named sections from document content.
-
-    Looks for patterns like:
-    - '## Section Name' (Markdown headers)
-    - 'Slide N: Title' (PowerPoint slides)
-    - 'Section N: Title' or 'N. TITLE' (numbered sections)
-    """
-    import re
-
-    # Try markdown headers
-    header_pattern = re.compile(r"^#{1,3}\s+(.+)$", re.MULTILINE)
-    # Try slide-style headers
-    slide_pattern = re.compile(r"^(?:Slide\s+\d+[:\s]+)(.+)$", re.MULTILINE | re.IGNORECASE)
-    # Try numbered section headers
-    numbered_pattern = re.compile(r"^(\d+\.?\s+[A-Z][A-Za-z\s&()]+)$", re.MULTILINE)
-
-    for pattern in [header_pattern, slide_pattern, numbered_pattern]:
-        matches = list(pattern.finditer(content))
-        if len(matches) >= 2:
-            sections = []
-            for i, match in enumerate(matches):
-                section_name = match.group(1).strip()
-                start = match.end()
-                end = matches[i + 1].start() if i + 1 < len(matches) else len(content)
-                section_text = content[start:end].strip()
-                sections.append((section_name, section_text))
-            return sections
-
-    return []
 
 
 def _split_large_text(text: str, max_size: int) -> list[str]:

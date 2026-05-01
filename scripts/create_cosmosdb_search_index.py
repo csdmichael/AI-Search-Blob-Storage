@@ -67,48 +67,65 @@ def create_index(index_client: SearchIndexClient):
             analyzer_name="en.microsoft",
         ),
         SearchableField(
-            name="file_name",
+            name="fileName",
             type=SearchFieldDataType.String,
             filterable=True,
             sortable=True,
         ),
         SimpleField(
-            name="file_type",
+            name="state",
             type=SearchFieldDataType.String,
             filterable=True,
             facetable=True,
         ),
         SearchableField(
-            name="title",
-            type=SearchFieldDataType.String,
-            filterable=True,
-        ),
-        SearchableField(
-            name="description",
-            type=SearchFieldDataType.String,
-        ),
-        SimpleField(
-            name="category",
+            name="stateName",
             type=SearchFieldDataType.String,
             filterable=True,
             facetable=True,
         ),
         SimpleField(
-            name="created_date",
-            type=SearchFieldDataType.DateTimeOffset,
-            filterable=True,
-            sortable=True,
-        ),
-        SimpleField(
-            name="modified_date",
-            type=SearchFieldDataType.DateTimeOffset,
-            filterable=True,
-            sortable=True,
-        ),
-        SimpleField(
-            name="metadata_storage_path",
+            name="status",
             type=SearchFieldDataType.String,
             filterable=True,
+        ),
+        SimpleField(
+            name="overallConfidence",
+            type=SearchFieldDataType.Double,
+            filterable=True,
+            sortable=True,
+        ),
+        SimpleField(
+            name="confidenceCategory",
+            type=SearchFieldDataType.String,
+            filterable=True,
+            facetable=True,
+        ),
+        SearchableField(
+            name="confidenceLabel",
+            type=SearchFieldDataType.String,
+        ),
+        SimpleField(
+            name="totalFields",
+            type=SearchFieldDataType.Int32,
+            filterable=True,
+        ),
+        SimpleField(
+            name="totalSections",
+            type=SearchFieldDataType.Int32,
+            filterable=True,
+        ),
+        SimpleField(
+            name="uploadedAt",
+            type=SearchFieldDataType.DateTimeOffset,
+            filterable=True,
+            sortable=True,
+        ),
+        SimpleField(
+            name="parsedAt",
+            type=SearchFieldDataType.DateTimeOffset,
+            filterable=True,
+            sortable=True,
         ),
     ]
 
@@ -116,10 +133,10 @@ def create_index(index_client: SearchIndexClient):
         name=SEMANTIC_CONFIG_NAME,
         prioritized_fields=SemanticPrioritizedFields(
             content_fields=[SemanticField(field_name="content")],
-            title_field=SemanticField(field_name="title"),
+            title_field=SemanticField(field_name="fileName"),
             keywords_fields=[
-                SemanticField(field_name="file_name"),
-                SemanticField(field_name="category"),
+                SemanticField(field_name="stateName"),
+                SemanticField(field_name="confidenceLabel"),
             ],
         ),
     )
@@ -140,7 +157,8 @@ def create_index(index_client: SearchIndexClient):
 def create_data_source(indexer_client: SearchIndexerClient):
     """Create a Cosmos DB data source using managed identity."""
     # Managed identity connection string for Cosmos DB
-    connection_string = f"ResourceId={COSMOSDB_RESOURCE_ID};Database={COSMOSDB_DATABASE};"
+    # IdentityAuthType=AccessToken is required when local auth is disabled on Cosmos DB
+    connection_string = f"ResourceId={COSMOSDB_RESOURCE_ID};Database={COSMOSDB_DATABASE};IdentityAuthType=AccessToken;"
 
     data_source = SearchIndexerDataSourceConnection(
         name=DATA_SOURCE_NAME,
@@ -176,6 +194,14 @@ def create_indexer(indexer_client: SearchIndexerClient):
             FieldMapping(
                 source_field_name="id",
                 target_field_name="id",
+            ),
+            FieldMapping(
+                source_field_name="fileName",
+                target_field_name="fileName",
+            ),
+            FieldMapping(
+                source_field_name="stateName",
+                target_field_name="stateName",
             ),
         ],
     )

@@ -15,7 +15,7 @@
   "cosmosdb": {
     "account_name": "cosmos-ai-poc",
     "resource_id": "/subscriptions/86b37969-9445-49cf-b03f-d8866235171c/resourceGroups/ai-myaacoub/providers/Microsoft.DocumentDb/databaseAccounts/cosmos-ai-poc",
-    "database_name": "taxform",
+    "database_name": "taxforms",
     "container_name": "documents"
   }
 }
