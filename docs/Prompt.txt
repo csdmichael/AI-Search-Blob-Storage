@@ -21,6 +21,13 @@ Implement best practices for AI Search including chunking by section and best pr
 Document best practices in readme for AI Search.
 Fine-tune Foundry model by training it on samples of Engineering docs, evaluate its accuracy and show results in separate file and refer to it in readme.
 
+Implement best practices for partitions, replicas based on Basic SKU for each use cases and document it in its use case readme file explaining benefits of partitioning and replicas
+Rerun indexes and sample prompts in foundry agents and ensure that accuracy of results is over 90%
+Add this video in References: https://youtu.be/yu4M7OKjnR4?si=ImvxddbPgz1j5KdR
+Include Microsoft Learn useful references in main readme file
+
+In ui, add pagination for documents in documents page
+
 Filter Design Use case
 =================
 Using same Azure resources, build this use case for Filter Design PDFs

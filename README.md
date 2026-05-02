@@ -126,6 +126,8 @@ AI-Search-Blob-Storage/
 ## References
 
 - [Azure AI Search documentation](https://learn.microsoft.com/azure/search/search-what-is-azure-search)
+- [Azure AI Search service limits, quotas, and capacity planning](https://learn.microsoft.com/azure/search/search-limits-quotas-capacity)
+- [Azure AI Search reliability guidance](https://learn.microsoft.com/azure/reliability/reliability-ai-search)
 - [Retrieval Augmented Generation (RAG) in Azure AI Search](https://learn.microsoft.com/azure/search/retrieval-augmented-generation-overview)
 - [Azure AI Search — Integrated vectorization and chunking](https://learn.microsoft.com/azure/search/vector-search-integrated-vectorization)
 - [Microsoft Foundry Agent Service overview](https://learn.microsoft.com/azure/foundry/agents/overview)
@@ -135,6 +137,7 @@ AI-Search-Blob-Storage/
 - [Azure App Service — Deploy a containerized app](https://learn.microsoft.com/azure/app-service/tutorial-custom-container)
 - [Azure Container Registry documentation](https://learn.microsoft.com/azure/container-registry/container-registry-intro)
 - [GitHub Actions for Azure deployment](https://learn.microsoft.com/azure/developer/github/github-actions)
+- [Azure AI Search + Foundry walkthrough video](https://youtu.be/yu4M7OKjnR4?si=ImvxddbPgz1j5KdR)
 
 ---
 

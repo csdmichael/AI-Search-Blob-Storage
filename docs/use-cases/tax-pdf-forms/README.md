@@ -41,6 +41,25 @@
 
 ---
 
+## Basic SKU Search Capacity Recommendation
+
+For this use case, start Azure AI Search on **Basic SKU with 2 partitions and 3 replicas**.
+
+| Setting | Recommendation | Why it fits this workload |
+|---------|----------------|---------------------------|
+| **Partitions** | **2** | Cosmos DB sourced PDF forms can grow faster, and the chunked index carries more jurisdictional and form-type metadata than the blob-based demos. Two partitions provide more indexing throughput and storage headroom for ongoing document expansion and daily refresh jobs. |
+| **Replicas** | **3** | Three replicas preserve query responsiveness for compliance users while scheduled indexing runs against live data. Replicas are the main lever for query concurrency and availability on Basic. |
+
+### Benefits of partitions and replicas
+
+- **Partitions** help absorb larger chunk counts, faster Cosmos-driven refresh cycles, and future growth across many state and form variants.
+- **Replicas** keep interactive agent queries responsive, especially when multiple users ask jurisdiction-specific questions during ingestion windows.
+- **2 partitions + 3 replicas** is the better Basic-tier balance here because this workload is more dynamic than the static blob demos and benefits from extra indexing capacity without overcomplicating the service topology.
+
+If Cosmos growth remains small, this can be tuned back to one partition after observing storage and indexer duration metrics. Replicas should remain at three unless the workload is strictly non-production and single-user.
+
+---
+
 ## Quick Start
 
 ### Prerequisites

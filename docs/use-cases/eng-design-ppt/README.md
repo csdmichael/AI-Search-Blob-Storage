@@ -41,6 +41,25 @@
 
 ---
 
+## Basic SKU Search Capacity Recommendation
+
+For this use case, start Azure AI Search on **Basic SKU with 2 partitions and 3 replicas**.
+
+| Setting | Recommendation | Why it fits this workload |
+|---------|----------------|---------------------------|
+| **Partitions** | **2** | Engineering presentation decks usually create more extracted content per source file than the text-based manufacturing corpus, and Cosmos-backed refresh can introduce bigger indexing bursts. Two partitions provide safer headroom for slide-level chunks and future deck growth. |
+| **Replicas** | **3** | Presentation search is interactive and review-heavy, so replicas matter more than raw storage. Three replicas support concurrent semantic queries and reduce query latency while scheduled refresh is running. |
+
+### Benefits of partitions and replicas
+
+- **Partitions** expand storage and indexing throughput, which is useful when slide decks accumulate more chunks or embedded speaker-note content over time.
+- **Replicas** increase query throughput and help maintain availability for engineering review scenarios where many users ask broad semantic questions against the same corpus.
+- **2 partitions + 3 replicas** gives this PPT workload more room for growth on Basic without forcing an early SKU change.
+
+If content remains limited to a small pilot corpus, monitor index size and indexer duration before deciding whether to step back to one partition. Keep three replicas if the agent is exposed to shared demo or review traffic.
+
+---
+
 ## Quick Start
 
 ### Prerequisites

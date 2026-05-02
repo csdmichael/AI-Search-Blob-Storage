@@ -38,6 +38,25 @@
 
 ---
 
+## Basic SKU Search Capacity Recommendation
+
+For this use case, start Azure AI Search on **Basic SKU with 1 partition and 3 replicas**.
+
+| Setting | Recommendation | Why it fits this workload |
+|---------|----------------|---------------------------|
+| **Partitions** | **1** | The corpus is only 100 manufacturing documents plus chunked sections, so one partition is the most cost-efficient starting point while still leaving room for the standard and chunked indexes. Partitions primarily add storage and indexing throughput; this use case is query-heavy, not storage-heavy. |
+| **Replicas** | **3** | Three replicas are the right Basic-tier default for demo and pilot traffic because replicas add query throughput and keep the service responsive while the daily indexer runs. This also aligns with Azure AI Search high-availability guidance for mixed query and indexing workloads. |
+
+### Benefits of partitions and replicas
+
+- **Partitions** increase storage capacity and parallel indexing throughput. For this small engineering-docs corpus, staying at one partition avoids unnecessary cost and keeps relevance tuning simple.
+- **Replicas** increase query concurrency, reduce latency spikes during semantic queries, and let indexing jobs run with less impact on user traffic.
+- **3 replicas on Basic** is the safer baseline for customer demos because it protects response quality when multiple users hit the agent while scheduled refresh is active.
+
+Scale partitions first only if chunk counts or indexed storage grow materially. Scale replicas first if the agent starts seeing slower response times or concurrent-user pressure.
+
+---
+
 ## Quick Start
 
 ### Prerequisites

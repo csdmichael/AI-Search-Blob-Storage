@@ -41,6 +41,9 @@ AGENT_INSTRUCTIONS = _uc_agent["instructions"]
 CHUNKED_INDEX = _uc_search["chunked_index"]["name"]
 SEARCH_TOP_K = int(os.environ.get("SEARCH_TOP_K", "10"))
 
+if _use_case in ("tax_pdf_forms", "eng_design_ppt") and "SEARCH_TOP_K" not in os.environ:
+    SEARCH_TOP_K = 15
+
 if _use_case == "filter_design":
     DEFAULT_QUERY_TYPE = AzureAISearchQueryType.SEMANTIC
     QUERY_TYPE_LABEL = "semantic"
@@ -67,7 +70,11 @@ elif _use_case in ("tax_pdf_forms", "eng_design_ppt"):
         "When multiple chunks reference the same document, synthesize information across them. "
         "For field values, copy the EXACT text from the retrieved chunk content. "
         "When queried about a specific state or jurisdiction, prioritize chunks matching that state. "
-        "If chunks contain relevant information, do NOT return a generic not-found response."
+        "If chunks contain relevant information, do NOT return a generic not-found response. "
+        "Every factual sentence must include at least one citation in the format [fileName†index-name]. "
+        "For deadline, expiration, validity, or renewal questions, inspect sections such as Exemption Details, Certification & Signature, Tax Information, or Full Document Summary for related dates and certificate metadata. "
+        "If the documents do not state an explicit deadline or renewal workflow but do contain related dates, answer with those exact grounded dates and clearly state that no separate deadline or renewal instruction was found in the retrieved documents. "
+        "Prefer a cited partial answer over an uncited generalization whenever the retrieved chunks are relevant."
     )
 else:
     DEFAULT_QUERY_TYPE = AzureAISearchQueryType.SEMANTIC
@@ -155,6 +162,9 @@ def query_agent(prompt: str, credential=None):
             "If relevant chunks are present, provide the best grounded answer. Do NOT return a generic not-found response. "
             "When synthesizing across multiple chunks, combine information and cite all referenced documents. "
             "Copy exact field values from retrieved text. "
+            "Every factual sentence must include at least one citation. "
+            "For deadline, expiration, validity, or renewal questions, search for related date fields such as Effective Date, Date, certificate metadata, and Exemption Details before concluding the information is missing. "
+            "If the exact workflow is not present but related dates are present, state that limitation explicitly and still return the cited date evidence. "
             f"\n\nUser question: {prompt}"
         )
 
