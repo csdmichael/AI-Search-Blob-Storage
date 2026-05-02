@@ -164,6 +164,108 @@ az webapp config appsettings set \
 
 ---
 
+## Demo Script
+
+### Act 1: The Problem (2 min)
+
+**Talking Points:**
+- Tax teams work across many state-specific exemption certificates, resale forms, and nonprofit filings.
+- Users usually need exact form names, dates, eligibility rules, and jurisdiction coverage, not generic tax guidance.
+- Traditional file search does a poor job when the same concepts appear under different state labels and certificate formats.
+- Goal: show a grounded Foundry agent that answers only from indexed tax-form documents with citations.
+
+### Act 2: Cosmos DB Data Flow and Security (4 min)
+
+**2.1 — Explain the source system**
+
+Walk through the architecture table and highlight:
+- The source documents are already stored in Cosmos DB under `taxforms/documents`.
+- Only `.pdf` records are selected for this use case.
+- Cosmos DB is protected by a private endpoint, so indexing and chunk refresh must run from an approved network path.
+
+> **Key Point**: This demo uses existing operational documents in Cosmos DB instead of staged local files, which makes the retrieval flow closer to a production line-of-business scenario.
+
+**2.2 — Show the index creation step**
+
+```bash
+export USE_CASE=tax_pdf_forms          # Linux/Mac
+$env:USE_CASE = "tax_pdf_forms"       # PowerShell
+python scripts/create_cosmosdb_search_index.py
+```
+
+> **Key Point**: Run this from a VNet-integrated environment. The AI Search service and the runner both need Cosmos DB access that honors the private endpoint and managed-identity authorization model.
+
+### Act 3: Chunked Index and Retrieval Quality (8 min)
+
+**3.1 — Build the chunked index**
+
+```bash
+python scripts/chunk_and_index_cosmosdb.py
+```
+
+Explain what the chunker preserves for each document:
+- `Document: <fileName>` for exact citation output
+- State and jurisdiction metadata for relevance boosting
+- Section-level content so deadline, eligibility, and approval answers come back from the right section
+
+**3.2 — Explain why chunking matters**
+
+- A full tax form often mixes company details, exemption rules, certificate fields, and signature blocks.
+- Chunking prevents the agent from receiving an entire form when the user only asked for a deadline, required form, or renewal date.
+- Metadata-aware chunking also improves state-specific prompts such as Texas or California questions.
+
+**3.3 — Show the direct search behavior**
+
+```bash
+python scripts/test_search.py
+```
+
+Use the results to explain:
+- **Keyword search** is effective for exact form names and certificate terminology.
+- **Semantic search** is better for natural-language questions like renewal workflows or filing requirements.
+
+### Act 4: Foundry Agent Grounding (6 min)
+
+**4.1 — Create the agent**
+
+```bash
+python scripts/create_agent.py
+```
+
+Highlight the guardrails:
+- The agent uses Azure AI Search as its only tool.
+- It is instructed to avoid fabrication and return cited answers only.
+- For ambiguous tax questions, it prefers cited partial answers from retrieved forms instead of unsupported generalizations.
+
+**4.2 — Run example prompts**
+
+Use these prompts live:
+- "What tax exemption forms are available for nonprofits?"
+- "What is the filing deadline for sales tax exemption in Texas?"
+- "How do I renew an expiring tax exemption certificate?"
+- "Which forms need to be filed for multi-state tax exemption?"
+
+> **Key Point**: The expected behavior is grounded retrieval with document citations, not generic tax advice.
+
+### Act 5: Accuracy and Readout (5 min)
+
+**5.1 — Run the demo accuracy check**
+
+```bash
+python scripts/retest_demo_accuracy.py
+```
+
+Call out the current result from the latest rerun:
+- **Grounded agent accuracy: 100.0% (10/10 prompts)**
+
+**5.2 — Close with the business value**
+
+- Compliance teams get faster answers with source traceability.
+- State-specific retrieval improves trust because the agent cites the exact form it used.
+- The same pattern can be extended to other regulated document sets stored in Cosmos DB.
+
+---
+
 ## AI Search Best Practices
 
 | Practice | Implementation |

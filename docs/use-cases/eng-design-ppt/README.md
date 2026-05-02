@@ -164,6 +164,108 @@ az webapp config appsettings set \
 
 ---
 
+## Demo Script
+
+### Act 1: The Problem (2 min)
+
+**Talking Points:**
+- Engineering review decks contain architecture decisions, specifications, milestone updates, and risk discussions spread across many slides.
+- Teams waste time opening multiple presentations just to find one design trade-off or reliability result.
+- Traditional search is weak when slide text is fragmented and the user asks broader semantic questions.
+- Goal: demonstrate a grounded Foundry agent that answers design-review questions using only indexed presentation content.
+
+### Act 2: Cosmos DB Source and Access Model (4 min)
+
+**2.1 — Explain the source system**
+
+Highlight these points from the architecture section:
+- The source documents live in Cosmos DB under `taxforms/documents`.
+- This use case filters only `.ppt` and `.pptx` files.
+- Cosmos DB is reachable through a private endpoint, so indexing and refresh must run from an allowed network path.
+
+> **Key Point**: This is a realistic enterprise pattern where the knowledge base already exists in an operational store rather than a demo upload folder.
+
+**2.2 — Create the baseline index**
+
+```bash
+export USE_CASE=eng_design_ppt         # Linux/Mac
+$env:USE_CASE = "eng_design_ppt"      # PowerShell
+python scripts/create_cosmosdb_search_index.py
+```
+
+> **Key Point**: The indexer uses managed identity and Cosmos DB filtering to isolate only presentation content for this agent.
+
+### Act 3: Slide-Level Chunking and Search Quality (8 min)
+
+**3.1 — Build the chunked index**
+
+```bash
+python scripts/chunk_and_index_cosmosdb.py
+```
+
+Explain what the chunked representation gives you:
+- Slide or section-level retrieval instead of entire presentations
+- Document-aware citations using the original file name
+- Metadata signals that help rank project-specific and category-specific content
+
+**3.2 — Explain why chunking matters**
+
+- A single presentation can mix requirements, trade-off analysis, risk registers, and test results.
+- Chunking makes it easier for the agent to return the correct section instead of summarizing an unrelated slide.
+- This is especially important for prompts about thermal constraints, material selection, and milestones.
+
+**3.3 — Compare direct search modes**
+
+```bash
+python scripts/test_search.py
+```
+
+Use the results to describe:
+- **Keyword search** works well for exact design terms.
+- **Semantic search** is stronger for broader review questions such as architecture decisions or trade-off analysis.
+
+### Act 4: Foundry Agent in Action (6 min)
+
+**4.1 — Create the agent**
+
+```bash
+python scripts/create_agent.py
+```
+
+Call out the operating model:
+- The agent uses Azure AI Search as its only tool.
+- It is configured to answer from retrieved chunks only.
+- Every grounded response is expected to include citations to the underlying presentation files.
+
+**4.2 — Use a live prompt set**
+
+Suggested live prompts:
+- "What are the key design specifications in the latest engineering review?"
+- "Which presentations cover system architecture decisions?"
+- "What trade-off analyses were performed for material selection?"
+- "What reliability testing results are documented?"
+
+> **Key Point**: The audience should see that the agent is not inventing architecture recommendations; it is retrieving them from actual design decks.
+
+### Act 5: Accuracy and Closeout (5 min)
+
+**5.1 — Run the grounded demo check**
+
+```bash
+python scripts/retest_demo_accuracy.py
+```
+
+Call out the current result from the latest rerun:
+- **Grounded agent accuracy: 100.0% (10/10 prompts)**
+
+**5.2 — Business takeaway**
+
+- Engineers can query design-review material conversationally without losing traceability.
+- Slide-level grounding improves trust for program reviews and decision audits.
+- The same pattern can be reused for other presentation-heavy knowledge bases in Cosmos DB.
+
+---
+
 ## AI Search Best Practices
 
 | Practice | Implementation |
