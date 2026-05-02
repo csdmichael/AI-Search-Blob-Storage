@@ -15,11 +15,14 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 export class DocumentsPage implements OnInit, OnDestroy {
   documents: DocumentEntry[] = [];
   filteredDocs: DocumentEntry[] = [];
+  paginatedDocs: DocumentEntry[] = [];
   searchText = '';
   filterType = 'all';
   availableTypes: string[] = [];
   isLoading = false;
   loadError = '';
+  currentPage = 1;
+  readonly pageSize = 10;
 
   // Detail view
   selectedDoc: DocumentDetail | null = null;
@@ -64,6 +67,29 @@ export class DocumentsPage implements OnInit, OnDestroy {
 
   ngOnDestroy() { if (this.ucSub) this.ucSub.unsubscribe(); }
 
+  get totalPages(): number {
+    return Math.max(1, Math.ceil(this.filteredDocs.length / this.pageSize));
+  }
+
+  get pageStart(): number {
+    if (!this.filteredDocs.length) {
+      return 0;
+    }
+    return (this.currentPage - 1) * this.pageSize + 1;
+  }
+
+  get pageEnd(): number {
+    return Math.min(this.currentPage * this.pageSize, this.filteredDocs.length);
+  }
+
+  get canGoPrevious(): boolean {
+    return this.currentPage > 1;
+  }
+
+  get canGoNext(): boolean {
+    return this.currentPage < this.totalPages;
+  }
+
   loadDocuments() {
     this.isLoading = true;
     this.loadError = '';
@@ -80,7 +106,9 @@ export class DocumentsPage implements OnInit, OnDestroy {
       error: (err: HttpErrorResponse) => {
         this.documents = [];
         this.filteredDocs = [];
+        this.paginatedDocs = [];
         this.availableTypes = [];
+        this.currentPage = 1;
         this.loadError = this.extractApiError(err);
         this.isLoading = false;
       },
@@ -102,6 +130,34 @@ export class DocumentsPage implements OnInit, OnDestroy {
       );
     }
     this.filteredDocs = docs;
+    this.currentPage = 1;
+    this.updatePaginatedDocs();
+  }
+
+  goToPage(page: number) {
+    if (!Number.isFinite(page)) {
+      return;
+    }
+
+    const nextPage = Math.min(Math.max(1, Math.trunc(page)), this.totalPages);
+    if (nextPage === this.currentPage && this.paginatedDocs.length) {
+      return;
+    }
+
+    this.currentPage = nextPage;
+    this.updatePaginatedDocs();
+  }
+
+  nextPage() {
+    if (this.canGoNext) {
+      this.goToPage(this.currentPage + 1);
+    }
+  }
+
+  previousPage() {
+    if (this.canGoPrevious) {
+      this.goToPage(this.currentPage - 1);
+    }
   }
 
   openDocument(docId: string) {
@@ -217,5 +273,10 @@ export class DocumentsPage implements OnInit, OnDestroy {
     }
 
     return 'Document API request failed. Please check API connectivity and configuration.';
+  }
+
+  private updatePaginatedDocs() {
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    this.paginatedDocs = this.filteredDocs.slice(startIndex, startIndex + this.pageSize);
   }
 }

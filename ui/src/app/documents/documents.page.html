@@ -104,6 +104,7 @@
 
       <ion-text color="medium" class="doc-count">
         {{ filteredDocs.length }} documents
+        <span *ngIf="filteredDocs.length"> · Showing {{ pageStart }}-{{ pageEnd }}</span>
       </ion-text>
 
       <ion-card *ngIf="loadError" class="error-card" color="danger">
@@ -116,7 +117,7 @@
       </ion-card>
 
       <ion-list>
-        <ion-item *ngFor="let doc of filteredDocs" (click)="openDocument(doc.doc_id)" button detail>
+        <ion-item *ngFor="let doc of paginatedDocs" (click)="openDocument(doc.doc_id)" button detail>
           <ion-icon [name]="getTypeIcon(doc.type)" slot="start" color="primary"></ion-icon>
           <ion-label>
             <h2>{{ doc.doc_id }}</h2>
@@ -130,6 +131,18 @@
           </ion-label>
         </ion-item>
       </ion-list>
+
+      <div *ngIf="filteredDocs.length > pageSize" class="pagination-bar">
+        <ion-button fill="outline" size="small" (click)="previousPage()" [disabled]="!canGoPrevious">
+          Previous
+        </ion-button>
+        <ion-text color="medium" class="page-indicator">
+          Page {{ currentPage }} of {{ totalPages }}
+        </ion-text>
+        <ion-button fill="outline" size="small" (click)="nextPage()" [disabled]="!canGoNext">
+          Next
+        </ion-button>
+      </div>
 
       <div *ngIf="isLoading" class="loading-center">
         <ion-spinner name="crescent"></ion-spinner>
