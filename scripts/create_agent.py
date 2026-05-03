@@ -13,6 +13,7 @@ Optional env vars:
 """
 
 import os
+import re
 import sys
 import time
 
@@ -33,6 +34,24 @@ from azure.ai.agents.models import (
 _uc_agent = config.uc_agent_config()["agent"]
 _uc_search = config.uc_search_config()
 _use_case = config.get_use_case()
+
+_ANNOTATION_PATTERN = re.compile(r"\[[^\[\]†]+?†[^\[\]]+?\]")
+_PREFIX_DOC_PATTERN = re.compile(r"\b((?:MFG|FD)-TC-\d{4})\b", re.IGNORECASE)
+_FALLBACK_RESPONSES = {
+    "engineering_docs": (
+        "I could not find relevant information in the engineering documents index for this query. "
+        "Please try a more specific query or verify the document exists."
+    ),
+    "filter_design": "I could not find relevant information in the filter design documents index for this query.",
+    "tax_pdf_forms": (
+        "I could not find relevant information in the tax exemption forms index for this query. "
+        "Please try a more specific query or verify the document exists."
+    ),
+    "eng_design_ppt": (
+        "I could not find relevant information in the engineering design presentations index for this query. "
+        "Please try a more specific query or verify the document exists."
+    ),
+}
 
 PROJECT_ENDPOINT = config.project_endpoint()
 AGENT_NAME = _uc_agent["name"]
@@ -128,6 +147,76 @@ def _get_agent_by_name(project_client: AgentsClient, agent_name: str):
     return None
 
 
+def _tool_type_name(tool) -> str:
+    """Normalize tool type across SDK model objects and plain dicts."""
+    if isinstance(tool, dict):
+        return str(tool.get("type", "")).strip().lower()
+    return str(getattr(tool, "type", "")).strip().lower()
+
+
+def _is_search_only_agent(agent) -> bool:
+    """Ensure the deployed agent cannot use web or other external tools."""
+    tools = list(getattr(agent, "tools", None) or [])
+    if len(tools) != 1:
+        return False
+    return _tool_type_name(tools[0]) == "azure_ai_search"
+
+
+def _fallback_response() -> str:
+    return _FALLBACK_RESPONSES[_use_case]
+
+
+def _response_is_grounded(response_text: str) -> bool:
+    """Reject replies that do not contain grounded citations from the search corpus."""
+    compact = " ".join(response_text.split())
+    if not compact:
+        return False
+    if _ANNOTATION_PATTERN.search(compact):
+        return True
+    if _use_case in ("engineering_docs", "filter_design") and _PREFIX_DOC_PATTERN.search(compact):
+        return True
+    return False
+
+
+def _build_search_only_agent(project_client: AgentsClient, connection_id: str):
+    ai_search_index = AISearchIndexResource(
+        index_connection_id=connection_id,
+        index_name=CHUNKED_INDEX,
+        query_type=DEFAULT_QUERY_TYPE,
+        top_k=SEARCH_TOP_K,
+    )
+
+    tool_resources = ToolResources(
+        azure_ai_search=AzureAISearchToolResource(
+            index_list=[ai_search_index],
+        )
+    )
+
+    return project_client.create_agent(
+        model=MODEL_DEPLOYMENT_NAME,
+        name=AGENT_NAME,
+        instructions=AGENT_INSTRUCTIONS,
+        tools=[AzureAISearchToolDefinition()],
+        tool_resources=tool_resources,
+        temperature=0,
+    )
+
+
+def _ensure_search_only_agent(project_client: AgentsClient, connection_id: str):
+    """Recreate the agent if it drifted from the intended search-only toolset."""
+    agent = _get_agent_by_name(project_client, AGENT_NAME)
+    if agent and _is_search_only_agent(agent):
+        return agent
+
+    if agent:
+        project_client.delete_agent(agent.id)
+        print(f"Deleted non-compliant agent: {agent.id}")
+
+    created = _build_search_only_agent(project_client, connection_id)
+    print(f"Created search-only agent: {created.id}")
+    return created
+
+
 def query_agent(prompt: str, credential=None):
     """Query the deployed Foundry agent configured with native Azure AI Search tool."""
     global _AGENT_ID_CACHE
@@ -138,10 +227,8 @@ def query_agent(prompt: str, credential=None):
 
     agent_id = _AGENT_ID_CACHE
     if not agent_id:
-        agent = _get_agent_by_name(project_client, AGENT_NAME)
-        if not agent:
-            print(f"Agent '{AGENT_NAME}' not found. Run create_agent.py first.")
-            return None
+        connection_id = _resolve_search_connection_id(project_client)
+        agent = _ensure_search_only_agent(project_client, connection_id)
         agent_id = agent.id
         _AGENT_ID_CACHE = agent_id
 
@@ -200,6 +287,9 @@ def query_agent(prompt: str, credential=None):
             response_text = msg.text_messages[-1].text.value
             break
 
+    if not _response_is_grounded(response_text):
+        return _fallback_response()
+
     return response_text
 
 
@@ -210,33 +300,13 @@ def main():
 
     connection_id = _resolve_search_connection_id(project_client)
 
-    ai_search_index = AISearchIndexResource(
-        index_connection_id=connection_id,
-        index_name=CHUNKED_INDEX,
-        query_type=DEFAULT_QUERY_TYPE,
-        top_k=SEARCH_TOP_K,
-    )
-
-    tool_resources = ToolResources(
-        azure_ai_search=AzureAISearchToolResource(
-            index_list=[ai_search_index],
-        )
-    )
-
     for agent in project_client.list_agents():
         if agent.name == AGENT_NAME:
             project_client.delete_agent(agent.id)
             print(f"Deleted existing agent: {agent.id}")
 
     print(f"\nCreating agent: {AGENT_NAME}")
-    created = project_client.create_agent(
-        model=MODEL_DEPLOYMENT_NAME,
-        name=AGENT_NAME,
-        instructions=AGENT_INSTRUCTIONS,
-        tools=[AzureAISearchToolDefinition()],
-        tool_resources=tool_resources,
-        temperature=0,
-    )
+    created = _build_search_only_agent(project_client, connection_id)
 
     print("\nAgent created successfully!")
     print(f"  Agent ID:     {created.id}")
