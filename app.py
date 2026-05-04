@@ -97,6 +97,7 @@ _FALLBACK_PHRASES = [
     "I don't have",
     "not found in",
 ]
+_DOCUMENT_IDS_CACHE: dict[str, set[str]] = {}
 
 def _extract_sources(text: str) -> list[str]:
     sources: list[str] = []
@@ -112,6 +113,33 @@ def _extract_sources(text: str) -> list[str]:
             sources.append(source)
 
     return list(dict.fromkeys(sources))
+
+def _valid_document_ids(use_case: str) -> set[str]:
+    cached = _DOCUMENT_IDS_CACHE.get(use_case)
+    if cached is not None:
+        return cached
+
+    if config.is_cosmosdb_use_case(use_case):
+        doc_ids = {
+            str(doc.get("doc_id", "")).strip()
+            for doc in _list_cosmosdb_documents(use_case)
+            if str(doc.get("doc_id", "")).strip()
+        }
+    else:
+        data_dir = config.uc_data_dir(use_case)
+        prefix = config.uc_document_config(use_case)["document_prefix"]
+        doc_ids = {
+            os.path.splitext(name)[0]
+            for name in os.listdir(data_dir)
+            if name.startswith(prefix)
+        }
+
+    _DOCUMENT_IDS_CACHE[use_case] = doc_ids
+    return doc_ids
+
+def _extract_valid_sources(text: str, use_case: str) -> list[str]:
+    valid_ids = _valid_document_ids(use_case)
+    return [source for source in _extract_sources(text) if source in valid_ids]
 
 def _is_fallback(text: str) -> bool:
     return any(p in text.lower() for p in _FALLBACK_PHRASES)
@@ -303,9 +331,10 @@ def chat(req: ChatRequest):
     start = time.time()
     response_text, attempts = _query_agent_with_retry(req.prompt, req.use_case)
     duration = int((time.time() - start) * 1000)
+    sources = _extract_valid_sources(response_text, req.use_case)
     return ChatResponse(
         prompt=req.prompt, response=response_text, use_case=req.use_case,
-        duration_ms=duration, sources=_extract_sources(response_text),
+        duration_ms=duration, sources=sources,
         attempts=attempts,
     )
 
@@ -319,7 +348,7 @@ def batch_run(req: BatchRequest):
         start = time.time()
         response_text, _attempts = _query_agent_with_retry(prompt, req.use_case)
         duration = int((time.time() - start) * 1000)
-        sources = _extract_sources(response_text)
+        sources = _extract_valid_sources(response_text, req.use_case)
         passed, reason = True, "OK"
         if not response_text.strip():
             passed, reason = False, "Empty response"

@@ -84,7 +84,9 @@ elif _use_case in ("tax_pdf_forms", "eng_design_ppt"):
     AGENT_INSTRUCTIONS += (
         "\n\nGROUNDING POLICY: "
         "Always answer strictly from azure_ai_search retrieved chunks. "
+        "Never use web search, browser search, or any external source. "
         "Each chunk starts with 'Document: <fileName>' — use that fileName for citations. "
+        "Never cite a URL, blob path, image asset, or external viewer; cite only the document fileName found in the retrieved chunk metadata. "
         "If relevant chunks are present, provide the best grounded answer instead of generic fallback text. "
         "When multiple chunks reference the same document, synthesize information across them. "
         "For field values, copy the EXACT text from the retrieved chunk content. "

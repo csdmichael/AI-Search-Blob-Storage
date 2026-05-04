@@ -1,14 +1,26 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
+function isCorpusCitationSource(source: string): boolean {
+  const trimmed = source.trim();
+  if (!trimmed) {
+    return false;
+  }
+  if (/^https?:/i.test(trimmed)) {
+    return false;
+  }
+  if (/[\\/]/.test(trimmed) || /[:?#]/.test(trimmed)) {
+    return false;
+  }
+  return /(?:\.(txt|json|pdf|pptx?)|(MFG|FD)-TC-\d{4})$/i.test(trimmed);
+}
+
 @Pipe({ name: 'formatResponse', standalone: false })
 export class FormatResponsePipe implements PipeTransform {
   constructor(private sanitizer: DomSanitizer) {}
 
-  transform(text: string, useCase?: string): SafeHtml {
+  transform(text: string, _useCase?: string): SafeHtml {
     if (!text) return '';
-
-    const useCaseQuery = useCase ? `?use_case=${encodeURIComponent(useCase)}` : '';
 
     let html = text
       // Escape HTML
@@ -21,9 +33,10 @@ export class FormatResponsePipe implements PipeTransform {
       .replace(
         /\[([^\[\]†]+?)†([^\[\]]+?)\]/g,
         (_match: string, source: string, _index: string) => {
-          const docId = source.replace(/\.(txt|json|pdf|pptx?)$/i, '');
-          const encodedDocId = encodeURIComponent(docId);
-          return `<a class="citation" href="/documents/${encodedDocId}${useCaseQuery}" title="View ${source}" target="_blank" rel="noopener noreferrer">${source}</a>`;
+          if (!isCorpusCitationSource(source)) {
+            return source;
+          }
+          return `<span class="citation" title="Open the validated source chip below to view this document">${source}</span>`;
         },
       )
       // Line breaks

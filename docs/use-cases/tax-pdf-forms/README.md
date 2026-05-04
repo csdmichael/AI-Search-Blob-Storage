@@ -240,10 +240,10 @@ Highlight the guardrails:
 **4.2 — Run example prompts**
 
 Use these prompts live:
-- "What tax exemption forms are available for nonprofits?"
-- "What is the filing deadline for sales tax exemption in Texas?"
-- "How do I renew an expiring tax exemption certificate?"
-- "Which forms need to be filed for multi-state tax exemption?"
+- "What renewal steps are described in lq_tax_exemption_IN_001_yellow.pdf?"
+- "How does lq_tax_exemption_ME_001_blue.pdf describe nonprofit tax exemption filing?"
+- "What property tax exemption deadline is listed in lq_tax_exemption_AL_002_green.pdf?"
+- "What documentation does lq_tax_exemption_WV_002_red.pdf require for a resale certificate?"
 
 > **Key Point**: The expected behavior is grounded retrieval with document citations, not generic tax advice.
 
@@ -282,25 +282,25 @@ Call out the current result from the latest rerun:
 ## Sample Prompts
 
 ### Semantic Search
-- "What forms are required for sales tax exemption?"
-- "How do I file for a nonprofit tax exemption certificate?"
-- "What are the deadlines for property tax exemption applications?"
-- "Which states accept multi-jurisdiction exemption certificates?"
-- "What documentation is needed for a resale certificate?"
+- "What renewal process is described in lq_tax_exemption_IN_001_yellow.pdf?"
+- "How does lq_tax_exemption_ME_001_blue.pdf describe filing for a nonprofit tax exemption certificate?"
+- "What deadline is listed in lq_tax_exemption_AL_002_green.pdf for property tax exemption?"
+- "What multi-jurisdiction exemption details are described in lq_tax_exemption_MA_001_blue.pdf?"
+- "What documentation is required in lq_tax_exemption_WV_002_red.pdf for a resale certificate?"
 
 ### Keyword Search
-- "tax exemption certificate form"
-- "sales tax exemption"
-- "501(c)(3) nonprofit exemption"
-- "resale certificate"
-- "multi-state tax exemption"
+- "lq_tax_exemption_IN_001_yellow.pdf renewal"
+- "lq_tax_exemption_ME_001_blue.pdf nonprofit certificate"
+- "lq_tax_exemption_AL_002_green.pdf property tax deadline"
+- "lq_tax_exemption_WV_002_red.pdf resale certificate documentation"
+- "lq_tax_exemption_CA_001_blue.pdf 501(c)(3) eligibility"
 
 ### Agent Queries
-- "What tax exemption forms are available for nonprofits?"
-- "What is the filing deadline for sales tax exemption in Texas?"
-- "List all forms required for property tax exemption."
-- "What are the eligibility requirements for agricultural exemption?"
-- "How do I renew an expiring tax exemption certificate?"
+- "What renewal steps are described in lq_tax_exemption_IN_001_yellow.pdf?"
+- "What property tax exemption deadline is listed in lq_tax_exemption_AL_002_green.pdf?"
+- "What agricultural exemption requirements are described in lq_tax_exemption_AR_002_red.pdf?"
+- "Which sections of lq_tax_exemption_MI_001_yellow.pdf mention notarization?"
+- "What 501(c)(3) eligibility language appears in lq_tax_exemption_CA_001_blue.pdf?"
 
 ---
 

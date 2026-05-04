@@ -240,10 +240,10 @@ Call out the operating model:
 **4.2 — Use a live prompt set**
 
 Suggested live prompts:
-- "What are the key design specifications in the latest engineering review?"
-- "Which presentations cover system architecture decisions?"
-- "What trade-off analyses were performed for material selection?"
-- "What reliability testing results are documented?"
+- "What key design specifications are listed in filter_design_active_rc_lp_05.pptx?"
+- "Which slides in filter_design_active_rc_lp_05.pptx cover system architecture decisions?"
+- "What trade-off analyses were performed in filter_design_butterworth_lp_01.pptx for material selection?"
+- "What reliability testing results are documented in filter_design_butterworth_lp_10.pptx?"
 
 > **Key Point**: The audience should see that the agent is not inventing architecture recommendations; it is retrieving them from actual design decks.
 
@@ -282,25 +282,25 @@ Call out the current result from the latest rerun:
 ## Sample Prompts
 
 ### Semantic Search
-- "What are the key design specifications in the latest engineering review?"
-- "Which presentations cover system architecture decisions?"
-- "What trade-off analyses were performed for material selection?"
-- "How are thermal constraints addressed in the design?"
-- "What project milestones are documented in the presentations?"
+- "What key design specifications are listed in filter_design_active_rc_lp_05.pptx?"
+- "Which slides in filter_design_active_rc_lp_05.pptx discuss system architecture decisions?"
+- "What material trade-off analysis appears in filter_design_butterworth_lp_01.pptx?"
+- "How are thermal constraints addressed in filter_design_active_rc_lp_01.pptx?"
+- "What project milestones are documented in filter_design_chebyshev2_lp_05.pptx?"
 
 ### Keyword Search
-- "engineering design review presentation"
-- "system architecture diagram"
-- "design specification requirements"
-- "thermal analysis simulation"
-- "manufacturing process flow"
+- "filter_design_active_rc_lp_05.pptx design specifications"
+- "filter_design_active_rc_lp_05.pptx system architecture"
+- "filter_design_butterworth_lp_01.pptx material trade-off"
+- "filter_design_active_rc_lp_01.pptx thermal constraints"
+- "filter_design_butterworth_lp_10.pptx reliability results"
 
 ### Agent Queries
-- "What are the key design specifications in the latest engineering review?"
-- "Which presentations cover system architecture decisions?"
-- "List all design reviews that identified critical risks."
-- "What trade-off analyses were performed for material selection?"
-- "What project milestones are documented in the presentations?"
+- "What key design specifications are listed in filter_design_active_rc_lp_05.pptx?"
+- "Which slides in filter_design_active_rc_lp_05.pptx cover system architecture decisions?"
+- "List the critical risks identified in filter_design_chebyshev2_lp_05.pptx."
+- "What trade-off analyses were performed in filter_design_butterworth_lp_01.pptx for material selection?"
+- "What project milestones are documented in filter_design_chebyshev2_lp_05.pptx?"
 
 ---
 

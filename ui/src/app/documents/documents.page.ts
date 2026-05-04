@@ -29,7 +29,7 @@ export class DocumentsPage implements OnInit, OnDestroy {
   selectedDocId = '';
   pdfUrl: SafeResourceUrl | null = null;
   originalText: string | null = null;
-  viewerType: 'pdf' | 'office' | 'text' | null = null;
+  viewerType: 'pdf' | 'text' | null = null;
   jsonTab: 'parsed' | 'raw' = 'parsed';
 
   private readonly originalTypeByUseCase: Record<string, string> = {
@@ -175,12 +175,6 @@ export class DocumentsPage implements OnInit, OnDestroy {
       const fileUrl = this.api.getDocumentFileUrl(docId, this.uc.activeKey);
       this.viewerType = 'pdf';
       this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(fileUrl);
-    } else if (originalType === 'pptx' || originalType === 'ppt') {
-      const fileUrl = this.api.getDocumentFileUrl(docId, this.uc.activeKey);
-      const officeViewerUrl = this.getOfficeViewerUrl(fileUrl);
-      const viewerUrl = officeViewerUrl ?? fileUrl;
-      this.viewerType = officeViewerUrl ? 'office' : 'pdf';
-      this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(viewerUrl);
     } else if (originalType === 'txt') {
       this.viewerType = 'text';
       this.api.getDocumentFileText(docId, this.uc.activeKey).subscribe({
@@ -206,18 +200,6 @@ export class DocumentsPage implements OnInit, OnDestroy {
 
   private getOriginalDocumentType(entry?: DocumentEntry): string | null {
     return this.originalTypeByUseCase[this.uc.activeKey] || entry?.type || null;
-  }
-
-  private getOfficeViewerUrl(fileUrl: string): string | null {
-    try {
-      const parsed = new URL(fileUrl);
-      if (parsed.protocol !== 'https:' || parsed.hostname === 'localhost' || parsed.hostname === '127.0.0.1') {
-        return null;
-      }
-      return `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(fileUrl)}`;
-    } catch {
-      return null;
-    }
   }
 
   getStatusColor(status: string): string {
