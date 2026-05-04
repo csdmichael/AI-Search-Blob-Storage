@@ -82,6 +82,16 @@
   white-space: pre-wrap;
 }
 
+.message-text {
+  :deep(a.citation) {
+    color: var(--ion-color-primary);
+    cursor: pointer;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+}
+
 .sources {
   margin-top: 0.5rem;
   display: flex;

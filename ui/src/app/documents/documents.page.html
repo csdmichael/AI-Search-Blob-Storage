@@ -23,6 +23,12 @@
             </p>
           </object>
         </div>
+        <div *ngIf="pptUrl && viewerType === 'ppt'" class="pdf-viewer">
+          <iframe [src]="pptUrl" class="pdf-iframe" title="PowerPoint viewer"></iframe>
+          <p class="viewer-fallback" *ngIf="originalFileUrl">
+            If the presentation does not render here, <a [href]="originalFileUrl" target="_blank" rel="noopener noreferrer">open the original PowerPoint file</a>.
+          </p>
+        </div>
         <pre *ngIf="viewerType === 'text' && originalText" class="text-view">{{ originalText }}</pre>
         <!-- JSON structured view -->
         <ng-container *ngIf="selectedDoc">

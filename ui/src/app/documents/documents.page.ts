@@ -28,8 +28,10 @@ export class DocumentsPage implements OnInit, OnDestroy {
   selectedDoc: DocumentDetail | null = null;
   selectedDocId = '';
   pdfUrl: SafeResourceUrl | null = null;
+  pptUrl: SafeResourceUrl | null = null;
+  originalFileUrl: string | null = null;
   originalText: string | null = null;
-  viewerType: 'pdf' | 'text' | null = null;
+  viewerType: 'pdf' | 'text' | 'ppt' | null = null;
   jsonTab: 'parsed' | 'raw' = 'parsed';
 
   private readonly originalTypeByUseCase: Record<string, string> = {
@@ -163,6 +165,8 @@ export class DocumentsPage implements OnInit, OnDestroy {
   openDocument(docId: string) {
     this.selectedDocId = docId;
     this.pdfUrl = null;
+    this.pptUrl = null;
+    this.originalFileUrl = null;
     this.originalText = null;
     this.viewerType = null;
     this.selectedDoc = null;
@@ -174,6 +178,7 @@ export class DocumentsPage implements OnInit, OnDestroy {
     if (originalType === 'pdf') {
       const fileUrl = this.api.getDocumentFileUrl(docId, this.uc.activeKey);
       this.viewerType = 'pdf';
+      this.originalFileUrl = fileUrl;
       this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(fileUrl);
     } else if (originalType === 'txt') {
       this.viewerType = 'text';
@@ -181,6 +186,12 @@ export class DocumentsPage implements OnInit, OnDestroy {
         next: (content) => { this.originalText = content; },
         error: () => { this.originalText = 'Unable to load original text document.'; },
       });
+    } else if (originalType === 'ppt' || originalType === 'pptx') {
+      const fileUrl = this.api.getDocumentFileUrl(docId, this.uc.activeKey);
+      const officeViewerUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(fileUrl)}`;
+      this.viewerType = 'ppt';
+      this.originalFileUrl = fileUrl;
+      this.pptUrl = this.sanitizer.bypassSecurityTrustResourceUrl(officeViewerUrl);
     }
 
     // Also load JSON/text metadata
@@ -194,6 +205,8 @@ export class DocumentsPage implements OnInit, OnDestroy {
     this.selectedDoc = null;
     this.selectedDocId = '';
     this.pdfUrl = null;
+    this.pptUrl = null;
+    this.originalFileUrl = null;
     this.originalText = null;
     this.viewerType = null;
   }

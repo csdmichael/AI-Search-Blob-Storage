@@ -19,7 +19,7 @@ function isCorpusCitationSource(source: string): boolean {
 export class FormatResponsePipe implements PipeTransform {
   constructor(private sanitizer: DomSanitizer) {}
 
-  transform(text: string, _useCase?: string): SafeHtml {
+  transform(text: string, useCase?: string): SafeHtml {
     if (!text) return '';
 
     let html = text
@@ -36,7 +36,9 @@ export class FormatResponsePipe implements PipeTransform {
           if (!isCorpusCitationSource(source)) {
             return source;
           }
-          return `<span class="citation" title="Open the validated source chip below to view this document">${source}</span>`;
+          const encodedSource = encodeURIComponent(source.trim());
+          const encodedUseCase = encodeURIComponent(useCase || '');
+          return `<a class="citation" href="/documents/${encodedSource}?use_case=${encodedUseCase}" data-doc-id="${encodedSource}" title="Open this source document">${source}</a>`;
         },
       )
       // Line breaks

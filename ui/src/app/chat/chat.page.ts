@@ -1,5 +1,6 @@
 import { Component, ViewChild, ElementRef, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ApiService, ChatResponse } from '../services/api.service';
 import { UseCaseService } from '../services/use-case.service';
@@ -36,7 +37,12 @@ export class ChatPage implements OnInit, OnDestroy {
   feedbackNotes = '';
   private ucSub!: Subscription;
 
-  constructor(public uc: UseCaseService, private api: ApiService, private route: ActivatedRoute) {}
+  constructor(
+    public uc: UseCaseService,
+    private api: ApiService,
+    private route: ActivatedRoute,
+    private router: Router,
+  ) {}
 
   ngOnInit() {
     this.loadHistory();
@@ -102,6 +108,20 @@ export class ChatPage implements OnInit, OnDestroy {
       event.preventDefault();
       this.sendMessage();
     }
+  }
+
+  onMessageContentClick(event: MouseEvent) {
+    const target = event.target as HTMLElement | null;
+    const citationLink = target?.closest('a.citation') as HTMLAnchorElement | null;
+    const docId = citationLink?.dataset['docId'];
+    if (!docId) {
+      return;
+    }
+
+    event.preventDefault();
+    this.router.navigate(['/documents', decodeURIComponent(docId)], {
+      queryParams: { use_case: this.activeUseCase },
+    });
   }
 
   giveFeedback(msg: ChatMessage, relevant: boolean) {

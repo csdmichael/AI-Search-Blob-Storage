@@ -19,7 +19,7 @@
           <ion-icon [name]="msg.role === 'user' ? 'person-circle' : 'sparkles'"></ion-icon>
         </div>
         <div class="message-body">
-          <div class="message-text" [innerHTML]="msg.text | formatResponse: activeUseCase"></div>
+          <div class="message-text" [innerHTML]="msg.text | formatResponse: activeUseCase" (click)="onMessageContentClick($event)"></div>
           <!-- Sources — clickable to open doc viewer -->
           <div class="sources" *ngIf="msg.sources && msg.sources.length">
             <ion-chip *ngFor="let src of msg.sources" color="tertiary" size="small" outline
