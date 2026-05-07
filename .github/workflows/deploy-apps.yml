@@ -42,16 +42,33 @@ jobs:
             --image ${{ env.API_IMAGE }}:latest \
             --file Dockerfile .
 
-      - name: Get ACR credentials
-        id: acr-creds
+      - name: Get ACR server
+        id: acr
         run: |
           ACR_SERVER=$(az acr show --name ${{ env.ACR_NAME }} --query loginServer -o tsv)
-          ACR_USER=$(az acr credential show --name ${{ env.ACR_NAME }} --query username -o tsv)
-          ACR_PASS=$(az acr credential show --name ${{ env.ACR_NAME }} --query "passwords[0].value" -o tsv)
           echo "server=$ACR_SERVER" >> "$GITHUB_OUTPUT"
-          echo "username=$ACR_USER" >> "$GITHUB_OUTPUT"
-          echo "::add-mask::$ACR_PASS"
-          echo "password=$ACR_PASS" >> "$GITHUB_OUTPUT"
+
+      - name: Ensure App Service managed identity
+        run: |
+          az webapp identity assign \
+            --name ai-search-agent-api \
+            --resource-group ${{ env.AZURE_RESOURCE_GROUP }}
+
+      - name: Grant AcrPull to App Service
+        run: |
+          APP_PRINCIPAL_ID=$(az webapp identity show \
+            --name ai-search-agent-api \
+            --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+            --query principalId -o tsv)
+          ACR_ID=$(az acr show \
+            --name ${{ env.ACR_NAME }} \
+            --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+            --query id -o tsv)
+          az role assignment create \
+            --assignee-object-id "$APP_PRINCIPAL_ID" \
+            --assignee-principal-type ServicePrincipal \
+            --role AcrPull \
+            --scope "$ACR_ID" || true
 
       - name: Configure App Service for container
         run: |
@@ -60,19 +77,29 @@ jobs:
             --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
             --settings \
               WEBSITES_PORT=8000 \
-              DOCKER_REGISTRY_SERVER_URL=https://${{ steps.acr-creds.outputs.server }} \
-              DOCKER_REGISTRY_SERVER_USERNAME=${{ steps.acr-creds.outputs.username }} \
-              DOCKER_REGISTRY_SERVER_PASSWORD=${{ steps.acr-creds.outputs.password }}
+              WEBSITES_ENABLE_APP_SERVICE_STORAGE=false
+
+      - name: Clear stale code-deploy settings
+        run: |
+          az webapp config appsettings delete \
+            --name ai-search-agent-api \
+            --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+            --setting-names WEBSITE_RUN_FROM_PACKAGE SCM_DO_BUILD_DURING_DEPLOYMENT ENABLE_ORYX_BUILD || true
 
       - name: Deploy container to App Service
         run: |
           az webapp config container set \
             --name ai-search-agent-api \
             --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
-            --container-image-name ${{ steps.acr-creds.outputs.server }}/${{ env.API_IMAGE }}:${{ github.sha }} \
-            --container-registry-url https://${{ steps.acr-creds.outputs.server }} \
-            --container-registry-user ${{ steps.acr-creds.outputs.username }} \
-            --container-registry-password ${{ steps.acr-creds.outputs.password }}
+            --container-image-name ${{ steps.acr.outputs.server }}/${{ env.API_IMAGE }}:${{ github.sha }} \
+            --container-registry-url https://${{ steps.acr.outputs.server }}
+
+      - name: Clear startup override and enable Always On
+        run: |
+          az webapp config set \
+            --name ai-search-agent-api \
+            --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+            --generic-configurations '{"acrUseManagedIdentityCreds":true,"appCommandLine":"","alwaysOn":true}'
 
       - name: Restart App Service
         run: |
